@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopify · Dashboard</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #f0f2f5;
+        color: #1e293b;
+        line-height: 1.5;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+      }
+
+      /* ── SHELL: full width, no padding, no gap ── */
+      .shell {
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: 260px;
+        flex-shrink: 0;
+        border-right: 1px solid #e2e8f0;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .sidebar-header {
+        padding: 16px 18px 14px;
+        border-bottom: 1px solid #e2e8f0;
+        flex-shrink: 0;
+      }
+      .sidebar-header h3 {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: #64748b;
+      }
+
+      .sidebar-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0;
+      }
+
+      /* ── COLLAPSIBLE SECTION ── */
+      .collapse-section {
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .collapse-trigger {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 18px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #0f172a;
+        transition: background 0.12s;
+      }
+      .collapse-trigger:hover {
+        background: #f8fafc;
+      }
+      .collapse-trigger .chevron {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        transition: transform 0.2s;
+        display: inline-block;
+      }
+      .collapse-trigger.open .chevron {
+        transform: rotate(180deg);
+      }
+
+      .collapse-body {
+        padding: 0 18px 14px;
+        display: none;
+      }
+      .collapse-body.open {
+        display: block;
+      }
+
+      /* ── FORM ELEMENTS ── */
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 12px;
+      }
+      .field:last-child {
+        margin-bottom: 0;
+      }
+      .field label {
+        font-size: 0.73rem;
+        font-weight: 600;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .field input {
+        padding: 8px 10px;
+        border: 1px solid #d1d9e6;
+        background: #fff;
+        font-size: 0.88rem;
+        border-radius: 4px;
+        transition:
+          border 0.15s,
+          box-shadow 0.15s;
+        font-family: inherit;
+      }
+      .field input:focus {
+        outline: none;
+        border-color: #0f172a;
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+      }
+
+      /* ── BUTTONS ── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 4px;
+        border: none;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+        font-family: inherit;
+        white-space: nowrap;
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-dark {
+        background: #0f172a;
+        color: white;
+      }
+      .btn-dark:hover:not(:disabled) {
+        background: #1e293b;
+      }
+      .btn-outline {
+        background: white;
+        color: #0f172a;
+        border: 1px solid #d1d9e6;
+      }
+      .btn-outline:hover:not(:disabled) {
+        background: #f8fafc;
+        border-color: #94a3b8;
+      }
+      .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+      .btn-full {
+        width: 100%;
+      }
+      .btn-ghost {
+        background: transparent;
+        color: #475569;
+        border: 1px solid transparent;
+      }
+      .btn-ghost:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+      }
+
+      /* ── PROGRESS PANEL ── */
+      .progress-panel {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        padding: 12px;
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 4px;
+      }
+      .progress-panel h4 {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #0f172a;
+      }
+      .progress-bar-wrap {
+        background: #e2e8f0;
+        height: 5px;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .progress-bar-fill {
+        height: 100%;
+        background: #0f172a;
+        border-radius: 3px;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+      .progress-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 5px;
+      }
+      .stat-box {
+        background: white;
+        border: 1px solid #e2e8f0;
+        padding: 6px 8px;
+        text-align: center;
+        border-radius: 3px;
+      }
+      .stat-box .stat-val {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        display: block;
+      }
+      .stat-box .stat-val.green {
+        color: #1a7f5a;
+      }
+      .stat-box .stat-val.red {
+        color: #b91c1c;
+      }
+      .stat-box .stat-label {
+        font-size: 0.65rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .live-log {
+        max-height: 160px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #e9edf2;
+        border-radius: 3px;
+        font-size: 0.73rem;
+        font-family: "Menlo", "Consolas", monospace;
+      }
+      .log-entry {
+        padding: 3px 8px;
+        border-bottom: 1px solid #f1f5f9;
+        animation: fadeIn 0.15s ease;
+      }
+      .log-entry:last-child {
+        border-bottom: none;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-3px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .log-entry.success {
+        color: #1a7f5a;
+      }
+      .log-entry.fail {
+        color: #b91c1c;
+      }
+      .log-entry.skip {
+        color: #94a3b8;
+      }
+      .log-entry.done {
+        color: #0f172a;
+        font-weight: 600;
+      }
+      .progress-status {
+        font-size: 0.75rem;
+        color: #64748b;
+        font-style: italic;
+      }
+
+      /* ── SIDEBAR FOOTER ── */
+      .sidebar-footer {
+        padding: 12px 18px;
+        border-top: 1px solid #e2e8f0;
+        font-size: 0.75rem;
+        color: #94a3b8;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      /* ── MAIN ── */
+      .main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      /* ── TOP BAR ── */
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 20px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #fff;
+        flex-shrink: 0;
+        gap: 12px;
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .topbar-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -0.01em;
+      }
+
+      /* ── VIEW SWITCHER ── */
+      .view-switcher {
+        display: flex;
+        background: #f1f5f9;
+        border-radius: 6px;
+        padding: 3px;
+        gap: 2px;
+      }
+      .view-btn {
+        padding: 5px 14px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        border-radius: 4px;
+        color: #64748b;
+        transition: all 0.15s;
+        font-family: inherit;
+      }
+      .view-btn.active {
+        background: #fff;
+        color: #0f172a;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      #searchInput {
+        padding: 7px 12px;
+        border: 1px solid #d1d9e6;
+        font-size: 0.85rem;
+        width: 220px;
+        border-radius: 4px;
+        background: white;
+        font-family: inherit;
+      }
+      #searchInput:focus {
+        outline: none;
+        border-color: #0f172a;
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+      }
+
+      /* ── CONTENT AREA ── */
+      .content {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* ── TABLE VIEW ── */
+      .view-panel {
+        width: 100%;
+        height: 100%;
+        display: none;
+        flex-direction: column;
+      }
+      .view-panel.active {
+        display: flex;
+      }
+
+      .table-scroll {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      th {
+        text-align: left;
+        padding: 11px 14px;
+        background: #f8fafc;
+        font-weight: 600;
+        color: #475569;
+        border-bottom: 2px solid #e2e8f0;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+        background: white;
+        transition: background 0.3s;
+      }
+      tr:hover td {
+        background: #fafafa;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      td.flash-update {
+        background: #f0fdf4 !important;
+      }
+
+      .product-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        display: block;
+      }
+      .no-image {
+        width: 40px;
+        height: 40px;
+        background: #f1f5f9;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 0.65rem;
+        border: 1px dashed #cbd5e1;
+      }
+      td input[type="text"] {
+        width: 85px;
+        padding: 6px 8px;
+        border: 1px solid #d1d9e6;
+        background: white;
+        font-size: 0.85rem;
+        border-radius: 4px;
+        transition: border 0.15s;
+        font-family: inherit;
+      }
+      td input[type="text"]:focus {
+        outline: none;
+        border-color: #0f172a;
+        box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.08);
+      }
+      .update-btn {
+        background: transparent;
+        border: 1px solid #0f172a;
+        color: #0f172a;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background 0.15s;
+        white-space: nowrap;
+        font-family: inherit;
+      }
+      .update-btn:hover {
+        background: #0f172a;
+        color: white;
+      }
+      .edit-btn {
+        background: transparent;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.15s;
+        white-space: nowrap;
+        font-family: inherit;
+      }
+      .edit-btn:hover {
+        background: #f1f5f9;
+        border-color: #94a3b8;
+        color: #0f172a;
+      }
+      .badge {
+        background: #f1f5f9;
+        color: #64748b;
+        padding: 2px 7px;
+        font-size: 0.72rem;
+        font-weight: 500;
+        border-radius: 3px;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+      }
+      .empty-row {
+        text-align: center;
+        color: #94a3b8;
+        padding: 48px 0;
+        font-size: 0.9rem;
+      }
+
+      /* ── EXCEL VIEW ── */
+      .excel-view {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        gap: 24px;
+        padding: 40px;
+      }
+      .excel-view h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+      }
+      .excel-view p {
+        font-size: 0.85rem;
+        color: #64748b;
+        text-align: center;
+        max-width: 360px;
+      }
+      .excel-cards {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .excel-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 28px 32px;
+        width: 260px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transition:
+          box-shadow 0.2s,
+          border-color 0.2s;
+        cursor: default;
+      }
+      .excel-card:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        border-color: #cbd5e1;
+      }
+      .excel-card-icon {
+        font-size: 2.4rem;
+      }
+      .excel-card h3 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #0f172a;
+      }
+      .excel-card p {
+        font-size: 0.8rem;
+        color: #64748b;
+        line-height: 1.5;
+      }
+      .excel-card-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+      }
+
+      /* drag-over state for import card */
+      .drop-zone {
+        border: 2px dashed #d1d9e6;
+        border-radius: 6px;
+        padding: 14px;
+        text-align: center;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+        position: relative;
+        font-size: 0.78rem;
+        color: #64748b;
+      }
+      .drop-zone:hover,
+      .drop-zone.drag-over {
+        border-color: #0f172a;
+        background: #f8fafc;
+      }
+      .drop-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* import status */
+      .import-status {
+        font-size: 0.78rem;
+        padding: 8px 10px;
+        border-radius: 4px;
+        display: none;
+        text-align: left;
+        line-height: 1.5;
+      }
+      .import-status.success {
+        background: #f0fdf4;
+        color: #1a7f5a;
+        border: 1px solid #bbf7d0;
+        display: block;
+      }
+      .import-status.error {
+        background: #fff4f4;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+        display: block;
+      }
+      .import-status.loading {
+        background: #f8fafc;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        display: block;
+      }
+
+      /* ── SPINNER ── */
+      .spinner {
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.6s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .spinner-dark {
+        border-color: rgba(15, 23, 42, 0.15);
+        border-top-color: #0f172a;
+      }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="shell">
+      <!-- ── SIDEBAR ── -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>⚙️ Actions</h3>
+        </div>
+
+        <div class="sidebar-body">
+          <!-- COLLAPSIBLE: BULK PRICE UPDATE -->
+          <div class="collapse-section">
+            <button class="collapse-trigger" onclick="toggleCollapse(this)">
+              <span>⚡ Bulk price update</span>
+              <span class="chevron">▼</span>
+            </button>
+            <div class="collapse-body">
+              <div class="field">
+                <label>Percentage change (%)</label>
+                <input
+                  type="number"
+                  id="percentage"
+                  placeholder="e.g. 10 or -5"
+                  step="any"
+                  value="10"
+                />
+              </div>
+              <button
+                class="btn btn-dark btn-full btn-sm"
+                id="bulkUpdateBtn"
+                onclick="bulkUpdate()"
+              >
+                Apply to all variants
+              </button>
+
+              <!-- LIVE PROGRESS -->
+              <div class="progress-panel" id="progressPanel">
+                <h4>📊 Live progress</h4>
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar-fill" id="progressBar"></div>
+                </div>
+                <div class="progress-status" id="progressStatus">
+                  Fetching products...
+                </div>
+                <div class="progress-stats">
+                  <div class="stat-box">
+                    <span class="stat-val" id="statTotal">0</span>
+                    <span class="stat-label">Total</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-val green" id="statUpdated">0</span>
+                    <span class="stat-label">Done</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-val red" id="statFailed">0</span>
+                    <span class="stat-label">Failed</span>
+                  </div>
+                </div>
+                <div class="live-log" id="liveLog"></div>
+                <button
+                  class="btn btn-outline btn-sm btn-full"
+                  id="dismissBtn"
+                  onclick="dismissProgress()"
+                  style="display: none"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- COLLAPSIBLE: OTHER TOOLS -->
+          <div class="collapse-section">
+            <button class="collapse-trigger" onclick="toggleCollapse(this)">
+              <span>🔧 Other tools</span>
+              <span class="chevron">▼</span>
+            </button>
+            <div class="collapse-body">
+              <button
+                class="btn btn-outline btn-full btn-sm"
+                onclick="alert('Coming soon: filtered bulk update')"
+              >
+                ⚙️ Filtered price update
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <span>📦 Shopify Admin API</span>
+          <span>🔴 Live SSE streaming</span>
+        </div>
+      </aside>
+
+      <!-- ── MAIN ── -->
+      <main class="main">
+        <!-- TOP BAR -->
+        <div class="topbar">
+          <div class="topbar-left">
+            <span class="topbar-title">Products</span>
+            <div class="view-switcher">
+              <button
+                class="view-btn active"
+                id="viewBtnTable"
+                onclick="switchView('table')"
+              >
+                ☰ Table
+              </button>
+              <button
+                class="view-btn"
+                id="viewBtnExcel"
+                onclick="switchView('excel')"
+              >
+                📊 Excel
+              </button>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="🔍 Search products..."
+              autocomplete="off"
+            />
+            <button class="btn btn-outline btn-sm" onclick="loadProducts()">
+              ↻ Refresh
+            </button>
+            <button
+              class="btn btn-dark btn-sm"
+              onclick="location.href = '/product/new'"
+            >
+              ➕ Add product
+            </button>
+          </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+          <!-- TABLE VIEW -->
+          <div class="view-panel active" id="viewTable">
+            <div class="table-scroll">
+              <table id="productTable">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Variant ID</th>
+                    <th>Price (USD)</th>
+                    <th>Update</th>
+                    <th>Edit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="empty-row">
+                      Click <strong>Refresh</strong> to load products.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- EXCEL VIEW -->
+          <div class="view-panel" id="viewExcel">
+            <div class="excel-view">
+              <div>
+                <h2>Excel / Spreadsheet tools</h2>
+                <p>
+                  Import products from an Excel file or export your current
+                  catalogue as a spreadsheet.
+                </p>
+              </div>
+              <div class="excel-cards">
+                <!-- IMPORT CARD -->
+                <div class="excel-card">
+                  <div class="excel-card-icon">📥</div>
+                  <h3>Import products</h3>
+                  <p>
+                    Upload an <code>.xlsx</code> file to bulk-create or update
+                    products in your Shopify store.
+                  </p>
+                  <div class="excel-card-actions">
+                    <div class="drop-zone" id="dropZone">
+                      <input
+                        type="file"
+                        id="excelFileInput"
+                        accept=".xlsx,.xls,.csv"
+                        onchange="handleExcelImport(this)"
+                      />
+                      <div id="dropZoneLabel">
+                        📁 Drop file here or <u>browse</u>
+                      </div>
+                    </div>
+                    <div class="import-status" id="importStatus"></div>
+                    <button
+                      class="btn btn-dark btn-sm btn-full"
+                      id="importBtn"
+                      onclick="submitImport()"
+                      style="display: none"
+                    >
+                      Upload & import
+                    </button>
+                  </div>
+                </div>
+
+                <!-- EXPORT CARD -->
+                <div class="excel-card">
+                  <div class="excel-card-icon">📤</div>
+                  <h3>Export products</h3>
+                  <p>
+                    Download your full product catalogue as an Excel
+                    spreadsheet, ready to edit and re-import.
+                  </p>
+                  <div class="excel-card-actions">
+                    <button
+                      class="btn btn-dark btn-sm btn-full"
+                      id="exportBtn"
+                      onclick="exportProducts()"
+                    >
+                      Download .xlsx
+                    </button>
+                    <div class="import-status" id="exportStatus"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // ── COLLAPSE TOGGLE ──
+      function toggleCollapse(trigger) {
+        trigger.classList.toggle("open");
+        const body = trigger.nextElementSibling;
+        body.classList.toggle("open");
+      }
+
+      // ── VIEW SWITCHER ──
+      function switchView(view) {
+        document
+          .querySelectorAll(".view-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".view-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .getElementById("view" + view.charAt(0).toUpperCase() + view.slice(1))
+          .classList.add("active");
+        document
+          .getElementById(
+            "viewBtn" + view.charAt(0).toUpperCase() + view.slice(1),
+          )
+          .classList.add("active");
+        // Hide search bar in excel view
+        document.getElementById("searchInput").style.display =
+          view === "table" ? "" : "none";
+      }
+
+      // ── HELPERS ──
+      function escapeHtml(s) {
+        if (s == null) return "";
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+      function getImageSrc(product) {
+        if (product.image && typeof product.image === "string")
+          return product.image;
+        if (product.image?.src) return product.image.src;
+        if (product.images?.length) return product.images[0].src;
+        return null;
+      }
+      function safeId(id) {
+        return id.replace(/[^a-zA-Z0-9]/g, "_");
+      }
+
+      // ── INFINITE SCROLL STATE ──
+      const PAGE_SIZE = 20;
+      let allProducts = [];
+      let filteredProducts = [];
+      let renderedCount = 0;
+      let isLoadingMore = false;
+
+      // ── DEBOUNCED SEARCH ──
+      let searchDebounce = null;
+      function filterProducts() {
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(() => {
+          const term = document
+            .getElementById("searchInput")
+            .value.trim()
+            .toLowerCase();
+          filteredProducts = term
+            ? allProducts.filter((p) => p.title.toLowerCase().includes(term))
+            : [...allProducts];
+          renderedCount = 0;
+          document.querySelector("#productTable tbody").innerHTML = "";
+          renderNextPage();
+        }, 250);
+      }
+
+      // ── LOAD PRODUCTS ──
+      async function loadProducts() {
+        const tbody = document.querySelector("#productTable tbody");
+        tbody.innerHTML = `<tr><td colspan="6" class="empty-row">⏳ Loading...</td></tr>`;
+        try {
+          const res = await fetch("/products");
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const products = await res.json();
+          allProducts = [...products].reverse(); // newest first
+          filteredProducts = [...allProducts];
+          renderedCount = 0;
+          tbody.innerHTML = "";
+          renderNextPage();
+        } catch {
+          tbody.innerHTML = `<tr><td colspan="6" class="empty-row">❌ Failed to load products</td></tr>`;
+        }
+      }
+
+      // ── RENDER PAGE ──
+      function renderNextPage() {
+        const tbody = document.querySelector("#productTable tbody");
+        const slice = filteredProducts.slice(
+          renderedCount,
+          renderedCount + PAGE_SIZE,
+        );
+        if (renderedCount === 0 && slice.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="empty-row">📭 No products found</td></tr>`;
+          return;
+        }
+        slice.forEach((product) => {
+          const title = escapeHtml(product.title);
+          const productId = escapeHtml(product.id);
+          const imgSrc = getImageSrc(product);
+          const imgHtml = imgSrc
+            ? `<img class="product-image" src="${escapeHtml(imgSrc)}" alt="${title}" />`
+            : `<div class="no-image">📷</div>`;
+          product.variants.forEach((v) => {
+            const domId = safeId(v.id);
+            const row = document.createElement("tr");
+            row.dataset.title = title.toLowerCase();
+            row.dataset.variantId = v.id;
+            row.innerHTML = `
+          <td>${imgHtml}</td>
+          <td><strong>${title}</strong></td>
+          <td><span class="badge">${escapeHtml(v.id)}</span></td>
+          <td><input type="text" value="${escapeHtml(v.price)}" id="${domId}" data-variant-id="${escapeHtml(v.id)}" /></td>
+          <td><button class="update-btn" onclick="updatePrice('${productId}','${escapeHtml(v.id)}','${domId}',this)">Update</button></td>
+          <td><button class="edit-btn" onclick="location.href='/product/${productId}'">Edit</button></td>
+        `;
+            tbody.appendChild(row);
+          });
+        });
+        renderedCount += slice.length;
+        isLoadingMore = false;
+      }
+
+      // ── INFINITE SCROLL ──
+      function setupInfiniteScroll() {
+        const scroller = document.querySelector(".table-scroll");
+        scroller.addEventListener("scroll", () => {
+          if (isLoadingMore || renderedCount >= filteredProducts.length) return;
+          const { scrollTop, scrollHeight, clientHeight } = scroller;
+          if (scrollTop + clientHeight >= scrollHeight - 100) {
+            isLoadingMore = true;
+            setTimeout(renderNextPage, 150);
+          }
+        });
+      }
+
+      // ── UPDATE SINGLE PRICE ──
+      async function updatePrice(productId, variantId, domId, button) {
+        const input = document.getElementById(domId);
+        const price = parseFloat(input.value);
+        if (isNaN(price)) {
+          alert("Enter a valid number");
+          return;
+        }
+        const orig = button.innerText;
+        button.innerText = "⏳";
+        button.disabled = true;
+        try {
+          const res = await fetch("/update-price", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              product_id: productId,
+              variant_id: variantId,
+              new_price: price,
+            }),
+          });
+          if (!res.ok) throw new Error();
+          button.innerText = "✓";
+          setTimeout(() => (button.innerText = orig), 1200);
+        } catch {
+          alert("Update failed");
+          button.innerText = orig;
+        } finally {
+          button.disabled = false;
+        }
+      }
+
+      // ── LIVE PRICE UPDATE IN TABLE ──
+      function updateVariantPriceInTable(variantId, newPrice) {
+        const input = document.querySelector(
+          `input[data-variant-id="${CSS.escape(variantId)}"]`,
+        );
+        if (!input) return;
+        input.value = newPrice;
+        const td = input.closest("td");
+        td.classList.add("flash-update");
+        setTimeout(() => td.classList.remove("flash-update"), 1000);
+      }
+
+      // ── BULK UPDATE SSE ──
+      function addLog(msg, type = "") {
+        const log = document.getElementById("liveLog");
+        const entry = document.createElement("div");
+        entry.className = `log-entry ${type}`;
+        entry.textContent = msg;
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      function updateStats(updated, failed, total) {
+        document.getElementById("statTotal").textContent = total;
+        document.getElementById("statUpdated").textContent = updated;
+        document.getElementById("statFailed").textContent = failed;
+        const pct =
+          total > 0 ? Math.round(((updated + failed) / total) * 100) : 0;
+        document.getElementById("progressBar").style.width = pct + "%";
+        document.getElementById("progressStatus").textContent =
+          `${updated + failed} / ${total} (${pct}%)`;
+      }
+
+      function dismissProgress() {
+        document.getElementById("progressPanel").style.display = "none";
+      }
+
+      async function bulkUpdate() {
+        const percentage = document.getElementById("percentage").value.trim();
+        if (!percentage) {
+          alert("Enter a percentage");
+          return;
+        }
+        if (!confirm(`Apply ${percentage}% price change to ALL variants?`))
+          return;
+
+        const btn = document.getElementById("bulkUpdateBtn");
+        btn.innerHTML = '<span class="spinner"></span> Running...';
+        btn.disabled = true;
+
+        const panel = document.getElementById("progressPanel");
+        panel.style.display = "flex";
+        document.getElementById("liveLog").innerHTML = "";
+        document.getElementById("progressBar").style.width = "0%";
+        document.getElementById("progressStatus").textContent =
+          "Fetching products from Shopify...";
+        document.getElementById("statTotal").textContent = "0";
+        document.getElementById("statUpdated").textContent = "0";
+        document.getElementById("statFailed").textContent = "0";
+        document.getElementById("dismissBtn").style.display = "none";
+
+        try {
+          const res = await fetch(
+            `/bulk/price-increase?percentage=${encodeURIComponent(percentage)}`,
+            { method: "POST" },
+          );
+          if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop();
+
+            for (const line of lines) {
+              if (!line.startsWith("data: ")) continue;
+              try {
+                const evt = JSON.parse(line.slice(6));
+                if (evt.type === "start") {
+                  addLog(`🚀 Starting — ${evt.total} products`);
+                  document.getElementById("statTotal").textContent = evt.total;
+                } else if (evt.type === "success") {
+                  updateStats(evt.updated, evt.failed, evt.total);
+                  addLog(`✅ ${evt.title}`, "success");
+                  evt.variants?.forEach((v) =>
+                    updateVariantPriceInTable(v.id, v.price),
+                  );
+                } else if (evt.type === "fail" || evt.type === "error") {
+                  updateStats(evt.updated, evt.failed, evt.total);
+                  addLog(`❌ ${evt.title}`, "fail");
+                } else if (evt.type === "skip") {
+                  addLog(`⏭ ${evt.title}`, "skip");
+                } else if (evt.type === "done") {
+                  document.getElementById("progressBar").style.width = "100%";
+                  document.getElementById("progressStatus").textContent =
+                    `✅ Done — ${evt.updated} updated, ${evt.failed} failed`;
+                  addLog(`🏁 Complete: ${evt.updated}/${evt.total}`, "done");
+                  document.getElementById("dismissBtn").style.display = "block";
+                }
+              } catch {}
+            }
+          }
+        } catch (err) {
+          addLog(`❌ ${err.message}`, "fail");
+          document.getElementById("progressStatus").textContent = "Failed";
+          document.getElementById("dismissBtn").style.display = "block";
+        } finally {
+          btn.innerHTML = "Apply to all variants";
+          btn.disabled = false;
+        }
+      }
+
+      // ── EXCEL: DROP ZONE ──
+      const dropZone = document.getElementById("dropZone");
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("drag-over");
+      });
+      dropZone.addEventListener("dragleave", () =>
+        dropZone.classList.remove("drag-over"),
+      );
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("drag-over");
+        const file = e.dataTransfer.files[0];
+        if (file) handleExcelImport({ files: [file] });
+      });
+
+      let selectedImportFile = null;
+      function handleExcelImport(input) {
+        const file = input.files ? input.files[0] : input;
+        if (!file) return;
+        selectedImportFile = file;
+        document.getElementById("dropZoneLabel").textContent =
+          `📄 ${file.name}`;
+        document.getElementById("importBtn").style.display = "block";
+        document.getElementById("importStatus").className = "import-status";
+        document.getElementById("importStatus").textContent = "";
+      }
+
+      async function submitImport() {
+        if (!selectedImportFile) return;
+        const status = document.getElementById("importStatus");
+        const btn = document.getElementById("importBtn");
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Uploading...';
+        status.className = "import-status loading";
+        status.textContent = "⏳ Uploading and processing...";
+
+        const formData = new FormData();
+        formData.append("file", selectedImportFile);
+
+        try {
+          const res = await fetch("/import-products", {
+            method: "POST",
+            body: formData,
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.detail || "Import failed");
+          status.className = "import-status success";
+          status.textContent = `✅ Imported ${data.created || 0} products successfully.`;
+        } catch (err) {
+          status.className = "import-status error";
+          status.textContent = `❌ ${err.message}`;
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = "Upload & import";
+        }
+      }
+
+      // ── EXCEL: EXPORT ──
+      async function exportProducts() {
+        const btn = document.getElementById("exportBtn");
+        const status = document.getElementById("exportStatus");
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Exporting...';
+        status.className = "import-status loading";
+        status.textContent = "⏳ Generating spreadsheet...";
+
+        try {
+          const res = await fetch("/export-products");
+          if (!res.ok) throw new Error("Export failed");
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `products_${new Date().toISOString().slice(0, 10)}.xlsx`;
+          a.click();
+          URL.revokeObjectURL(url);
+          status.className = "import-status success";
+          status.textContent = "✅ Download started.";
+        } catch (err) {
+          status.className = "import-status error";
+          status.textContent = `❌ ${err.message}`;
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = "Download .xlsx";
+        }
+      }
+
+      // ── INIT ──
+      document.addEventListener("DOMContentLoaded", () => {
+        document
+          .getElementById("searchInput")
+          .addEventListener("input", filterProducts);
+        setupInfiniteScroll();
+        loadProducts();
+      });
+    </script>
+  </body>
+</html>
