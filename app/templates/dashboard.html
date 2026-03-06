@@ -503,7 +503,8 @@
         cursor: pointer;
         border-radius: 4px;
         transition: background 0.15s;
-        white-space: nowrap;
+        white-space: normal !important;
+        word-break: break-word;
         font-family: inherit;
       }
       .update-btn:hover {
@@ -674,6 +675,79 @@
       }
 
       /* ── SPINNER ── */
+      /* ── GRID TOOLBAR ── */
+      .grid-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 16px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #fff;
+        flex-shrink: 0;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .grid-toolbar-left,
+      .grid-toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .grid-status {
+        font-size: 0.8rem;
+        color: #64748b;
+      }
+      .changed-badge {
+        background: #fef9c3;
+        color: #854d0e;
+        border: 1px solid #fde047;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      /* ── HANDSONTABLE OVERRIDES ── */
+      #gridContainer {
+        width: 100%;
+        height: 100%;
+      }
+      #gridContainer .handsontable td.changed-cell {
+        background: #fefce8 !important;
+      }
+      #gridContainer .handsontable td.htDimmed {
+        color: #94a3b8;
+      }
+      .colHeader-readonly {
+        color: #94a3b8 !important;
+      }
+
+      /* ── SAVE RESULT TOAST ── */
+      .grid-save-toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        padding: 10px 18px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        z-index: 9999;
+        animation: fadeIn 0.2s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      .grid-save-toast.success {
+        background: #0f172a;
+        color: white;
+      }
+      .grid-save-toast.error {
+        background: #b91c1c;
+        color: white;
+      }
+      .grid-save-toast.partial {
+        background: #92400e;
+        color: white;
+      }
+
       .spinner {
         display: inline-block;
         width: 13px;
@@ -864,72 +938,136 @@
 
           <!-- EXCEL VIEW -->
           <div class="view-panel" id="viewExcel">
-            <div class="excel-view">
-              <div>
-                <h2>Excel / Spreadsheet tools</h2>
-                <p>
-                  Import products from an Excel file or export your current
-                  catalogue as a spreadsheet.
-                </p>
+            <!-- GRID TOOLBAR -->
+            <div class="grid-toolbar" id="gridToolbar">
+              <div class="grid-toolbar-left">
+                <button
+                  class="btn btn-dark btn-sm"
+                  id="gridLoadBtn"
+                  onclick="gridLoad()"
+                >
+                  ⟳ Load from Shopify
+                </button>
+                <span class="grid-status" id="gridStatus">No data loaded</span>
               </div>
-              <div class="excel-cards">
-                <!-- IMPORT CARD -->
-                <div class="excel-card">
-                  <div class="excel-card-icon">📥</div>
-                  <h3>Import products</h3>
-                  <p>
-                    Upload an <code>.xlsx</code> file to bulk-create or update
-                    products in your Shopify store.
-                  </p>
-                  <div class="excel-card-actions">
-                    <div class="drop-zone" id="dropZone">
-                      <input
-                        type="file"
-                        id="excelFileInput"
-                        accept=".xlsx,.xls,.csv"
-                        onchange="handleExcelImport(this)"
-                      />
-                      <div id="dropZoneLabel">
-                        📁 Drop file here or <u>browse</u>
-                      </div>
-                    </div>
-                    <div class="import-status" id="importStatus"></div>
-                    <button
-                      class="btn btn-dark btn-sm btn-full"
-                      id="importBtn"
-                      onclick="submitImport()"
-                      style="display: none"
-                    >
-                      Upload & import
-                    </button>
-                  </div>
-                </div>
+              <div
+                class="grid-toolbar-right"
+                id="gridActions"
+                style="display: none"
+              >
+                <span
+                  class="changed-badge"
+                  id="changedBadge"
+                  style="display: none"
+                  >0 unsaved changes</span
+                >
+                <button class="btn btn-outline btn-sm" onclick="gridExport()">
+                  📥 Export .xlsx
+                </button>
+                <button
+                  class="btn btn-dark btn-sm"
+                  id="gridSaveBtn"
+                  onclick="gridSave()"
+                  style="display: none"
+                >
+                  💾 Save to Shopify
+                </button>
+              </div>
+            </div>
 
-                <!-- EXPORT CARD -->
-                <div class="excel-card">
-                  <div class="excel-card-icon">📤</div>
-                  <h3>Export products</h3>
-                  <p>
-                    Download your full product catalogue as an Excel
-                    spreadsheet, ready to edit and re-import.
-                  </p>
-                  <div class="excel-card-actions">
-                    <button
-                      class="btn btn-dark btn-sm btn-full"
-                      id="exportBtn"
-                      onclick="exportProducts()"
-                    >
-                      Download .xlsx
-                    </button>
-                    <div class="import-status" id="exportStatus"></div>
-                  </div>
-                </div>
+            <!-- LOAD PROGRESS -->
+            <div
+              id="gridLoadProgress"
+              style="
+                display: none;
+                padding: 12px 20px;
+                background: #f8fafc;
+                border-bottom: 1px solid #e2e8f0;
+              "
+            >
+              <div
+                style="
+                  font-size: 0.8rem;
+                  font-weight: 600;
+                  color: #0f172a;
+                  margin-bottom: 6px;
+                "
+              >
+                Loading data from Shopify...
+              </div>
+              <div
+                style="
+                  background: #e2e8f0;
+                  height: 4px;
+                  border-radius: 2px;
+                  overflow: hidden;
+                  margin-bottom: 8px;
+                "
+              >
+                <div
+                  id="gridProgressBar"
+                  style="
+                    height: 100%;
+                    background: #0f172a;
+                    width: 0%;
+                    transition: width 0.4s ease;
+                  "
+                ></div>
+              </div>
+              <div
+                id="gridProgressLog"
+                style="
+                  max-height: 100px;
+                  overflow-y: auto;
+                  font-size: 0.72rem;
+                  font-family: monospace;
+                  color: #475569;
+                "
+              ></div>
+            </div>
+
+            <!-- HANDSONTABLE GRID -->
+            <div
+              id="gridContainer"
+              style="flex: 1; min-height: 0; overflow: hidden; display: none"
+            ></div>
+
+            <!-- EMPTY STATE -->
+            <div
+              id="gridEmpty"
+              style="
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 12px;
+                color: #94a3b8;
+              "
+            >
+              <div style="font-size: 2.5rem">📊</div>
+              <div style="font-size: 0.95rem; font-weight: 500">
+                Click
+                <strong style="color: #0f172a">Load from Shopify</strong> to
+                fetch your products
+              </div>
+              <div style="font-size: 0.8rem">
+                Uses Shopify Bulk Operations — supports thousands of products
               </div>
             </div>
           </div>
         </div>
       </main>
     </div>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
     <script>
       // ── COLLAPSE TOGGLE ──
@@ -1052,7 +1190,7 @@
           <td><span class="badge">${escapeHtml(v.id)}</span></td>
           <td><input type="text" value="${escapeHtml(v.price)}" id="${domId}" data-variant-id="${escapeHtml(v.id)}" /></td>
           <td><button class="update-btn" onclick="updatePrice('${productId}','${escapeHtml(v.id)}','${domId}',this)">Update</button></td>
-          <td><button class="edit-btn" onclick="location.href='/product/${productId}'">Edit</button></td>
+          <td><button class="edit-btn" onclick="location.href='/product/' + '${productId}'">Edit</button></td>
         `;
             tbody.appendChild(row);
           });
@@ -1224,20 +1362,24 @@
       }
 
       // ── EXCEL: DROP ZONE ──
-      const dropZone = document.getElementById("dropZone");
-      dropZone.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        dropZone.classList.add("drag-over");
-      });
-      dropZone.addEventListener("dragleave", () =>
-        dropZone.classList.remove("drag-over"),
-      );
-      dropZone.addEventListener("drop", (e) => {
-        e.preventDefault();
-        dropZone.classList.remove("drag-over");
-        const file = e.dataTransfer.files[0];
-        if (file) handleExcelImport({ files: [file] });
-      });
+      // dropZone only exists in Excel view — guard against null
+      function initDropZone() {
+        const dropZone = document.getElementById("dropZone");
+        if (!dropZone) return;
+        dropZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          dropZone.classList.add("drag-over");
+        });
+        dropZone.addEventListener("dragleave", () =>
+          dropZone.classList.remove("drag-over"),
+        );
+        dropZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dropZone.classList.remove("drag-over");
+          const file = e.dataTransfer.files[0];
+          if (file) handleExcelImport({ files: [file] });
+        });
+      }
 
       let selectedImportFile = null;
       function handleExcelImport(input) {
@@ -1281,27 +1423,72 @@
         }
       }
 
-      // ── EXCEL: EXPORT ──
+      // ── EXCEL: EXPORT with SSE progress ──
       async function exportProducts() {
         const btn = document.getElementById("exportBtn");
         const status = document.getElementById("exportStatus");
+        const log = document.getElementById("exportLog");
+
         btn.disabled = true;
-        btn.innerHTML = '<span class="spinner"></span> Exporting...';
+        btn.innerHTML =
+          '<span class="spinner spinner-dark"></span> Running sync...';
         status.className = "import-status loading";
-        status.textContent = "⏳ Generating spreadsheet...";
+        status.textContent = "⏳ Fetching all products from Shopify...";
+        if (log) {
+          log.innerHTML = "";
+          log.style.display = "block";
+        }
+
+        function addExportLog(msg) {
+          if (!log) return;
+          const div = document.createElement("div");
+          div.style.cssText =
+            "padding:2px 0; font-size:.75rem; color:#475569; font-family:monospace;";
+          div.textContent = msg;
+          log.appendChild(div);
+          log.scrollTop = log.scrollHeight;
+        }
 
         try {
-          const res = await fetch("/export-products");
-          if (!res.ok) throw new Error("Export failed");
-          const blob = await res.blob();
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `products_${new Date().toISOString().slice(0, 10)}.xlsx`;
-          a.click();
-          URL.revokeObjectURL(url);
-          status.className = "import-status success";
-          status.textContent = "✅ Download started.";
+          const res = await fetch("/export-products/start", { method: "POST" });
+          if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop();
+
+            for (const line of lines) {
+              if (!line.startsWith("data: ")) continue;
+              try {
+                const evt = JSON.parse(line.slice(6));
+                if (evt.type === "log") {
+                  addExportLog(evt.msg);
+                  status.textContent = evt.msg;
+                } else if (evt.type === "done") {
+                  status.className = "import-status success";
+                  status.textContent = "✅ Sync complete — downloading file...";
+                  // Trigger file download
+                  const a = document.createElement("a");
+                  a.href = "/export-products/download";
+                  a.download = "";
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                } else if (evt.type === "error") {
+                  throw new Error(evt.msg);
+                }
+              } catch (parseErr) {
+                if (parseErr.message.includes("❌")) throw parseErr;
+              }
+            }
+          }
         } catch (err) {
           status.className = "import-status error";
           status.textContent = `❌ ${err.message}`;
@@ -1311,6 +1498,264 @@
         }
       }
 
+      // ════════════════════════════════════════
+      // SPREADSHEET GRID
+      // ════════════════════════════════════════
+
+      var hotInstance = null;
+      var gridData = [];
+      var gridChanges = new Map();
+      var gridColumns = [];
+
+      const READONLY_COLS = new Set([
+        "Product ID",
+        "Variant ID",
+        "Inventory Item ID",
+        "Created At",
+        "Updated At",
+        "Last Synced",
+        "Product Category ID",
+      ]);
+
+      async function gridLoad() {
+        const btn = document.getElementById("gridLoadBtn");
+        const status = document.getElementById("gridStatus");
+        const progress = document.getElementById("gridLoadProgress");
+        const progressLog = document.getElementById("gridProgressLog");
+        const progressBar = document.getElementById("gridProgressBar");
+        const empty = document.getElementById("gridEmpty");
+        const container = document.getElementById("gridContainer");
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Loading...';
+        progress.style.display = "block";
+        empty.style.display = "none";
+        container.style.display = "none";
+        progressLog.innerHTML = "";
+        progressBar.style.width = "0%";
+        status.textContent = "Connecting to Shopify...";
+        gridChanges.clear();
+
+        let stepCount = 0;
+        const totalSteps = 7;
+
+        function logLine(msg) {
+          const div = document.createElement("div");
+          div.textContent = msg;
+          progressLog.appendChild(div);
+          progressLog.scrollTop = progressLog.scrollHeight;
+          stepCount = Math.min(stepCount + 1, totalSteps);
+          progressBar.style.width =
+            Math.round((stepCount / totalSteps) * 90) + "%";
+          status.textContent = msg;
+        }
+
+        try {
+          const res = await fetch("/grid/load", { method: "POST" });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop();
+
+            for (const line of lines) {
+              if (!line.startsWith("data: ")) continue;
+              try {
+                const evt = JSON.parse(line.slice(6));
+                if (evt.type === "log") {
+                  logLine(evt.msg);
+                } else if (evt.type === "ready") {
+                  progressBar.style.width = "100%";
+                  logLine("✅ Loaded " + evt.count + " rows");
+                  gridData = evt.rows;
+                  initGrid(gridData);
+                } else if (evt.type === "error") {
+                  throw new Error(evt.msg);
+                }
+              } catch (e) {
+                if (e.message && e.message.includes("❌")) throw e;
+              }
+            }
+          }
+        } catch (err) {
+          status.textContent = "❌ " + err.message;
+          empty.style.display = "flex";
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = "⟳ Reload";
+          progress.style.display = "none";
+        }
+      }
+
+      function initGrid(rows) {
+        if (!rows || rows.length === 0) return;
+
+        const container = document.getElementById("gridContainer");
+        container.style.display = "block";
+        document.getElementById("gridEmpty").style.display = "none";
+        document.getElementById("gridActions").style.display = "flex";
+        document.getElementById("gridStatus").textContent =
+          rows.length + " rows loaded";
+
+        const keys = Object.keys(rows[0]);
+        gridColumns = keys.map((key) => {
+          const col = {
+            data: key,
+            title: key,
+            readOnly: READONLY_COLS.has(key),
+          };
+          if (key === "Status") {
+            col.type = "dropdown";
+            col.source = ["ACTIVE", "DRAFT", "ARCHIVED"];
+          }
+          if (/Price|Cost|Qty|Grams/.test(key)) col.type = "numeric";
+          return col;
+        });
+
+        if (hotInstance) hotInstance.destroy();
+
+        hotInstance = new Handsontable(container, {
+          data: rows,
+          columns: gridColumns,
+          colHeaders: keys,
+          rowHeaders: true,
+          width: "100%",
+          height: "100%",
+          licenseKey: "non-commercial-and-evaluation",
+          stretchH: "none",
+          columnSorting: true,
+          filters: true,
+          dropdownMenu: true,
+          contextMenu: true,
+          manualColumnResize: true,
+          manualColumnMove: true,
+          fixedColumnsStart: 0,
+          autoWrapRow: true,
+          autoWrapCol: true,
+          wordWrap: true,
+          cells(row, col) {
+            const cellProperties = {};
+            const key = keys[col];
+            if (READONLY_COLS.has(key)) {
+              cellProperties.renderer = function (instance, td) {
+                Handsontable.renderers.TextRenderer.apply(this, arguments);
+                td.style.color = "#94a3b8";
+                td.style.background = "#f8fafc";
+                td.style.fontSize = "0.75rem";
+              };
+            }
+            return cellProperties;
+          },
+          afterChange(changes, source) {
+            if (!changes || source === "loadData") return;
+            changes.forEach(([row, prop, oldVal, newVal]) => {
+              if (oldVal === newVal) return;
+              if (!gridChanges.has(row)) {
+                gridChanges.set(row, {
+                  ...hotInstance.getSourceDataAtRow(row),
+                });
+              }
+              gridChanges.get(row)[prop] = newVal;
+              const colIdx = keys.indexOf(prop);
+              hotInstance.setCellMeta(row, colIdx, "className", "changed-cell");
+            });
+            hotInstance.render();
+            updateChangedBadge();
+          },
+        });
+      }
+
+      function updateChangedBadge() {
+        const badge = document.getElementById("changedBadge");
+        const saveBtn = document.getElementById("gridSaveBtn");
+        const count = gridChanges.size;
+        if (count > 0) {
+          badge.textContent =
+            count + " unsaved change" + (count > 1 ? "s" : "");
+          badge.style.display = "inline-block";
+          saveBtn.style.display = "inline-flex";
+        } else {
+          badge.style.display = "none";
+          saveBtn.style.display = "none";
+        }
+      }
+
+      async function gridSave() {
+        if (gridChanges.size === 0) return;
+        const btn = document.getElementById("gridSaveBtn");
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Saving...';
+
+        try {
+          const res = await fetch("/grid/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ changes: Array.from(gridChanges.values()) }),
+          });
+          const result = await res.json();
+
+          if (result.status === "ok" || result.status === "partial") {
+            gridChanges.clear();
+            if (hotInstance) {
+              for (let r = 0; r < hotInstance.countRows(); r++)
+                for (let c = 0; c < hotInstance.countCols(); c++)
+                  hotInstance.setCellMeta(r, c, "className", "");
+              hotInstance.render();
+            }
+            updateChangedBadge();
+            const msg =
+              result.status === "ok"
+                ? "✅ Saved " + result.updated + " rows to Shopify"
+                : "⚠️ Saved " +
+                  result.updated +
+                  " rows — " +
+                  result.errors.length +
+                  " failed";
+            showGridToast(msg, result.status === "ok" ? "success" : "partial");
+          } else {
+            throw new Error(JSON.stringify(result.errors));
+          }
+        } catch (err) {
+          showGridToast("❌ Save failed: " + err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = "💾 Save to Shopify";
+        }
+      }
+
+      function gridExport() {
+        if (!gridData || gridData.length === 0) {
+          alert("Load data first.");
+          return;
+        }
+        const headers = gridColumns.map((c) => c.data);
+        const data = hotInstance.getData();
+        const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Products");
+        XLSX.writeFile(
+          wb,
+          "shopify_products_" + new Date().toISOString().slice(0, 10) + ".xlsx",
+        );
+      }
+
+      function showGridToast(msg, type) {
+        const t = document.querySelector(".grid-save-toast");
+        if (t) t.remove();
+        const toast = document.createElement("div");
+        toast.className = "grid-save-toast " + type;
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+      }
+
       // ── INIT ──
       document.addEventListener("DOMContentLoaded", () => {
         document
@@ -1318,6 +1763,7 @@
           .addEventListener("input", filterProducts);
         setupInfiniteScroll();
         loadProducts();
+        initDropZone();
       });
     </script>
   </body>

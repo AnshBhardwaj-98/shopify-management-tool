@@ -26,6 +26,251 @@ class ProductService:
             for p in products
         ]
 
+
+    # ==================== GET SINGLE PRODUCT ====================
+
+    def get_product(self, product_id: str):
+        result = self.client.graphql(
+            """
+            query getProduct($id: ID!) {
+              product(id: $id) {
+                id
+                title
+                descriptionHtml
+                vendor
+                productType
+                tags
+                status
+                handle
+                featuredImage { url }
+                images(first: 10) {
+                  edges { node { id url altText } }
+                }
+                variants(first: 100) {
+                  edges {
+                    node {
+                      id
+                      price
+                      sku
+                      inventoryItem {
+                        id
+                        tracked
+                        inventoryLevels(first: 5) {
+                          edges {
+                            node {
+                              quantities(names: ["available"]) {
+                                name
+                                quantity
+                              }
+                              location { id name }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                seo { title description }
+              }
+            }
+            """,
+            {"id": product_id}
+        )
+
+        p = result["product"]
+        if not p:
+            raise Exception(f"Product {product_id} not found")
+
+        # Get first variant for price/sku/inventory
+        variants_raw = [e["node"] for e in p["variants"]["edges"]]
+        first_variant = variants_raw[0] if variants_raw else {}
+        inv_item = first_variant.get("inventoryItem", {})
+
+        # Get quantity from first inventory level
+        quantity = 0
+        inv_levels = inv_item.get("inventoryLevels", {}).get("edges", [])
+        if inv_levels:
+            qtys = inv_levels[0]["node"].get("quantities", [])
+            if qtys:
+                quantity = qtys[0].get("quantity", 0)
+
+        return {
+            "id": p["id"],
+            "title": p["title"],
+            "description": p["descriptionHtml"],
+            "vendor": p["vendor"],
+            "product_type": p["productType"],
+            "tags": p["tags"],
+            "status": p["status"].lower(),
+            "image": p["featuredImage"]["url"] if p["featuredImage"] else None,
+            "images": [
+                {"id": e["node"]["id"], "url": e["node"]["url"]}
+                for e in p["images"]["edges"]
+            ],
+            "price": float(first_variant.get("price", 0)),
+            "variants": [
+                {
+                    "id": v["id"],
+                    "price": float(v["price"]),
+                    "name": v.get("sku") or "",
+                }
+                for v in variants_raw
+            ],
+            "inventory": {
+                "sku": first_variant.get("sku") or "",
+                "quantity": quantity,
+                "track": inv_item.get("tracked", False),
+            },
+            "seo": {
+                "title": p["seo"]["title"] or "",
+                "description": p["seo"]["description"] or "",
+                "handle": p["handle"] or "",
+            },
+        }
+
+    # ==================== UPDATE PRODUCT ====================
+
+    def update_product(self, product_id: str, data):
+        warnings = []
+
+        # -------------------------
+        # 1. CORE FIELDS
+        # -------------------------
+        update_input = {
+            "id": product_id,
+            "title": data.title,
+            "descriptionHtml": data.description or "",
+            "vendor": data.vendor,
+            "productType": data.product_type,
+            "tags": data.tags or [],
+            "status": (data.status or "draft").upper(),
+        }
+        if data.seo and data.seo.handle:
+            update_input["handle"] = data.seo.handle
+
+        resp = self.client.graphql(
+            """
+            mutation productUpdate($input: ProductInput!) {
+              productUpdate(input: $input) {
+                product { id }
+                userErrors { field message }
+              }
+            }
+            """,
+            {"input": update_input}
+        )
+        errs = resp["productUpdate"]["userErrors"]
+        if errs:
+            raise Exception(f"Product update errors: {errs}")
+
+        # -------------------------
+        # 2. PRICE — update all existing variants
+        # -------------------------
+        try:
+            variants = self._get_all_variants(product_id)
+            if variants and data.price is not None:
+                self._bulk_update_variants(product_id, [
+                    {"id": v["id"], "price": f"{data.price:.2f}"}
+                    for v in variants
+                ])
+        except Exception as e:
+            warnings.append(f"Price not updated: {e}")
+
+        # -------------------------
+        # 3. IMAGE — only if a new public URL is provided
+        # -------------------------
+        if data.image and data.image.startswith("https://"):
+            try:
+                self.add_product_image(product_id, data.image)
+            except Exception as e:
+                warnings.append(f"Image not updated: {e}")
+
+        # -------------------------
+        # 4. INVENTORY
+        # -------------------------
+        if data.inventory:
+            try:
+                variants = self._get_all_variants(product_id)
+                for variant in variants:
+                    inv_item_id = variant["inventoryItem"]["id"]
+
+                    # Enable/disable tracking
+                    track_resp = self.client.graphql(
+                        """
+                        mutation inventoryItemUpdate($id: ID!, $input: InventoryItemInput!) {
+                          inventoryItemUpdate(id: $id, input: $input) {
+                            inventoryItem { id tracked }
+                            userErrors { field message }
+                          }
+                        }
+                        """,
+                        {"id": inv_item_id, "input": {"tracked": data.inventory.track}}
+                    )
+                    track_errs = track_resp["inventoryItemUpdate"]["userErrors"]
+                    if track_errs:
+                        raise Exception(f"Tracking error: {track_errs}")
+
+                    # Set quantity if tracking is on
+                    if data.inventory.track and data.inventory.quantity is not None:
+                        qty_resp = self.client.graphql(
+                            """
+                            mutation inventorySetOnHandQuantities($input: InventorySetOnHandQuantitiesInput!) {
+                              inventorySetOnHandQuantities(input: $input) {
+                                inventoryAdjustments { inventoryItem { id } }
+                                userErrors { field message }
+                              }
+                            }
+                            """,
+                            {
+                                "input": {
+                                    "reason": "correction",
+                                    "setQuantities": [{
+                                        "inventoryItemId": inv_item_id,
+                                        "locationId": self.location_id,
+                                        "quantity": data.inventory.quantity
+                                    }]
+                                }
+                            }
+                        )
+                        qty_errs = qty_resp["inventorySetOnHandQuantities"]["userErrors"]
+                        if qty_errs:
+                            raise Exception(f"Quantity error: {qty_errs}")
+            except Exception as e:
+                warnings.append(f"Inventory not updated: {e}")
+
+        # -------------------------
+        # 5. SEO
+        # -------------------------
+        if data.seo and (data.seo.title or data.seo.description):
+            try:
+                self.client.graphql(
+                    """
+                    mutation productUpdate($input: ProductInput!) {
+                      productUpdate(input: $input) {
+                        product { id }
+                        userErrors { field message }
+                      }
+                    }
+                    """,
+                    {
+                        "input": {
+                            "id": product_id,
+                            "seo": {
+                                "title": data.seo.title,
+                                "description": data.seo.description
+                            }
+                        }
+                    }
+                )
+            except Exception as e:
+                warnings.append(f"SEO not updated: {e}")
+
+        return {
+            "status": "success",
+            "product_id": product_id,
+            **({"warnings": warnings} if warnings else {})
+        }
+
     # ==================== CREATE PRODUCT ====================
 
     def create_product(self, data):

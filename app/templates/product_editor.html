@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add product · Shopify</title>
+    <title>Product · Shopify</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -756,6 +756,10 @@
         }
       }
     </style>
+    <script>
+      // Injected by product_page.py via Jinja2
+      const PRODUCT_ID = "{{ product_id or '' }}";
+    </script>
   </head>
   <body>
     <div class="page-wrapper">
@@ -1634,21 +1638,131 @@
         setTimeout(() => t.classList.remove("show"), 3500);
       }
 
-      // ── SAVE PRODUCT ──
-      async function saveProduct() {
-        const title = document.getElementById("title").value.trim();
-        if (!title) {
-          showToast("Title is required", "error");
-          document.getElementById("title").focus();
-          document.getElementById("title").style.borderColor = "var(--red)";
-          setTimeout(
-            () => (document.getElementById("title").style.borderColor = ""),
-            2000,
-          );
-          return;
-        }
+      // ── EDIT MODE ──
+      // Detect if we're editing via ?id=gid://shopify/Product/123
+      // product_page.py injects these via Jinja2 when in edit mode
+      const editProductId =
+        typeof PRODUCT_ID !== "undefined" && PRODUCT_ID ? PRODUCT_ID : null;
+      const isEditMode = !!editProductId;
 
-        // Collect variants — only include rows where user actually typed a name
+      // Update page chrome for edit mode
+      if (isEditMode) {
+        document.title = "Edit product · Shopify";
+        document.querySelector(".page-title").textContent = "Edit product";
+        document.querySelector(".breadcrumb").innerHTML =
+          `<a href="/">Products</a><span>/</span><span>Edit product</span>`;
+        document.getElementById("saveStatus").textContent = "Loading...";
+        ["saveButton", "saveButton2"].forEach((id) => {
+          const btn = document.getElementById(id);
+          if (btn) {
+            btn.disabled = true;
+            btn.textContent = "Loading...";
+          }
+        });
+      }
+
+      // ── PREFILL FORM FROM API ──
+      async function loadProductForEdit(productId) {
+        try {
+          const res = await fetch(
+            `/api/product/data?id=${encodeURIComponent(productId)}`,
+          );
+          console.log(res);
+
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const p = await res.json();
+          console.log(p);
+
+          // Basic fields
+          document.getElementById("title").value = p.title || "";
+          document.getElementById("vendor").value = p.vendor || "";
+          document.getElementById("productType").value = p.product_type || "";
+          document.getElementById("price").value = p.price || "";
+          document.getElementById("status").value = p.status || "draft";
+          updateStatusBadge();
+
+          // Description (rich text div)
+          document.getElementById("description").innerHTML =
+            p.description || "";
+
+          // Tags
+          (p.tags || []).forEach((t) => {
+            if (!tags.includes(t)) tags.push(t);
+          });
+          renderTags();
+
+          // Images — show existing ones as already-uploaded (no re-upload needed)
+          if (p.images && p.images.length > 0) {
+            p.images.forEach((img, i) => {
+              mediaFiles.push({
+                file: null,
+                url: img.url,
+                serverUrl: img.url,
+                uploading: false,
+                existingId: img.id,
+              });
+            });
+            document.getElementById("imageUrl").value = p.images[0].url;
+            renderMedia();
+            setUploadStatus("✅ Existing images loaded");
+          }
+
+          // Inventory
+          const inv = p.inventory || {};
+          document.getElementById("sku").value = inv.sku || "";
+          document.getElementById("trackInventory").checked = !!inv.track;
+          if (inv.track) {
+            document.getElementById("quantitySection").style.display = "block";
+            document.getElementById("inventoryQty").value = inv.quantity || 0;
+          }
+
+          // Variants — clear default row, populate from product
+          document.getElementById("variantList").innerHTML = "";
+          variantCount = 0;
+          const realVariants = (p.variants || []).filter(
+            (v) => v.name && v.name.toLowerCase() !== "default title",
+          );
+          if (realVariants.length > 0) {
+            realVariants.forEach((v) =>
+              addVariant(v.name, v.price, v.sku || ""),
+            );
+          } else {
+            addVariant(); // keep one empty row
+          }
+
+          // SEO
+          const seo = p.seo || {};
+          document.getElementById("seoTitle").value = seo.title || "";
+          document.getElementById("seoDescription").value =
+            seo.description || "";
+          document.getElementById("seoHandle").value = seo.handle || "";
+          updateSeoPreview();
+
+          // Re-enable save buttons
+          document.getElementById("saveStatus").textContent = "Unsaved changes";
+          ["saveButton", "saveButton2"].forEach((id) => {
+            const btn = document.getElementById(id);
+            if (btn) {
+              btn.disabled = false;
+              btn.textContent = "Save changes";
+            }
+          });
+        } catch (err) {
+          console.error("loadProductForEdit error:", err);
+          showToast(
+            "Failed to load product: " + err.message + " — check console",
+            "error",
+          );
+          document.getElementById("saveStatus").textContent = "Load failed";
+        }
+      }
+
+      if (isEditMode) {
+        loadProductForEdit(editProductId);
+      }
+
+      // ── BUILD PAYLOAD (shared by create + update) ──
+      function buildPayload() {
         const variantRows = document.querySelectorAll(
           "#variantList .variant-row",
         );
@@ -1667,15 +1781,14 @@
             (v) => v.name !== "" && v.name.toLowerCase() !== "default title",
           );
 
-        // Collect description HTML
         const descEl = document.getElementById("description");
         const description =
           descEl.innerHTML.replace(/<br\s*\/?>/gi, "").trim() === ""
             ? ""
             : descEl.innerHTML;
 
-        const payload = {
-          title,
+        return {
+          title: document.getElementById("title").value.trim(),
           description,
           vendor: document.getElementById("vendor").value.trim(),
           product_type: document.getElementById("productType").value.trim(),
@@ -1683,9 +1796,7 @@
           image: document.getElementById("imageUrl").value || null,
           tags,
           status: document.getElementById("status").value,
-          variants: variants.filter(
-            (v) => v.name.toLowerCase() !== "default title",
-          ),
+          variants,
           inventory: {
             sku: document.getElementById("sku").value.trim(),
             quantity:
@@ -1698,39 +1809,75 @@
             handle: document.getElementById("seoHandle").value.trim(),
           },
         };
+      }
 
-        // Block save if image is still uploading
+      // ── SAVE / UPDATE PRODUCT ──
+      async function saveProduct() {
+        const title = document.getElementById("title").value.trim();
+        if (!title) {
+          showToast("Title is required", "error");
+          document.getElementById("title").focus();
+          document.getElementById("title").style.borderColor = "var(--red)";
+          setTimeout(
+            () => (document.getElementById("title").style.borderColor = ""),
+            2000,
+          );
+          return;
+        }
+
         if (uploadInProgress) {
           showToast("Please wait — image is still uploading", "error");
           return;
         }
 
-        // Disable both save buttons
+        const payload = buildPayload();
+
         ["saveButton", "saveButton2"].forEach((id) => {
           const btn = document.getElementById(id);
-          btn.disabled = true;
-          btn.innerHTML = '<span class="spinner"></span> Saving...';
+          if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Saving...';
+          }
         });
         document.getElementById("saveStatus").textContent = "Saving...";
 
         try {
-          const res = await fetch("/create-product", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
+          let res;
+          if (isEditMode) {
+            // UPDATE existing product
+            res = await fetch(
+              `/api/product/update?id=${encodeURIComponent(editProductId)}`,
+              {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              },
+            );
+          } else {
+            // CREATE new product
+            res = await fetch("/create-product", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+          }
 
           if (!res.ok) {
             const err = await res.json().catch(() => ({}));
             throw new Error(err.detail || "Save failed");
           }
 
-          showToast("Product saved successfully");
+          const label = isEditMode
+            ? "Product updated successfully"
+            : "Product saved successfully";
+          showToast(label);
           document.getElementById("saveStatus").textContent = "Saved";
           ["saveButton", "saveButton2"].forEach((id) => {
             const btn = document.getElementById(id);
-            btn.disabled = false;
-            btn.textContent = "Saved ✓";
+            if (btn) {
+              btn.disabled = false;
+              btn.textContent = isEditMode ? "Saved ✓" : "Saved ✓";
+            }
           });
           setTimeout(() => (location.href = "/"), 1200);
         } catch (err) {
@@ -1738,8 +1885,10 @@
           document.getElementById("saveStatus").textContent = "Error saving";
           ["saveButton", "saveButton2"].forEach((id) => {
             const btn = document.getElementById(id);
-            btn.disabled = false;
-            btn.textContent = "Save";
+            if (btn) {
+              btn.disabled = false;
+              btn.textContent = isEditMode ? "Save changes" : "Save";
+            }
           });
         }
       }

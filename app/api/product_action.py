@@ -42,3 +42,14 @@ class CreateProductRequest(BaseModel):
 @router.post("/create-product")
 def create_product(req: CreateProductRequest):
     return service.create_product(req)
+
+@router.get("/api/product/data")
+def get_product(id: str):
+    # ID passed as query param: /product/data?id=gid://shopify/Product/123
+    return service.get_product(id)
+
+
+@router.put("/api/product/update")
+def update_product(id: str, req: CreateProductRequest):
+    # ID passed as query param: /product/update?id=gid://shopify/Product/123
+    return service.update_product(id, req)
