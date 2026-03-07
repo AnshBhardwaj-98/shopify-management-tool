@@ -1,0 +1,164 @@
+<style>
+  /* ===== refined global navbar – same markup, enhanced visuals ===== */
+  :root {
+    --nav-bg: #ffffff;
+    --nav-border: #e9edf2;
+    --nav-text: #1e293b;
+    --nav-text-muted: #64748b;
+    --nav-hover-bg: #f1f5f9;
+    --nav-active-bg: #eef2ff;
+    --nav-active-color: #4f46e5;
+    --nav-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    --nav-brand: #0f172a;
+    --nav-brand-accent: #0d9488;
+    --nav-btn-bg: #f8fafc;
+    --nav-btn-border: #e2e8f0;
+    --transition: 0.2s ease;
+  }
+
+  body.dark-theme {
+    --nav-bg: #0f172a;
+    --nav-border: #1e293b;
+    --nav-text: #f8fafc;
+    --nav-text-muted: #94a3b8;
+    --nav-hover-bg: #1e293b;
+    --nav-active-bg: #1e3a8a;
+    --nav-active-color: #60a5fa;
+    --nav-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    --nav-brand: #f8fafc;
+    --nav-brand-accent: #14b8a6;
+    --nav-btn-bg: #1e293b;
+    --nav-btn-border: #334155;
+  }
+
+  .global-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 28px;
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--nav-border);
+    box-shadow: var(--nav-shadow);
+    transition: background var(--transition), border-color var(--transition);
+    z-index: 100;
+  }
+
+  .global-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .global-nav-brand {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--nav-brand);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    transition: color 0.2s;
+  }
+  .global-nav-brand:hover {
+    color: var(--nav-active-color);
+  }
+  .global-nav-brand span {
+    background: var(--nav-brand-accent);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 30px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+
+  .global-nav-links {
+    display: flex;
+    gap: 8px;
+  }
+  .global-nav-link {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--nav-text-muted);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 30px;
+    transition: all 0.15s;
+  }
+  .global-nav-link:hover {
+    color: var(--nav-text);
+    background: var(--nav-hover-bg);
+  }
+  .global-nav-link.active {
+    color: var(--nav-active-color);
+    background: var(--nav-active-bg);
+    font-weight: 600;
+  }
+
+  .global-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .nav-btn {
+    background: var(--nav-btn-bg);
+    color: var(--nav-text-muted);
+    border: 1px solid var(--nav-btn-border);
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-btn:hover {
+    background: var(--nav-hover-bg);
+    color: var(--nav-text);
+    border-color: var(--nav-active-color);
+  }
+  /* focus outline for accessibility */
+  .nav-btn:focus-visible,
+  .global-nav-link:focus-visible {
+    outline: 2px solid var(--nav-active-color);
+    outline-offset: 2px;
+  }
+</style>
+
+<nav class="global-nav">
+  <div class="global-nav-left">
+    <a href="/" class="global-nav-brand">Shopify <span>Manager</span></a>
+    <div class="global-nav-links">
+      <a href="/" class="global-nav-link active">Products</a>
+      <a href="#" class="global-nav-link">Collections</a>
+      <a href="#" class="global-nav-link">Inventory</a>
+    </div>
+  </div>
+  <div class="global-nav-right">
+    <button class="nav-btn" onclick="toggleDarkMode()" id="darkModeBtn" title="Toggle Dark Mode">🌙</button>
+  </div>
+</nav>
+
+<script>
+  // ── DARK MODE TOGGLE (unchanged) ──
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-theme");
+    const isDark = document.body.classList.contains("dark-theme");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+    updateDarkModeIcon();
+  }
+  
+  function updateDarkModeIcon() {
+    const btn = document.getElementById("darkModeBtn");
+    if (!btn) return;
+    btn.textContent = document.body.classList.contains("dark-theme") ? "☀️" : "🌙";
+  }
+  
+  // Initialize on load
+  updateDarkModeIcon();
+</script>
