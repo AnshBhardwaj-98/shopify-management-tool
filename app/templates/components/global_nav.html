@@ -1,5 +1,4 @@
 <style>
-  /* ===== refined global navbar – same markup, enhanced visuals ===== */
   :root {
     --nav-bg: #ffffff;
     --nav-border: #e9edf2;
@@ -15,7 +14,6 @@
     --nav-btn-border: #e2e8f0;
     --transition: 0.2s ease;
   }
-
   body.dark-theme {
     --nav-bg: #0f172a;
     --nav-border: #1e293b;
@@ -30,7 +28,6 @@
     --nav-btn-bg: #1e293b;
     --nav-btn-border: #334155;
   }
-
   .global-nav {
     display: flex;
     align-items: center;
@@ -41,14 +38,9 @@
     box-shadow: var(--nav-shadow);
     transition: background var(--transition), border-color var(--transition);
     z-index: 100;
+    flex-shrink: 0;
   }
-
-  .global-nav-left {
-    display: flex;
-    align-items: center;
-    gap: 28px;
-  }
-
+  .global-nav-left { display: flex; align-items: center; gap: 28px; }
   .global-nav-brand {
     font-size: 1.2rem;
     font-weight: 700;
@@ -60,9 +52,7 @@
     letter-spacing: -0.02em;
     transition: color 0.2s;
   }
-  .global-nav-brand:hover {
-    color: var(--nav-active-color);
-  }
+  .global-nav-brand:hover { color: var(--nav-active-color); }
   .global-nav-brand span {
     background: var(--nav-brand-accent);
     color: white;
@@ -73,11 +63,7 @@
     letter-spacing: 0.3px;
     text-transform: uppercase;
   }
-
-  .global-nav-links {
-    display: flex;
-    gap: 8px;
-  }
+  .global-nav-links { display: flex; gap: 8px; }
   .global-nav-link {
     font-size: 0.9rem;
     font-weight: 500;
@@ -87,22 +73,9 @@
     border-radius: 30px;
     transition: all 0.15s;
   }
-  .global-nav-link:hover {
-    color: var(--nav-text);
-    background: var(--nav-hover-bg);
-  }
-  .global-nav-link.active {
-    color: var(--nav-active-color);
-    background: var(--nav-active-bg);
-    font-weight: 600;
-  }
-
-  .global-nav-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
+  .global-nav-link:hover { color: var(--nav-text); background: var(--nav-hover-bg); }
+  .global-nav-link.active { color: var(--nav-active-color); background: var(--nav-active-bg); font-weight: 600; }
+  .global-nav-right { display: flex; align-items: center; gap: 16px; }
   .nav-btn {
     background: var(--nav-btn-bg);
     color: var(--nav-text-muted);
@@ -117,26 +90,17 @@
     align-items: center;
     gap: 6px;
   }
-  .nav-btn:hover {
-    background: var(--nav-hover-bg);
-    color: var(--nav-text);
-    border-color: var(--nav-active-color);
-  }
-  /* focus outline for accessibility */
-  .nav-btn:focus-visible,
-  .global-nav-link:focus-visible {
-    outline: 2px solid var(--nav-active-color);
-    outline-offset: 2px;
-  }
+  .nav-btn:hover { background: var(--nav-hover-bg); color: var(--nav-text); border-color: var(--nav-active-color); }
+  .nav-btn:focus-visible, .global-nav-link:focus-visible { outline: 2px solid var(--nav-active-color); outline-offset: 2px; }
 </style>
 
 <nav class="global-nav">
   <div class="global-nav-left">
     <a href="/" class="global-nav-brand">Shopify <span>Manager</span></a>
     <div class="global-nav-links">
-      <a href="/" class="global-nav-link active">Products</a>
-      <a href="#" class="global-nav-link">Collections</a>
-      <a href="#" class="global-nav-link">Inventory</a>
+      <a href="/"            class="global-nav-link" data-nav="products">Products</a>
+      <a href="/collections" class="global-nav-link" data-nav="collections">Collections</a>
+      <a href="#"            class="global-nav-link" data-nav="inventory">Inventory</a>
     </div>
   </div>
   <div class="global-nav-right">
@@ -145,20 +109,25 @@
 </nav>
 
 <script>
-  // ── DARK MODE TOGGLE (unchanged) ──
+  (function () {
+    const path = location.pathname;
+    let active = 'products';
+    if (path.startsWith('/collections')) active = 'collections';
+    else if (path.startsWith('/inventory')) active = 'inventory';
+    const link = document.querySelector('.global-nav-link[data-nav="' + active + '"]');
+    if (link) link.classList.add('active');
+  })();
+
   function toggleDarkMode() {
-    document.body.classList.toggle("dark-theme");
-    const isDark = document.body.classList.contains("dark-theme");
-    localStorage.setItem("theme", isDark ? "dark" : "light");
+    document.body.classList.toggle('dark-theme');
+    const isDark = document.body.classList.contains('dark-theme');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
     updateDarkModeIcon();
   }
-  
   function updateDarkModeIcon() {
-    const btn = document.getElementById("darkModeBtn");
+    const btn = document.getElementById('darkModeBtn');
     if (!btn) return;
-    btn.textContent = document.body.classList.contains("dark-theme") ? "☀️" : "🌙";
+    btn.textContent = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
   }
-  
-  // Initialize on load
   updateDarkModeIcon();
 </script>

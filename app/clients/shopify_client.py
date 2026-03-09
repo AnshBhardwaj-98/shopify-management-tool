@@ -50,6 +50,7 @@ class ShopifyClient:
                     title
                     vendor
                     productType
+                    status
 
                     featuredImage {
                     url

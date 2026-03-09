@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 from app.services.product_service import ProductService
@@ -53,3 +53,12 @@ def get_product(id: str):
 def update_product(id: str, req: CreateProductRequest):
     # ID passed as query param: /product/update?id=gid://shopify/Product/123
     return service.update_product(id, req)
+
+
+@router.delete("/api/product/delete")
+def delete_product(id: str):
+    # ID passed as query param: /api/product/delete?id=gid://shopify/Product/123
+    try:
+        return service.delete_product(id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

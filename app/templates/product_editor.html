@@ -1,58 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Product · Shopify (refined)</title>
+  <title>Product · Shopify</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    /* ===== refined product page – same functionality, smoother visuals ===== */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #f4f6f9;
+      --bg: #f1f2f4;
       --surface: #ffffff;
-      --border: #e2e8f0;
-      --border-focus: #1e3a8a;
-      --text-primary: #1e293b;
-      --text-secondary: #64748b;
-      --text-disabled: #94a3b8;
-      --green: #0d9488;
-      --green-bg: #f0fdfa;
-      --red: #dc2626;
-      --red-bg: #fef2f2;
-      --blue: #2563eb;
-      --blue-bg: #eff6ff;
+      --border: #e1e3e5;
+      --border-focus: #005bd3;
+      --text-primary: #202223;
+      --text-secondary: #6d7175;
+      --text-disabled: #8c9196;
+      --green: #1a7f5a;
+      --green-bg: #f1f8f5;
+      --red: #d82c0d;
+      --red-bg: #fff4f4;
+      --blue: #005bd3;
+      --blue-bg: #f2f7fe;
       --badge-active-bg: #ddf1ea;
-      --badge-active-text: #115e59;
-      --badge-draft-bg: #f1f5f9;
-      --badge-draft-text: #475569;
-      --btn-primary-bg: #0f172a;
-      --btn-primary-hover: #1e293b;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-      --shadow-md: 0 4px 6px -2px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02);
-      --radius: 12px;
-      --radius-sm: 8px;
-      --transition: all 0.15s ease;
+      --badge-active-text: #1a7f5a;
+      --badge-draft-bg: #e4e5e7;
+      --badge-draft-text: #6d7175;
+      --btn-primary-bg: #404040;
+      --btn-primary-hover: #2a2a2a;
+      --shadow-sm: 0 1px 0 rgba(0,0,0,.05);
+      --shadow-md: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-lg: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.05);
+      --radius: 8px;
+      --radius-sm: 6px;
     }
 
     body {
-      font-family: "Inter", sans-serif;
+      font-family: 'Inter', sans-serif;
       background: var(--bg);
       color: var(--text-primary);
       font-size: 14px;
       line-height: 1.5;
       min-height: 100vh;
     }
+
+    
 
     /* ── LAYOUT ── */
     .page-wrapper {
@@ -61,101 +55,61 @@
       padding: 24px 32px 120px;
     }
 
-    /* ── BREADCRUMB (subtle) ── */
+    /* ── BREADCRUMB ── */
     .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--text-secondary);
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--text-secondary);
       margin-bottom: 16px;
     }
-    .breadcrumb a {
-      color: var(--text-secondary);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .breadcrumb a:hover {
-      color: var(--text-primary);
-    }
-    .breadcrumb span {
-      color: var(--text-disabled);
-    }
+    .breadcrumb a { color: var(--text-secondary); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--text-primary); }
+    .breadcrumb span { color: var(--text-disabled); }
 
     /* ── PAGE HEADER ── */
     .page-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      gap: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; gap: 12px;
     }
-    .page-title {
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text-primary);
-      letter-spacing: -0.01em;
-    }
-    .header-actions {
-      display: flex;
-      gap: 10px;
-    }
+    .page-title { font-size: 20px; font-weight: 600; color: var(--text-primary); }
+    .header-actions { display: flex; gap: 8px; }
 
     /* ── GRID ── */
     .grid {
       display: grid;
       grid-template-columns: 1fr 280px;
-      gap: 20px;
+      gap: 16px;
       align-items: start;
     }
 
-    /* ── CARD (elevated, softer) ── */
+    /* ── CARD ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow-sm);
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       overflow: hidden;
-      transition: box-shadow 0.2s;
-    }
-    .card:hover {
-      box-shadow: var(--shadow-md);
     }
     .card-header {
-      padding: 18px 24px 0;
+      padding: 16px 20px 0;
     }
-    .card-body {
-      padding: 18px 24px 24px;
-    }
+    .card-body { padding: 16px 20px 20px; }
     .card-title {
-      font-size: 15px;
-      font-weight: 600;
+      font-size: 14px; font-weight: 600;
       color: var(--text-primary);
-      padding: 16px 24px 12px;
+      padding: 16px 20px 12px;
       border-bottom: 1px solid var(--border);
-      background: #fcfcfd;
     }
 
-    /* ── FORM ELEMENTS (rounder, consistent) ── */
-    .field {
-      margin-bottom: 18px;
-    }
-    .field:last-child {
-      margin-bottom: 0;
-    }
+    /* ── FORM ELEMENTS ── */
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
     .field label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin-bottom: 6px;
+      display: block; font-size: 13px; font-weight: 500;
+      color: var(--text-primary); margin-bottom: 6px;
     }
     .field label .optional {
-      font-weight: 400;
-      color: var(--text-secondary);
-      font-size: 12px;
-      margin-left: 4px;
+      font-weight: 400; color: var(--text-secondary); font-size: 12px; margin-left: 4px;
     }
 
     input[type="text"],
@@ -163,611 +117,290 @@
     input[type="email"],
     textarea,
     select {
-      width: 100%;
-      padding: 10px 14px;
+      width: 100%; padding: 8px 12px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-family: inherit;
+      font-size: 14px; font-family: inherit;
       color: var(--text-primary);
       background: var(--surface);
-      transition: border-color 0.15s, box-shadow 0.15s;
+      transition: border-color .15s, box-shadow .15s;
       outline: none;
       appearance: none;
     }
-    input:focus,
-    textarea:focus,
-    select:focus {
+    input:focus, textarea:focus, select:focus {
       border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+      box-shadow: 0 0 0 3px rgba(0,91,211,.12);
     }
-    input::placeholder,
-    textarea::placeholder {
-      color: var(--text-disabled);
-    }
-    textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
+    input::placeholder, textarea::placeholder { color: var(--text-disabled); }
+    textarea { resize: vertical; min-height: 120px; }
 
     .input-prefix {
-      display: flex;
-      align-items: center;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      background: white;
+      display: flex; align-items: center;
+      border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden;
+      transition: border-color .15s, box-shadow .15s;
     }
     .input-prefix:focus-within {
       border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+      box-shadow: 0 0 0 3px rgba(0,91,211,.12);
     }
     .input-prefix .prefix {
-      padding: 10px 12px;
-      background: #f9fafc;
+      padding: 8px 10px; background: #f6f6f7;
       border-right: 1px solid var(--border);
-      font-size: 13px;
-      color: var(--text-secondary);
-      white-space: nowrap;
+      font-size: 13px; color: var(--text-secondary); white-space: nowrap;
     }
     .input-prefix input {
-      border: none;
-      border-radius: 0;
-      flex: 1;
+      border: none; border-radius: 0; flex: 1;
       box-shadow: none !important;
-      padding: 10px 12px;
     }
-    .input-prefix input:focus {
-      border-color: transparent;
-      box-shadow: none;
-    }
+    .input-prefix input:focus { border-color: transparent; box-shadow: none; }
 
-    select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 36px;
-    }
+    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236d7175' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
 
-    /* ── BUTTONS (modern) ── */
+    /* ── BUTTONS ── */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 9px 18px;
-      border-radius: 30px;               /* pill shape */
-      font-size: 14px;
-      font-weight: 500;
-      font-family: inherit;
-      cursor: pointer;
-      border: none;
-      transition: var(--transition);
-      white-space: nowrap;
-      text-decoration: none;
-      box-shadow: var(--shadow-sm);
-      line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 8px 16px; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 500; font-family: inherit;
+      cursor: pointer; border: none; transition: all .15s;
+      white-space: nowrap; text-decoration: none;
     }
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-    .btn-primary {
-      background: var(--btn-primary-bg);
-      color: white;
-    }
-    .btn-primary:hover:not(:disabled) {
-      background: var(--btn-primary-hover);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
-    }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+    .btn-primary { background: var(--btn-primary-bg); color: white; }
+    .btn-primary:hover:not(:disabled) { background: var(--btn-primary-hover); }
     .btn-secondary {
-      background: white;
-      color: var(--text-primary);
+      background: var(--surface); color: var(--text-primary);
       border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
     }
-    .btn-secondary:hover:not(:disabled) {
-      background: #f8fafc;
-      border-color: #cbd5e1;
-    }
-    .btn-plain {
-      background: transparent;
-      color: var(--blue);
-      padding: 6px 14px;
-      font-size: 13px;
-      box-shadow: none;
-    }
-    .btn-plain:hover {
-      background: var(--blue-bg);
-    }
-    .btn-danger-plain {
-      background: transparent;
-      color: var(--red);
-      padding: 4px 10px;
-      font-size: 13px;
-      box-shadow: none;
-    }
-    .btn-danger-plain:hover {
-      background: var(--red-bg);
-    }
-    .btn-sm {
-      padding: 6px 16px;
-      font-size: 13px;
-    }
+    .btn-secondary:hover:not(:disabled) { background: #f6f6f7; }
+    .btn-plain { background: transparent; color: var(--blue); padding: 6px 8px; font-size: 13px; }
+    .btn-plain:hover { background: var(--blue-bg); }
+    .btn-danger-plain { background: transparent; color: var(--red); padding: 4px 8px; font-size: 13px; }
+    .btn-danger-plain:hover { background: var(--red-bg); }
+    .btn-sm { padding: 6px 12px; font-size: 13px; }
 
-    /* ── TITLE INPUT (bigger) ── */
+    /* ── TITLE INPUT ── */
     .title-input {
-      font-size: 16px !important;
-      padding: 12px 14px !important;
+      font-size: 14px !important;
     }
 
-    /* ── RICH TEXT TOOLBAR (cleaner) ── */
+    /* ── RICH TEXT TOOLBAR ── */
     .richtext-toolbar {
-      display: flex;
-      gap: 2px;
-      padding: 10px 12px;
+      display: flex; gap: 2px; padding: 8px;
       border-bottom: 1px solid var(--border);
-      background: #f9fafc;
-      flex-wrap: wrap;
+      background: #f6f6f7; flex-wrap: wrap;
     }
     .richtext-btn {
-      width: 30px;
-      height: 30px;
-      border: none;
-      background: transparent;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.1s, color 0.1s;
-      font-family: inherit;
+      width: 28px; height: 28px; border: none; background: transparent;
+      border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;
+      color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
+      transition: background .1s, color .1s; font-family: inherit;
     }
-    .richtext-btn:hover {
-      background: var(--border);
-      color: var(--text-primary);
-    }
-    .richtext-divider {
-      width: 1px;
-      background: var(--border);
-      margin: 4px 4px;
-    }
+    .richtext-btn:hover { background: var(--border); color: var(--text-primary); }
+    .richtext-divider { width: 1px; background: var(--border); margin: 4px 2px; }
     #description {
-      border: none;
-      border-radius: 0;
-      box-shadow: none !important;
-      min-height: 160px;
-      padding: 14px;
+      border: none; border-radius: 0; box-shadow: none !important; min-height: 160px;
     }
-    #description:focus {
-      box-shadow: none !important;
-      border-color: transparent !important;
-    }
+    #description:focus { box-shadow: none !important; border-color: transparent !important; }
     .richtext-wrapper {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      transition: border-color 0.15s, box-shadow 0.15s;
+      border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden;
+      transition: border-color .15s, box-shadow .15s;
     }
     .richtext-wrapper:focus-within {
       border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+      box-shadow: 0 0 0 3px rgba(0,91,211,.12);
     }
 
-    /* ── MEDIA UPLOAD (elevated drop zone) ── */
+    /* ── MEDIA UPLOAD ── */
     .media-drop-zone {
       border: 2px dashed var(--border);
-      border-radius: var(--radius);
+      border-radius: var(--radius-sm);
       padding: 40px 20px;
       text-align: center;
       cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
+      transition: border-color .15s, background .15s;
       position: relative;
-      background: #fafcff;
     }
-    .media-drop-zone:hover,
-    .media-drop-zone.drag-over {
+    .media-drop-zone:hover, .media-drop-zone.drag-over {
       border-color: var(--border-focus);
       background: var(--blue-bg);
     }
     .media-drop-zone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
     }
-    .drop-icon {
-      font-size: 32px;
-      margin-bottom: 8px;
-    }
-    .drop-title {
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-    .drop-sub {
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-    .drop-link {
-      color: var(--blue);
-      text-decoration: underline;
-      cursor: pointer;
-    }
+    .drop-icon { font-size: 28px; margin-bottom: 8px; }
+    .drop-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+    .drop-sub { font-size: 12px; color: var(--text-secondary); }
+    .drop-link { color: var(--blue); text-decoration: underline; cursor: pointer; }
 
     .media-preview-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-      gap: 10px;
-      margin-top: 16px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px;
+      margin-top: 12px;
     }
     .media-thumb {
-      aspect-ratio: 1;
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      border: 1px solid var(--border);
-      position: relative;
-      background: #f1f5f9;
+      aspect-ratio: 1; border-radius: var(--radius-sm); overflow: hidden;
+      border: 1px solid var(--border); position: relative; background: #f6f6f7;
     }
-    .media-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+    .media-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .media-thumb .remove-media {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      width: 22px;
-      height: 22px;
-      border-radius: 30px;
-      background: rgba(15, 23, 42, 0.7);
-      border: none;
-      color: white;
-      font-size: 12px;
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(2px);
+      position: absolute; top: 4px; right: 4px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(0,0,0,.6); border: none; color: white;
+      font-size: 11px; cursor: pointer; display: none; align-items: center; justify-content: center;
     }
-    .media-thumb:hover .remove-media {
-      display: flex;
-    }
+    .media-thumb:hover .remove-media { display: flex; }
     .media-thumb .primary-badge {
-      position: absolute;
-      bottom: 4px;
-      left: 4px;
-      background: rgba(0, 0, 0, 0.6);
-      color: white;
-      font-size: 9px;
-      padding: 2px 6px;
-      border-radius: 20px;
-      font-weight: 500;
-      backdrop-filter: blur(2px);
+      position: absolute; bottom: 4px; left: 4px;
+      background: rgba(0,0,0,.65); color: white; font-size: 9px;
+      padding: 2px 5px; border-radius: 3px; font-weight: 500;
     }
 
     /* ── VARIANTS ── */
     .variant-row {
-      display: grid;
-      grid-template-columns: 1fr 140px 140px 40px;
-      gap: 10px;
-      align-items: center;
-      padding: 12px 0;
+      display: grid; grid-template-columns: 1fr 120px 120px 40px;
+      gap: 8px; align-items: center; padding: 10px 0;
       border-bottom: 1px solid var(--border);
     }
-    .variant-row:last-child {
-      border-bottom: none;
-    }
+    .variant-row:last-child { border-bottom: none; }
     .variant-row-header {
-      display: grid;
-      grid-template-columns: 1fr 140px 140px 40px;
-      gap: 10px;
-      padding: 0 0 10px;
-      border-bottom: 1px solid var(--border);
+      display: grid; grid-template-columns: 1fr 120px 120px 40px;
+      gap: 8px; padding: 0 0 8px; border-bottom: 1px solid var(--border);
     }
     .variant-row-header span {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
+      font-size: 12px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .4px;
     }
-    .variant-row input {
-      margin: 0;
-    }
+    .variant-row input { margin: 0; }
     .remove-variant-btn {
-      width: 34px;
-      height: 34px;
-      border: 1px solid var(--border);
-      background: white;
-      border-radius: 20px;
-      cursor: pointer;
-      color: var(--text-secondary);
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s;
+      width: 32px; height: 32px; border: 1px solid var(--border);
+      background: transparent; border-radius: var(--radius-sm); cursor: pointer;
+      color: var(--text-secondary); font-size: 16px; display: flex;
+      align-items: center; justify-content: center; transition: all .15s;
     }
-    .remove-variant-btn:hover {
-      background: var(--red-bg);
-      border-color: var(--red);
-      color: var(--red);
-    }
+    .remove-variant-btn:hover { background: var(--red-bg); border-color: var(--red); color: var(--red); }
 
     /* ── TAGS ── */
     .tag-input-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      border: 1px solid var(--border);
-      border-radius: 30px;               /* pill shape */
-      padding: 8px 12px;
-      min-height: 44px;
-      cursor: text;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      background: white;
+      display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 6px 8px; min-height: 40px; cursor: text;
+      transition: border-color .15s, box-shadow .15s;
     }
     .tag-input-wrapper:focus-within {
       border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+      box-shadow: 0 0 0 3px rgba(0,91,211,.12);
     }
     .tag-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #eef2f6;
-      border-radius: 30px;
-      padding: 4px 12px 4px 12px;
-      font-size: 13px;
-      color: var(--text-primary);
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #e4e5e7; border-radius: 4px;
+      padding: 2px 8px 2px 8px; font-size: 13px; color: var(--text-primary);
     }
     .tag-pill button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--text-secondary);
-      font-size: 14px;
-      line-height: 1;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      margin-left: 4px;
+      background: none; border: none; cursor: pointer; color: var(--text-secondary);
+      font-size: 14px; line-height: 1; padding: 0; display: flex; align-items: center;
     }
-    .tag-pill button:hover {
-      color: var(--red);
-    }
+    .tag-pill button:hover { color: var(--red); }
     .tag-text-input {
-      border: none;
-      outline: none;
-      font-size: 13px;
-      font-family: inherit;
-      color: var(--text-primary);
-      min-width: 120px;
-      flex: 1;
-      background: transparent;
+      border: none; outline: none; font-size: 13px; font-family: inherit;
+      color: var(--text-primary); min-width: 100px; flex: 1; background: transparent;
       padding: 2px 0;
     }
 
     /* ── STATUS BADGE ── */
     .status-dot {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 4px 0;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500;
     }
     .status-dot::before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
     }
-    .status-dot.active {
-      color: var(--badge-active-text);
-    }
-    .status-dot.active::before {
-      background: var(--green);
-    }
-    .status-dot.draft {
-      color: var(--badge-draft-text);
-    }
-    .status-dot.draft::before {
-      background: #94a3b8;
-    }
+    .status-dot.active { color: var(--badge-active-text); }
+    .status-dot.active::before { background: var(--green); }
+    .status-dot.draft { color: var(--badge-draft-text); }
+    .status-dot.draft::before { background: #8c9196; }
 
-    /* ── SAVE BAR (modern, elevated) ── */
+    /* ── SAVE BAR ── */
     .save-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #0f172a;
-      backdrop-filter: blur(8px);
-      padding: 14px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      z-index: 300;
-      gap: 16px;
-      border-top: 1px solid #1e293b;
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #1a1a1a; padding: 12px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 300; gap: 12px;
     }
-    .save-bar-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .save-bar-right {
-      display: flex;
-      gap: 12px;
-    }
-    .save-status {
-      font-size: 13px;
-      color: #e2e8f0;
-      font-weight: 500;
-    }
+    .save-bar-left { display: flex; align-items: center; gap: 10px; }
+    .save-bar-right { display: flex; gap: 8px; }
+    .save-status { font-size: 13px; color: #d1d5db; }
 
     /* ── TOAST ── */
     .toast {
-      position: fixed;
-      top: 80px;
-      right: 24px;
-      background: #0f172a;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 40px;
-      font-size: 13px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: var(--shadow-lg);
-      z-index: 400;
-      transform: translateY(-10px);
-      opacity: 0;
-      transition: all 0.25s;
-      pointer-events: none;
+      position: fixed; top: 72px; right: 20px;
+      background: #1a1a1a; color: white;
+      padding: 12px 16px; border-radius: var(--radius);
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+      box-shadow: var(--shadow-lg); z-index: 400;
+      transform: translateY(-8px); opacity: 0;
+      transition: all .25s; pointer-events: none;
     }
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    .toast.success {
-      border-left: 4px solid #14b8a6;
-    }
-    .toast.error {
-      border-left: 4px solid var(--red);
-    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-left: 3px solid #1a7f5a; }
+    .toast.error { border-left: 3px solid var(--red); }
 
     /* ── DIVIDER ── */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 20px 0;
-    }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 
     /* ── HELPER TEXT ── */
-    .help-text {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-top: 6px;
-    }
+    .help-text { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
 
-    /* ── CHECKBOX (refined) ── */
+    /* ── CHECKBOX ── */
     .checkbox-field {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
+      display: flex; align-items: flex-start; gap: 10px;
       padding: 12px 0;
     }
     .checkbox-field input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-      margin-top: 1px;
-      accent-color: var(--blue);
-      cursor: pointer;
-      border-radius: 4px;
+      width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px;
+      accent-color: var(--blue); cursor: pointer;
     }
     .checkbox-field label {
-      margin: 0;
-      cursor: pointer;
-      font-weight: 400;
+      margin: 0; cursor: pointer; font-weight: 400;
     }
-    .checkbox-field label strong {
-      display: block;
-      font-weight: 600;
-      font-size: 14px;
-    }
-    .checkbox-field label span {
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
+    .checkbox-field label strong { display: block; font-weight: 500; font-size: 13px; }
+    .checkbox-field label span { font-size: 12px; color: var(--text-secondary); }
 
     /* ── SECTION HEADER ── */
     .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 12px;
     }
-    .section-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
+    .section-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+      .page-header { flex-wrap: wrap; }
+      .variant-row, .variant-row-header {
+        grid-template-columns: 1fr 100px 36px;
+      }
+      .variant-row .sku-col, .variant-row-header .sku-col { display: none; }
     }
 
     /* ── CHANNEL ITEM ── */
     .channel-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 13px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px;
     }
-    .channel-item:last-child {
-      border-bottom: none;
-    }
-    .channel-item-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .channel-item:last-child { border-bottom: none; }
+    .channel-item-left { display: flex; align-items: center; gap: 8px; }
     .channel-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      background: #f1f5f9;
+      width: 28px; height: 28px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
     }
 
-    /* spinner (same) */
+    /* loading spinner */
     .spinner {
-      width: 14px;
-      height: 14px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      display: inline-block;
+      width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin .6s linear infinite; display: inline-block;
     }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* responsive */
-    @media (max-width: 768px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .page-header {
-        flex-wrap: wrap;
-      }
-      .variant-row,
-      .variant-row-header {
-        grid-template-columns: 1fr 100px 36px;
-      }
-      .variant-row .sku-col,
-      .variant-row-header .sku-col {
-        display: none;
-      }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── DARK MODE ── */
     body.dark-theme {
@@ -790,74 +423,49 @@
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
       --shadow-md: 0 4px 6px -2px rgba(0,0,0,0.3), 0 2px 4px -1px rgba(0,0,0,0.2);
     }
-    body.dark-theme .card-title {
-      background: #1e293b;
-    }
-    body.dark-theme .input-prefix {
-      background: #1e293b;
-    }
-    body.dark-theme .input-prefix .prefix {
-      background: #0f172a;
-      border-right-color: #334155;
-    }
-    body.dark-theme .btn-primary {
-      color: #0f172a;
-    }
-    body.dark-theme .btn-secondary {
-      background: #1e293b;
-      color: #f8fafc;
-      border-color: #334155;
-    }
-    body.dark-theme .btn-secondary:hover:not(:disabled) {
-      background: #334155;
-      border-color: #475569;
-    }
-    body.dark-theme .btn-plain {
-      color: #60a5fa;
-    }
-    body.dark-theme .btn-plain:hover {
-      background: #1e3a8a;
-    }
-    body.dark-theme .btn-danger-plain {
-      color: #f87171;
-    }
-    body.dark-theme .btn-danger-plain:hover {
-      background: #450a0a;
-    }
-    body.dark-theme .richtext-toolbar {
-      background: #0f172a;
-    }
-    body.dark-theme .media-drop-zone {
-      background: #0f172a;
-    }
-    body.dark-theme .media-thumb {
-      background: #0f172a;
-      border-color: #334155;
-    }
-    body.dark-theme .tag-input-wrapper {
-      background: #1e293b;
-    }
-    body.dark-theme .tag-pill {
-      background: #334155;
-      color: #f8fafc;
-    }
-    body.dark-theme .remove-variant-btn {
-      background: #1e293b;
-      border-color: #334155;
-      color: #94a3b8;
-    }
-    body.dark-theme .remove-variant-btn:hover {
-      background: #450a0a;
-      border-color: #f87171;
-      color: #f87171;
-    }
-    body.dark-theme .channel-icon {
-      background: #334155 !important;
-    }
-    body.dark-theme .save-bar {
-      background: #0f172a;
-      border-top-color: #1e293b;
-    }
+    body.dark-theme .card-title { background: #1e293b; }
+    body.dark-theme .input-prefix { background: #1e293b; }
+    body.dark-theme .input-prefix .prefix { background: #0f172a; border-right-color: #334155; }
+    body.dark-theme .btn-primary { color: #0f172a; }
+    body.dark-theme .btn-secondary { background: #1e293b; color: #f8fafc; border-color: #334155; }
+    body.dark-theme .btn-secondary:hover:not(:disabled) { background: #334155; border-color: #475569; }
+    body.dark-theme .btn-plain { color: #60a5fa; }
+    body.dark-theme .btn-plain:hover { background: #1e3a8a; }
+    body.dark-theme .btn-danger-plain { color: #f87171; }
+    body.dark-theme .btn-danger-plain:hover { background: #450a0a; }
+    body.dark-theme .btn-delete { border-color: #7f1d1d; color: #f87171; }
+    body.dark-theme .btn-delete:hover { background: #450a0a; border-color: #ef4444; }
+    body.dark-theme .richtext-toolbar { background: #0f172a; }
+    body.dark-theme .richtext-wrapper { border-color: #334155; }
+    body.dark-theme .richtext-btn { color: #94a3b8; }
+    body.dark-theme .richtext-btn:hover { background: #334155; color: #f8fafc; }
+    body.dark-theme #description { background: #1e293b; color: #f8fafc; }
+    body.dark-theme .media-drop-zone { background: #0f172a; border-color: #475569; }
+    body.dark-theme .media-thumb { background: #0f172a; border-color: #334155; }
+    body.dark-theme .tag-input-wrapper { background: #1e293b; border-color: #334155; }
+    body.dark-theme .tag-pill { background: #334155; color: #f8fafc; }
+    body.dark-theme .remove-variant-btn { background: #1e293b; border-color: #334155; color: #94a3b8; }
+    body.dark-theme .remove-variant-btn:hover { background: #450a0a; border-color: #f87171; color: #f87171; }
+    body.dark-theme .channel-icon { background: #334155 !important; }
+    body.dark-theme .save-bar { background: #0f172a; border-top-color: #1e293b; }
+    body.dark-theme .marginDisplay { background: #0f172a; border-color: #334155; }
+    body.dark-theme #marginDisplay { background: #0f172a; border-color: #334155; color: #94a3b8; }
+    body.dark-theme .help-text { color: #64748b; }
+    body.dark-theme .divider { border-top-color: #334155; }
+    body.dark-theme .breadcrumb a { color: #94a3b8; }
+    body.dark-theme .page-title { color: #f8fafc; }
+    body.dark-theme input[readonly] { background: #0f172a !important; color: #64748b; border-color: #334155; }
+    body.dark-theme .status-dot.active { color: #34d399; }
+    body.dark-theme .status-dot.draft { color: #94a3b8; }
+    body.dark-theme .seo-preview-title { color: #60a5fa; }
+    body.dark-theme #seoPreviewTitle { color: #60a5fa; }
+    body.dark-theme #seoPreviewUrl { color: #2dd4bf; }
+    body.dark-theme #seoPreviewDesc { color: #94a3b8; }
+    body.dark-theme .channel-item { border-bottom-color: #334155; }
+    body.dark-theme .variant-row { border-bottom-color: #334155; }
+    body.dark-theme .variant-row-header { border-bottom-color: #334155; }
+    body.dark-theme .variant-row-header span { color: #64748b; }
+    body.dark-theme .toast { background: #1e293b; border-color: #334155; }
   </style>
   <script>
     // Injected by product_page.py via Jinja2
@@ -865,11 +473,12 @@
   </script>
 </head>
 <body>
-  <script>
-    if (localStorage.getItem("theme") === "dark") document.body.classList.add("dark-theme");
-  </script>
-  {% include 'components/global_nav.html' %}
+<script>if(localStorage.getItem("theme")==="dark")document.body.classList.add("dark-theme");</script>
+{% include 'components/global_nav.html' %}
+{% include 'components/custom_alert.html' %}
+
   <div class="page-wrapper">
+
     <!-- BREADCRUMB -->
     <div class="breadcrumb">
       <a href="/">Products</a>
@@ -881,19 +490,18 @@
     <div class="page-header">
       <h1 class="page-title">Add product</h1>
       <div class="header-actions">
-        <button class="btn btn-secondary" onclick="location.href = '/'">
-          Discard
-        </button>
-        <button class="btn btn-primary" id="saveButton" onclick="saveProduct()">
-          Save
-        </button>
+        <button class="btn btn-secondary" onclick="location.href='/'">Discard</button>
+        <button class="btn btn-danger-plain" id="deleteButton" onclick="deleteProduct()" style="display:none;">🗑 Delete</button>
+        <button class="btn btn-primary" id="saveButton" onclick="saveProduct()">Save</button>
       </div>
     </div>
 
     <!-- GRID -->
     <div class="grid">
+
       <!-- LEFT COLUMN -->
       <div>
+
         <!-- TITLE & DESCRIPTION -->
         <div class="card">
           <div class="card-body">
@@ -915,7 +523,7 @@
                   <button class="richtext-btn" onclick="fmt('justifyLeft')" title="Align left">⬅</button>
                   <button class="richtext-btn" onclick="fmt('justifyCenter')" title="Center">↔</button>
                 </div>
-                <div id="description" contenteditable="true" style="padding: 12px; min-height: 120px; outline: none; font-size: 14px;" data-placeholder="Describe your product..."></div>
+                <div id="description" contenteditable="true" style="padding:12px; min-height:120px; outline:none; font-size:14px;" data-placeholder="Describe your product..."></div>
               </div>
             </div>
           </div>
@@ -940,7 +548,7 @@
         <div class="card">
           <div class="card-title">Pricing</div>
           <div class="card-body">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="field">
                 <label for="price">Price</label>
                 <div class="input-prefix">
@@ -963,7 +571,7 @@
               </label>
             </div>
             <hr class="divider" />
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="field">
                 <label for="costPerItem">Cost per item <span class="optional">(optional)</span></label>
                 <div class="input-prefix">
@@ -973,7 +581,7 @@
               </div>
               <div class="field">
                 <label>Margin</label>
-                <div style="padding: 10px 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; color: var(--text-secondary);" id="marginDisplay">--</div>
+                <div style="padding:8px 12px; background:#f6f6f7; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:14px; color:var(--text-secondary);" id="marginDisplay">--</div>
               </div>
             </div>
           </div>
@@ -983,13 +591,13 @@
         <div class="card">
           <div class="card-title">Inventory</div>
           <div class="card-body">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="field">
-                <label for="sku">SKU <span class="optional">(optional)</span></label>
+                <label for="sku">SKU (Stock Keeping Unit) <span class="optional">(optional)</span></label>
                 <input type="text" id="sku" placeholder="e.g. TSHIRT-BLK-S" />
               </div>
               <div class="field">
-                <label for="barcode">Barcode <span class="optional">(optional)</span></label>
+                <label for="barcode">Barcode (ISBN, UPC, GTIN) <span class="optional">(optional)</span></label>
                 <input type="text" id="barcode" placeholder="" />
               </div>
             </div>
@@ -1000,15 +608,15 @@
                 <span>Shopify tracks this product's inventory</span>
               </label>
             </div>
-            <div id="quantitySection" style="display: none; margin-top: 16px;">
+            <div id="quantitySection" style="display:none; margin-top:12px;">
               <hr class="divider" />
               <div class="section-header">
                 <span class="section-title">Quantity</span>
               </div>
-              <div style="display: grid; grid-template-columns: 1fr 100px; gap: 16px; align-items: end;">
+              <div style="display:grid; grid-template-columns:1fr 100px; gap:12px; align-items:end;">
                 <div class="field">
                   <label>Location</label>
-                  <input type="text" value="Default location" readonly style="background: #f8fafc; color: var(--text-secondary);" />
+                  <input type="text" value="Default location" readonly style="background:#f6f6f7; color:var(--text-secondary);" />
                 </div>
                 <div class="field">
                   <label for="inventoryQty">Available</label>
@@ -1030,14 +638,14 @@
                 <span>Customers will need to provide a shipping address at checkout</span>
               </label>
             </div>
-            <div id="shippingFields" style="margin-top: 16px;">
+            <div id="shippingFields" style="margin-top:12px;">
               <hr class="divider" />
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
                 <div class="field">
                   <label for="weight">Weight <span class="optional">(optional)</span></label>
                   <div class="input-prefix">
                     <input type="number" id="weight" step="0.01" min="0" placeholder="0.0" />
-                    <span class="prefix" style="border-left: 1px solid var(--border); border-right: none;">kg</span>
+                    <span class="prefix" style="border-left:1px solid var(--border); border-right:none;">kg</span>
                   </div>
                 </div>
               </div>
@@ -1047,13 +655,11 @@
 
         <!-- VARIANTS -->
         <div class="card">
-          <div class="card-title" style="display: flex; align-items: center; justify-content: space-between;">
+          <div class="card-title" style="display:flex; align-items:center; justify-content:space-between;">
             <span>Variants</span>
           </div>
           <div class="card-body">
-            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
-              Add variants like size or color if this product comes in multiple options.
-            </p>
+            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">Add variants like size or color if this product comes in multiple options.</p>
             <div class="variant-row-header">
               <span>Option name</span>
               <span>Price</span>
@@ -1061,8 +667,8 @@
               <span></span>
             </div>
             <div id="variantList"></div>
-            <button class="btn btn-plain" style="margin-top: 12px;" onclick="addVariant()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14" /></svg>
+            <button class="btn btn-plain" style="margin-top:8px;" onclick="addVariant()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
               Add variant
             </button>
           </div>
@@ -1070,17 +676,17 @@
 
         <!-- SEO -->
         <div class="card">
-          <div class="card-title" style="display: flex; align-items: center; justify-content: space-between;">
+          <div class="card-title" style="display:flex; align-items:center; justify-content:space-between;">
             <span>Search engine listing</span>
             <button class="btn btn-plain btn-sm" onclick="toggleSeo()">Edit</button>
           </div>
           <div class="card-body">
-            <div id="seoPreview" style="padding: 4px 0 8px;">
-              <div style="font-size: 18px; color: #2563eb; margin-bottom: 2px;" id="seoPreviewTitle">Add a title to see how this listing might appear in a search engine</div>
-              <div style="font-size: 13px; color: #0d9488; margin-bottom: 4px;" id="seoPreviewUrl">your-store.myshopify.com/products/<span id="seoPreviewHandle">product-url-handle</span></div>
-              <div style="font-size: 13px; color: #475569;" id="seoPreviewDesc">Add a description to see how this listing might appear in a search engine result</div>
+            <div id="seoPreview" style="padding:4px 0 8px;">
+              <div style="font-size:18px; color:#1558d6; margin-bottom:2px;" id="seoPreviewTitle">Add a title to see how this listing might appear in a search engine</div>
+              <div style="font-size:13px; color:#006621; margin-bottom:4px;" id="seoPreviewUrl">your-store.myshopify.com/products/<span id="seoPreviewHandle">product-url-handle</span></div>
+              <div style="font-size:13px; color:#545454;" id="seoPreviewDesc">Add a description to see how this listing might appear in a search engine result</div>
             </div>
-            <div id="seoFields" style="display: none; margin-top: 16px;">
+            <div id="seoFields" style="display:none; margin-top:12px;">
               <hr class="divider" />
               <div class="field">
                 <label for="seoTitle">Page title</label>
@@ -1089,7 +695,7 @@
               </div>
               <div class="field">
                 <label for="seoDescription">Meta description <span class="optional">(optional)</span></label>
-                <textarea id="seoDescription" style="height: 80px;" placeholder="Describe your page for search engines..." oninput="updateSeoPreview()"></textarea>
+                <textarea id="seoDescription" style="height:80px;" placeholder="Describe your page for search engines..." oninput="updateSeoPreview()"></textarea>
                 <div class="help-text"><span id="seoDescCount">0</span> of 320 characters used</div>
               </div>
               <div class="field">
@@ -1102,10 +708,12 @@
             </div>
           </div>
         </div>
+
       </div>
 
       <!-- RIGHT COLUMN -->
       <div>
+
         <!-- STATUS -->
         <div class="card">
           <div class="card-title">Status</div>
@@ -1117,22 +725,20 @@
               </select>
             </div>
             <div id="statusBadge" class="status-dot draft">Draft</div>
-            <p class="help-text" style="margin-top: 10px;" id="statusHelp">
-              This product will be hidden from all sales channels.
-            </p>
+            <p class="help-text" style="margin-top:8px;" id="statusHelp">This product will be hidden from all sales channels.</p>
           </div>
         </div>
 
         <!-- PUBLISHING -->
         <div class="card">
           <div class="card-title">Publishing</div>
-          <div class="card-body" style="padding-top: 8px;">
+          <div class="card-body" style="padding-top:8px;">
             <div class="channel-item">
               <div class="channel-item-left">
-                <div class="channel-icon" style="background:#f0fdfa;">🛍️</div>
+                <div class="channel-icon" style="background:#f0fdf4;">🛍️</div>
                 <div>
-                  <div style="font-weight: 500; font-size: 13px;">Online Store</div>
-                  <div style="font-size: 12px; color: var(--text-secondary);">Not published</div>
+                  <div style="font-weight:500; font-size:13px;">Online Store</div>
+                  <div style="font-size:12px; color:var(--text-secondary);">Not published</div>
                 </div>
               </div>
             </div>
@@ -1140,8 +746,8 @@
               <div class="channel-item-left">
                 <div class="channel-icon" style="background:#fef9f0;">📱</div>
                 <div>
-                  <div style="font-weight: 500; font-size: 13px;">Point of Sale</div>
-                  <div style="font-size: 12px; color: var(--text-secondary);">Not published</div>
+                  <div style="font-weight:500; font-size:13px;">Point of Sale</div>
+                  <div style="font-size:12px; color:var(--text-secondary);">Not published</div>
                 </div>
               </div>
             </div>
@@ -1173,17 +779,19 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 
-  <!-- SAVE BAR (modern) -->
+  <!-- SAVE BAR -->
   <div class="save-bar">
     <div class="save-bar-left">
       <span class="save-status" id="saveStatus">Unsaved product</span>
     </div>
     <div class="save-bar-right">
-      <button class="btn btn-secondary" onclick="location.href = '/'">Discard</button>
+      <button class="btn btn-secondary" onclick="location.href='/'">Discard</button>
+      <button class="btn btn-danger-plain" id="deleteButton2" onclick="deleteProduct()" style="display:none; color:#f87171;">🗑 Delete</button>
       <button class="btn btn-primary" id="saveButton2" onclick="saveProduct()">Save</button>
     </div>
   </div>
@@ -1192,110 +800,110 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    // ── ALL JAVASCRIPT REMAINS EXACTLY THE SAME (preserved) ──
-    function fmt(cmd) {
-      document.execCommand(cmd, false, null);
-    }
+    // ── RICH TEXT ──
+    function fmt(cmd) { document.execCommand(cmd, false, null); }
 
+    // ── STATUS BADGE ──
     function updateStatusBadge() {
-      const val = document.getElementById("status").value;
-      const badge = document.getElementById("statusBadge");
-      const help = document.getElementById("statusHelp");
-      badge.className = "status-dot " + val;
+      const val = document.getElementById('status').value;
+      const badge = document.getElementById('statusBadge');
+      const help = document.getElementById('statusHelp');
+      badge.className = 'status-dot ' + val;
       badge.textContent = val.charAt(0).toUpperCase() + val.slice(1);
-      help.textContent = val === "active"
-        ? "This product is visible on all active sales channels."
-        : "This product will be hidden from all sales channels.";
+      help.textContent = val === 'active'
+        ? 'This product is visible on all active sales channels.'
+        : 'This product will be hidden from all sales channels.';
     }
 
+    // ── SEO TOGGLE & PREVIEW ──
     function toggleSeo() {
-      const f = document.getElementById("seoFields");
-      f.style.display = f.style.display === "none" ? "block" : "none";
+      const f = document.getElementById('seoFields');
+      f.style.display = f.style.display === 'none' ? 'block' : 'none';
     }
-
     function updateSeoPreview() {
-      const title = document.getElementById("seoTitle").value;
-      const desc = document.getElementById("seoDescription").value;
-      const handle = document.getElementById("seoHandle").value;
-      document.getElementById("seoPreviewTitle").textContent = title || "Add a title to see how this listing might appear in a search engine";
-      document.getElementById("seoPreviewDesc").textContent = desc || "Add a description to see how this listing might appear in a search engine result";
-      document.getElementById("seoPreviewHandle").textContent = handle || "product-url-handle";
-      document.getElementById("seoTitleCount").textContent = title.length;
-      document.getElementById("seoDescCount").textContent = desc.length;
+      const title = document.getElementById('seoTitle').value;
+      const desc = document.getElementById('seoDescription').value;
+      const handle = document.getElementById('seoHandle').value;
+      document.getElementById('seoPreviewTitle').textContent = title || 'Add a title to see how this listing might appear in a search engine';
+      document.getElementById('seoPreviewDesc').textContent = desc || 'Add a description to see how this listing might appear in a search engine result';
+      document.getElementById('seoPreviewHandle').textContent = handle || 'product-url-handle';
+      document.getElementById('seoTitleCount').textContent = title.length;
+      document.getElementById('seoDescCount').textContent = desc.length;
     }
-
-    document.getElementById("title").addEventListener("input", function () {
-      const handle = this.value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-      if (!document.getElementById("seoHandle").value) {
-        document.getElementById("seoHandle").value = handle;
+    // Auto-fill SEO handle from title
+    document.getElementById('title').addEventListener('input', function() {
+      const handle = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      if (!document.getElementById('seoHandle').value) {
+        document.getElementById('seoHandle').value = handle;
         updateSeoPreview();
       }
     });
 
-    ["price", "costPerItem"].forEach((id) => {
-      document.getElementById(id).addEventListener("input", () => {
-        const price = parseFloat(document.getElementById("price").value) || 0;
-        const cost = parseFloat(document.getElementById("costPerItem").value) || 0;
-        const display = document.getElementById("marginDisplay");
+    // ── MARGIN CALC ──
+    ['price','costPerItem'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        const price = parseFloat(document.getElementById('price').value) || 0;
+        const cost = parseFloat(document.getElementById('costPerItem').value) || 0;
+        const display = document.getElementById('marginDisplay');
         if (price > 0 && cost > 0) {
-          const margin = (((price - cost) / price) * 100).toFixed(1);
-          display.textContent = margin + "%";
-          display.style.color = margin >= 0 ? "var(--green)" : "var(--red)";
+          const margin = ((price - cost) / price * 100).toFixed(1);
+          display.textContent = margin + '%';
+          display.style.color = margin >= 0 ? 'var(--green)' : 'var(--red)';
         } else {
-          display.textContent = "--";
-          display.style.color = "var(--text-secondary)";
+          display.textContent = '--';
+          display.style.color = 'var(--text-secondary)';
         }
       });
     });
 
-    document.getElementById("trackInventory").addEventListener("change", function () {
-      document.getElementById("quantitySection").style.display = this.checked ? "block" : "none";
+    // ── TRACK INVENTORY TOGGLE ──
+    document.getElementById('trackInventory').addEventListener('change', function() {
+      document.getElementById('quantitySection').style.display = this.checked ? 'block' : 'none';
     });
 
-    document.getElementById("isPhysical").addEventListener("change", function () {
-      document.getElementById("shippingFields").style.display = this.checked ? "block" : "none";
+    // ── PHYSICAL PRODUCT TOGGLE ──
+    document.getElementById('isPhysical').addEventListener('change', function() {
+      document.getElementById('shippingFields').style.display = this.checked ? 'block' : 'none';
     });
 
-    // MEDIA
+    // ── MEDIA UPLOAD ──
     const mediaFiles = [];
-    let uploadInProgress = false;
-    const dropZone = document.getElementById("dropZone");
+    let uploadInProgress = false;  // blocks Save until upload finishes
+    const dropZone = document.getElementById('dropZone');
 
-    dropZone.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      dropZone.classList.add("drag-over");
-    });
-    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("drag-over"));
-    dropZone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      dropZone.classList.remove("drag-over");
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault(); dropZone.classList.remove('drag-over');
       handleFiles(e.dataTransfer.files);
     });
 
     function setUploadStatus(msg, isError = false) {
-      const zone = document.getElementById("dropZone");
-      let status = document.getElementById("uploadStatusMsg");
+      const zone = document.getElementById('dropZone');
+      let status = document.getElementById('uploadStatusMsg');
       if (!status) {
-        status = document.createElement("div");
-        status.id = "uploadStatusMsg";
-        status.style.cssText = "margin-top:8px; font-size:12px; font-weight:500;";
+        status = document.createElement('div');
+        status.id = 'uploadStatusMsg';
+        status.style.cssText = 'margin-top:8px; font-size:12px; font-weight:500;';
         zone.parentNode.insertBefore(status, zone.nextSibling);
       }
-      status.style.color = isError ? "var(--red)" : "var(--green)";
+      status.style.color = isError ? 'var(--red)' : 'var(--green)';
       status.textContent = msg;
     }
 
     function handleFiles(files) {
       Array.from(files).forEach((file) => {
-        if (!file.type.startsWith("image/")) return;
+        if (!file.type.startsWith('image/')) return;
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = e => {
           const base64url = e.target.result;
           const index = mediaFiles.length;
+          // Store entry with uploading flag
           mediaFiles.push({ file, url: base64url, serverUrl: null, uploading: true });
           renderMedia();
-          setUploadStatus("⏳ Uploading image...");
+          setUploadStatus('⏳ Uploading image...');
           uploadInProgress = true;
+
           uploadToServer(file, index);
         };
         reader.readAsDataURL(file);
@@ -1303,291 +911,363 @@
     }
 
     function renderMedia() {
-      const grid = document.getElementById("mediaGrid");
-      grid.innerHTML = "";
+      const grid = document.getElementById('mediaGrid');
+      grid.innerHTML = '';
       mediaFiles.forEach((m, i) => {
-        const thumb = document.createElement("div");
-        thumb.className = "media-thumb";
+        const thumb = document.createElement('div');
+        thumb.className = 'media-thumb';
         const statusOverlay = m.uploading
           ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;">
                <div style="width:18px;height:18px;border:2px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;"></div>
              </div>`
-          : "";
+          : '';
         thumb.innerHTML = `
           <img src="${m.url}" alt="media ${i}" />
           ${statusOverlay}
-          ${i === 0 && !m.uploading ? '<div class="primary-badge">Main</div>' : ""}
+          ${i === 0 && !m.uploading ? '<div class="primary-badge">Main</div>' : ''}
           <button class="remove-media" onclick="removeMedia(${i})">✕</button>
         `;
         grid.appendChild(thumb);
       });
     }
 
-    window.removeMedia = function (i) {
+    window.removeMedia = function(i) {
       mediaFiles.splice(i, 1);
-      document.getElementById("imageUrl").value = mediaFiles[0]?.serverUrl || mediaFiles[0]?.url || "";
+      document.getElementById('imageUrl').value = mediaFiles[0]?.serverUrl || mediaFiles[0]?.url || '';
       renderMedia();
       if (mediaFiles.length === 0) {
-        const s = document.getElementById("uploadStatusMsg");
-        if (s) s.textContent = "";
+        const s = document.getElementById('uploadStatusMsg');
+        if (s) s.textContent = '';
       }
     };
 
     async function uploadToServer(file, index) {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
       try {
-        const res = await fetch("/upload-image", { method: "POST", body: formData });
+        const res = await fetch('/upload-image', { method: 'POST', body: formData });
         if (!res.ok) throw new Error(`Server responded ${res.status}`);
         const data = await res.json();
+
         mediaFiles[index].serverUrl = data.url;
         mediaFiles[index].uploading = false;
-        if (index === 0) document.getElementById("imageUrl").value = data.url;
-        setUploadStatus("✅ Image uploaded successfully");
+
+        // Update the hidden imageUrl with the real CDN URL
+        if (index === 0) document.getElementById('imageUrl').value = data.url;
+
+        setUploadStatus('✅ Image uploaded successfully');
       } catch (e) {
         mediaFiles[index].uploading = false;
-        mediaFiles[index].serverUrl = null;
-        setUploadStatus("⚠️ Image upload failed — product will be saved without image", true);
-        if (index === 0) document.getElementById("imageUrl").value = "";
+        mediaFiles[index].serverUrl = null;  // force null so backend skips it
+        setUploadStatus('⚠️ Image upload failed — product will be saved without image', true);
+        if (index === 0) document.getElementById('imageUrl').value = '';  // clear base64, don't send it
       } finally {
         uploadInProgress = false;
         renderMedia();
       }
     }
 
-    // TAGS
+    // ── TAGS ──
     const tags = [];
-    const tagInput = document.getElementById("tagTextInput");
-    tagInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" || e.key === ",") {
+    const tagInput = document.getElementById('tagTextInput');
+
+    tagInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ',') {
         e.preventDefault();
-        const val = this.value.replace(/,/g, "").trim();
-        if (val && !tags.includes(val)) {
-          tags.push(val);
-          renderTags();
-        }
-        this.value = "";
-      } else if (e.key === "Backspace" && !this.value && tags.length) {
-        tags.pop();
-        renderTags();
+        const val = this.value.replace(/,/g,'').trim();
+        if (val && !tags.includes(val)) { tags.push(val); renderTags(); }
+        this.value = '';
+      } else if (e.key === 'Backspace' && !this.value && tags.length) {
+        tags.pop(); renderTags();
       }
     });
 
     function renderTags() {
-      const wrapper = document.getElementById("tagWrapper");
-      wrapper.querySelectorAll(".tag-pill").forEach(el => el.remove());
-      const ref = document.getElementById("tagTextInput");
+      const wrapper = document.getElementById('tagWrapper');
+      wrapper.querySelectorAll('.tag-pill').forEach(el => el.remove());
+      const ref = document.getElementById('tagTextInput');
       tags.forEach((tag, i) => {
-        const pill = document.createElement("div");
-        pill.className = "tag-pill";
+        const pill = document.createElement('div');
+        pill.className = 'tag-pill';
         pill.innerHTML = `${escHtml(tag)}<button onclick="removeTag(${i})" type="button">×</button>`;
         wrapper.insertBefore(pill, ref);
       });
     }
-    window.removeTag = (i) => { tags.splice(i, 1); renderTags(); };
+    window.removeTag = i => { tags.splice(i, 1); renderTags(); };
 
-    // VARIANTS
+    // ── VARIANTS ──
     let variantCount = 0;
-    function addVariant(name = "", price = "", sku = "") {
+    function addVariant(name = '', price = '', sku = '') {
       const id = ++variantCount;
-      const row = document.createElement("div");
-      row.className = "variant-row";
-      row.id = "variant-" + id;
+      const row = document.createElement('div');
+      row.className = 'variant-row';
+      row.id = 'variant-' + id;
       row.innerHTML = `
         <input type="text" placeholder="e.g. Small / Black" value="${escHtml(name)}" />
-        <div class="input-prefix"><span class="prefix">$</span><input type="number" step="0.01" placeholder="0.00" value="${escHtml(price)}" /></div>
+        <div class="input-prefix">
+          <span class="prefix">$</span>
+          <input type="number" step="0.01" placeholder="0.00" value="${escHtml(price)}" />
+        </div>
         <input type="text" class="sku-col" placeholder="SKU" value="${escHtml(sku)}" />
         <button class="remove-variant-btn" onclick="document.getElementById('variant-${id}').remove()" title="Remove">×</button>
       `;
-      document.getElementById("variantList").appendChild(row);
+      document.getElementById('variantList').appendChild(row);
     }
-    addVariant();
+    addVariant(); // default row
 
-    function escHtml(s) { if (!s) return ""; return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-
-    function showToast(msg, type = "success") {
-      const t = document.getElementById("toast");
-      t.textContent = (type === "success" ? "✓ " : "✕ ") + msg;
-      t.className = "toast " + type;
-      t.classList.add("show");
-      setTimeout(() => t.classList.remove("show"), 3500);
+    // ── HELPERS ──
+    function escHtml(s) {
+      if (!s) return '';
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    // EDIT MODE
-    const editProductId = typeof PRODUCT_ID !== "undefined" && PRODUCT_ID ? PRODUCT_ID : null;
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = (type === 'success' ? '✓ ' : '✕ ') + msg;
+      t.className = 'toast ' + type;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    // ── EDIT MODE ──
+    // Detect if we're editing via ?id=gid://shopify/Product/123
+    // product_page.py injects these via Jinja2 when in edit mode
+    const editProductId = (typeof PRODUCT_ID !== 'undefined' && PRODUCT_ID) ? PRODUCT_ID : null;
     const isEditMode = !!editProductId;
 
+    // Update page chrome for edit mode
     if (isEditMode) {
-      document.title = "Edit product · Shopify";
-      document.querySelector(".page-title").textContent = "Edit product";
-      document.querySelector(".breadcrumb").innerHTML = `<a href="/">Products</a><span>/</span><span>Edit product</span>`;
-      document.getElementById("saveStatus").textContent = "Loading...";
-      ["saveButton", "saveButton2"].forEach(id => {
+      document.title = 'Edit product · Shopify';
+      document.querySelector('.page-title').textContent = 'Edit product';
+      document.querySelector('.breadcrumb').innerHTML =
+        `<a href="/">Products</a><span>/</span><span>Edit product</span>`;
+      document.getElementById('saveStatus').textContent = 'Loading...';
+      ['saveButton','saveButton2'].forEach(id => {
         const btn = document.getElementById(id);
-        if (btn) { btn.disabled = true; btn.textContent = "Loading..."; }
+        if (btn) { btn.disabled = true; btn.textContent = 'Loading...'; }
+      });
+      // Show delete buttons only in edit mode
+      ['deleteButton','deleteButton2'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.style.display = 'inline-flex';
       });
     }
 
+    // ── PREFILL FORM FROM API ──
     async function loadProductForEdit(productId) {
       try {
         const res = await fetch(`/api/product/data?id=${encodeURIComponent(productId)}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const p = await res.json();
 
-        document.getElementById("title").value = p.title || "";
-        document.getElementById("vendor").value = p.vendor || "";
-        document.getElementById("productType").value = p.product_type || "";
-        document.getElementById("price").value = p.price || "";
-        document.getElementById("status").value = p.status || "draft";
+        // Basic fields
+        document.getElementById('title').value = p.title || '';
+        document.getElementById('vendor').value = p.vendor || '';
+        document.getElementById('productType').value = p.product_type || '';
+        document.getElementById('price').value = p.price || '';
+        document.getElementById('status').value = p.status || 'draft';
         updateStatusBadge();
-        document.getElementById("description").innerHTML = p.description || "";
 
+        // Description (rich text div)
+        document.getElementById('description').innerHTML = p.description || '';
+
+        // Tags
         (p.tags || []).forEach(t => { if (!tags.includes(t)) tags.push(t); });
         renderTags();
 
+        // Images — show existing ones as already-uploaded (no re-upload needed)
         if (p.images && p.images.length > 0) {
           p.images.forEach((img, i) => {
             mediaFiles.push({ file: null, url: img.url, serverUrl: img.url, uploading: false, existingId: img.id });
           });
-          document.getElementById("imageUrl").value = p.images[0].url;
+          document.getElementById('imageUrl').value = p.images[0].url;
           renderMedia();
-          setUploadStatus("✅ Existing images loaded");
+          setUploadStatus('✅ Existing images loaded');
         }
 
+        // Inventory
         const inv = p.inventory || {};
-        document.getElementById("sku").value = inv.sku || "";
-        document.getElementById("trackInventory").checked = !!inv.track;
+        document.getElementById('sku').value = inv.sku || '';
+        document.getElementById('trackInventory').checked = !!inv.track;
         if (inv.track) {
-          document.getElementById("quantitySection").style.display = "block";
-          document.getElementById("inventoryQty").value = inv.quantity || 0;
+          document.getElementById('quantitySection').style.display = 'block';
+          document.getElementById('inventoryQty').value = inv.quantity || 0;
         }
 
-        document.getElementById("variantList").innerHTML = "";
+        // Variants — clear default row, populate from product
+        document.getElementById('variantList').innerHTML = '';
         variantCount = 0;
-        const realVariants = (p.variants || []).filter(v => v.name && v.name.toLowerCase() !== "default title");
+        const realVariants = (p.variants || []).filter(v =>
+          v.name && v.name.toLowerCase() !== 'default title'
+        );
         if (realVariants.length > 0) {
-          realVariants.forEach(v => addVariant(v.name, v.price, v.sku || ""));
-        } else { addVariant(); }
+          realVariants.forEach(v => addVariant(v.name, v.price, v.sku || ''));
+        } else {
+          addVariant(); // keep one empty row
+        }
 
+        // SEO — fall back to product title/description if not explicitly set
         const seo = p.seo || {};
-        document.getElementById("seoTitle").value = seo.title || "";
-        document.getElementById("seoDescription").value = seo.description || "";
-        document.getElementById("seoHandle").value = seo.handle || "";
+        document.getElementById('seoTitle').value = seo.title || p.title || '';
+        document.getElementById('seoDescription').value = seo.description || p.description?.replace(/<[^>]*>/g, '') || '';
+        document.getElementById('seoHandle').value = seo.handle || '';
         updateSeoPreview();
 
-        document.getElementById("saveStatus").textContent = "Unsaved changes";
-        ["saveButton", "saveButton2"].forEach(id => {
+        // Re-enable save buttons
+        document.getElementById('saveStatus').textContent = 'Unsaved changes';
+        ['saveButton','saveButton2'].forEach(id => {
           const btn = document.getElementById(id);
-          if (btn) { btn.disabled = false; btn.textContent = "Save changes"; }
+          if (btn) { btn.disabled = false; btn.textContent = 'Save changes'; }
         });
+
       } catch (err) {
-        console.error(err);
-        showToast("Failed to load product: " + err.message, "error");
-        document.getElementById("saveStatus").textContent = "Load failed";
+        console.error('loadProductForEdit error:', err);
+        showToast('Failed to load product: ' + err.message + ' — check console', 'error');
+        document.getElementById('saveStatus').textContent = 'Load failed';
       }
     }
 
-    if (isEditMode) { loadProductForEdit(editProductId); }
+    if (isEditMode) {
+      loadProductForEdit(editProductId);
+    }
 
+    // ── BUILD PAYLOAD (shared by create + update) ──
     function buildPayload() {
-      const variantRows = document.querySelectorAll("#variantList .variant-row");
+      const variantRows = document.querySelectorAll('#variantList .variant-row');
       const variants = Array.from(variantRows).map(row => {
-        const inputs = row.querySelectorAll("input");
+        const inputs = row.querySelectorAll('input');
         return {
           name: inputs[0].value.trim(),
-          price: parseFloat(inputs[1].value) || parseFloat(document.getElementById("price").value) || 0,
+          price: parseFloat(inputs[1].value) || parseFloat(document.getElementById('price').value) || 0,
         };
-      }).filter(v => v.name !== "" && v.name.toLowerCase() !== "default title");
+      }).filter(v => v.name !== '' && v.name.toLowerCase() !== 'default title');
 
-      const descEl = document.getElementById("description");
-      const description = descEl.innerHTML.replace(/<br\s*\/?>/gi, "").trim() === "" ? "" : descEl.innerHTML;
+      const descEl = document.getElementById('description');
+      const description = descEl.innerHTML.replace(/<br\s*\/?>/gi, '').trim() === '' ? '' : descEl.innerHTML;
 
       return {
-        title: document.getElementById("title").value.trim(),
+        title: document.getElementById('title').value.trim(),
         description,
-        vendor: document.getElementById("vendor").value.trim(),
-        product_type: document.getElementById("productType").value.trim(),
-        price: parseFloat(document.getElementById("price").value) || 0,
-        image: document.getElementById("imageUrl").value || null,
+        vendor: document.getElementById('vendor').value.trim(),
+        product_type: document.getElementById('productType').value.trim(),
+        price: parseFloat(document.getElementById('price').value) || 0,
+        image: document.getElementById('imageUrl').value || null,
         tags,
-        status: document.getElementById("status").value,
+        status: document.getElementById('status').value,
         variants,
         inventory: {
-          sku: document.getElementById("sku").value.trim(),
-          quantity: parseInt(document.getElementById("inventoryQty").value, 10) || 0,
-          track: document.getElementById("trackInventory").checked,
+          sku: document.getElementById('sku').value.trim(),
+          quantity: parseInt(document.getElementById('inventoryQty').value, 10) || 0,
+          track: document.getElementById('trackInventory').checked,
         },
         seo: {
-          title: document.getElementById("seoTitle").value.trim(),
-          description: document.getElementById("seoDescription").value.trim(),
-          handle: document.getElementById("seoHandle").value.trim(),
+          title: document.getElementById('seoTitle').value.trim(),
+          description: document.getElementById('seoDescription').value.trim(),
+          handle: document.getElementById('seoHandle').value.trim(),
         },
       };
     }
 
+    // ── SAVE / UPDATE PRODUCT ──
+    async function deleteProduct() {
+      const titleVal = document.getElementById("title").value.trim() || "this product";
+      const confirmed = await showCustomAlert({
+        title: "Delete product",
+        message: `Delete <strong>${escHtml(titleVal)}</strong>?<br><br>This cannot be undone.`,
+        type: "danger",
+        showCancel: true,
+        confirmText: "Delete"
+      });
+      if (!confirmed) return;
+
+      ["deleteButton", "deleteButton2"].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) { btn.disabled = true; btn.textContent = "⏳ Deleting..."; }
+      });
+
+      try {
+        const res = await fetch("/api/product/delete?id=" + encodeURIComponent(editProductId), { method: "DELETE" });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.detail || "HTTP " + res.status);
+        }
+        await showCustomAlert({ title: "Deleted", message: "Product deleted successfully.", type: "success" });
+        setTimeout(() => location.href = "/", 1000);
+      } catch (err) {
+        await showCustomAlert({ title: "Error", message: "Delete failed: " + err.message, type: "danger" });
+        ["deleteButton", "deleteButton2"].forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) { btn.disabled = false; btn.innerHTML = "🗑 Delete"; }
+        });
+      }
+    }
+
     async function saveProduct() {
-      const title = document.getElementById("title").value.trim();
+      const title = document.getElementById('title').value.trim();
       if (!title) {
-        showToast("Title is required", "error");
-        document.getElementById("title").focus();
-        document.getElementById("title").style.borderColor = "var(--red)";
-        setTimeout(() => document.getElementById("title").style.borderColor = "", 2000);
+        showToast('Title is required', 'error');
+        document.getElementById('title').focus();
+        document.getElementById('title').style.borderColor = 'var(--red)';
+        setTimeout(() => document.getElementById('title').style.borderColor = '', 2000);
         return;
       }
 
       if (uploadInProgress) {
-        showToast("Please wait — image is still uploading", "error");
+        showToast('Please wait — image is still uploading', 'error');
         return;
       }
 
       const payload = buildPayload();
 
-      ["saveButton", "saveButton2"].forEach(id => {
+      ['saveButton','saveButton2'].forEach(id => {
         const btn = document.getElementById(id);
         if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving...'; }
       });
-      document.getElementById("saveStatus").textContent = "Saving...";
+      document.getElementById('saveStatus').textContent = 'Saving...';
 
       try {
         let res;
         if (isEditMode) {
+          // UPDATE existing product
           res = await fetch(`/api/product/update?id=${encodeURIComponent(editProductId)}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
           });
         } else {
-          res = await fetch("/create-product", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+          // CREATE new product
+          res = await fetch('/create-product', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
           });
         }
 
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          throw new Error(err.detail || "Save failed");
+          throw new Error(err.detail || 'Save failed');
         }
 
-        const label = isEditMode ? "Product updated successfully" : "Product saved successfully";
+        const label = isEditMode ? 'Product updated successfully' : 'Product saved successfully';
         showToast(label);
-        document.getElementById("saveStatus").textContent = "Saved";
-        ["saveButton", "saveButton2"].forEach(id => {
+        document.getElementById('saveStatus').textContent = 'Saved';
+        ['saveButton','saveButton2'].forEach(id => {
           const btn = document.getElementById(id);
-          if (btn) { btn.disabled = false; btn.textContent = isEditMode ? "Saved ✓" : "Saved ✓"; }
+          if (btn) { btn.disabled = false; btn.textContent = isEditMode ? 'Saved ✓' : 'Saved ✓'; }
         });
-        setTimeout(() => location.href = "/", 1200);
+        setTimeout(() => location.href = '/', 1200);
+
       } catch (err) {
-        showToast(err.message || "Could not save product", "error");
-        document.getElementById("saveStatus").textContent = "Error saving";
-        ["saveButton", "saveButton2"].forEach(id => {
+        showToast(err.message || 'Could not save product', 'error');
+        document.getElementById('saveStatus').textContent = 'Error saving';
+        ['saveButton','saveButton2'].forEach(id => {
           const btn = document.getElementById(id);
-          if (btn) { btn.disabled = false; btn.textContent = isEditMode ? "Save changes" : "Save"; }
+          if (btn) { btn.disabled = false; btn.textContent = isEditMode ? 'Save changes' : 'Save'; }
         });
       }
     }
-  </script>
 
-  {% include 'components/custom_alert.html' %}
+    // ── DELETE PRODUCT ──
+  </script>
 </body>
 </html>

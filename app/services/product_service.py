@@ -17,6 +17,7 @@ class ProductService:
                 "title": p["title"],
                 "vendor": p["vendor"],
                 "product_type": p["productType"],
+                "status": p.get("status", "ACTIVE").title(),
                 "image": p["featuredImage"]["url"] if p["featuredImage"] else None,
                 "variants": [
                     {"id": v["node"]["id"], "price": v["node"]["price"]}
@@ -62,7 +63,6 @@ class ProductService:
                                 name
                                 quantity
                               }
-                              location { id name }
                             }
                           }
                         }
@@ -122,7 +122,7 @@ class ProductService:
                 "track": inv_item.get("tracked", False),
             },
             "seo": {
-                "title": p["seo"]["title"] or "",
+                "title": p["seo"]["title"] or p["title"] or "",
                 "description": p["seo"]["description"] or "",
                 "handle": p["handle"] or "",
             },
@@ -529,4 +529,19 @@ class ProductService:
                 "productId": product_id,
                 "media": [{"originalSource": image_url, "mediaContentType": "IMAGE"}]
             }
+        )
+
+    # ==================== DELETE PRODUCT ====================
+
+    def delete_product(self, product_id: str):
+        result = self.client.graphql(
+            """
+            mutation productDelete($id: ID!) {
+            productDelete(id: $id) {
+                deletedProductId
+                userErrors { field message }
+            }
+            }
+            """,
+            {"id": product_id}
         )
