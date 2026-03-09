@@ -6,6 +6,8 @@ from app.api import upload_action
 from app.api import bulk_action
 from app.api import export_action
 from app.api import grid_action
+from app.api import collections
+from app.api import inventory
 
 app = FastAPI()
 
@@ -17,6 +19,8 @@ app.include_router(upload_action.router)
 app.include_router(bulk_action.router)
 app.include_router(export_action.router)
 app.include_router(grid_action.router)
+app.include_router(collections.router)
+app.include_router(inventory.router)
 app.include_router(product_page.router)   # ← catch-all HTML routes last
 
 

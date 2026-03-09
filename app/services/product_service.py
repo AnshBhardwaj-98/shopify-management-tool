@@ -17,7 +17,6 @@ class ProductService:
                 "title": p["title"],
                 "vendor": p["vendor"],
                 "product_type": p["productType"],
-                "status": p.get("status", "ACTIVE").title(),
                 "image": p["featuredImage"]["url"] if p["featuredImage"] else None,
                 "variants": [
                     {"id": v["node"]["id"], "price": v["node"]["price"]}
@@ -536,12 +535,16 @@ class ProductService:
     def delete_product(self, product_id: str):
         result = self.client.graphql(
             """
-            mutation productDelete($id: ID!) {
-            productDelete(id: $id) {
+            mutation productDelete($input: ProductDeleteInput!) {
+              productDelete(input: $input) {
                 deletedProductId
                 userErrors { field message }
-            }
+              }
             }
             """,
-            {"id": product_id}
+            {"input": {"id": product_id}}
         )
+        errors = result["productDelete"]["userErrors"]
+        if errors:
+            raise Exception(f"Delete failed: {errors[0]['message']}")
+        return {"deleted_id": result["productDelete"]["deletedProductId"]}

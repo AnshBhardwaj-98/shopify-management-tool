@@ -1,11 +1,8 @@
 <style>
-  /* ── CUSTOM ALERT OVERLAY & BOX ── */
   .custom-alert-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
     background: rgba(15, 23, 42, 0.4);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
@@ -21,13 +18,13 @@
     opacity: 1;
     pointer-events: auto;
   }
-  
+
   .custom-alert-box {
     background: #ffffff;
     width: 90%;
     max-width: 400px;
     border-radius: 12px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
     transform: scale(0.95) translateY(10px);
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     overflow: hidden;
@@ -37,25 +34,15 @@
   .custom-alert-overlay.show .custom-alert-box {
     transform: scale(1) translateY(0);
   }
-  
+
   .custom-alert-header {
     padding: 20px 24px 12px;
     display: flex;
     align-items: center;
     gap: 12px;
   }
-  .custom-alert-icon {
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .custom-alert-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #0f172a;
-    margin: 0;
-  }
+  .custom-alert-icon { font-size: 1.5rem; display: flex; align-items: center; justify-content: center; }
+  .custom-alert-title { font-size: 1.1rem; font-weight: 600; color: #0f172a; margin: 0; }
 
   .custom-alert-body {
     padding: 0 24px 20px;
@@ -73,7 +60,6 @@
     gap: 12px;
   }
 
-  /* Buttons inside alert */
   .custom-alert-btn {
     padding: 8px 16px;
     border-radius: 6px;
@@ -84,74 +70,26 @@
     transition: all 0.15s ease;
     font-family: inherit;
   }
-  .custom-alert-btn-cancel {
-    background: #ffffff;
-    border-color: #cbd5e1;
-    color: #475569;
-  }
-  .custom-alert-btn-cancel:hover {
-    background: #f1f5f9;
-    color: #0f172a;
-  }
-  .custom-alert-btn-confirm {
-    background: #0f172a;
-    color: #ffffff;
-  }
-  .custom-alert-btn-confirm:hover {
-    background: #1e293b;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Alert Types (Themes) */
-  .custom-alert-type-danger .custom-alert-btn-confirm {
-    background: #ef4444;
-  }
-  .custom-alert-type-danger .custom-alert-btn-confirm:hover {
-    background: #dc2626;
-  }
-  
-  /* ── DARK MODE OVERRIDES ── */
-  body.dark-theme .custom-alert-overlay {
-    background: rgba(0, 0, 0, 0.6);
-  }
-  body.dark-theme .custom-alert-box {
-    background: #1e293b;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    border: 1px solid #334155;
-  }
-  body.dark-theme .custom-alert-title {
-    color: #f8fafc;
-  }
-  body.dark-theme .custom-alert-body {
-    color: #cbd5e1;
-  }
-  body.dark-theme .custom-alert-footer {
-    background: #0f172a;
-    border-top-color: #334155;
-  }
-  body.dark-theme .custom-alert-btn-cancel {
-    background: #1e293b;
-    border-color: #475569;
-    color: #e2e8f0;
-  }
-  body.dark-theme .custom-alert-btn-cancel:hover {
-    background: #334155;
-    color: #ffffff;
-  }
-  body.dark-theme .custom-alert-btn-confirm {
-    background: #f8fafc;
-    color: #0f172a;
-  }
-  body.dark-theme .custom-alert-btn-confirm:hover {
-    background: #e2e8f0;
-  }
-  body.dark-theme .custom-alert-type-danger .custom-alert-btn-confirm {
-    background: #ef4444;
-    color: #ffffff;
-  }
-  body.dark-theme .custom-alert-type-danger .custom-alert-btn-confirm:hover {
-    background: #dc2626;
-  }
+  .custom-alert-btn-cancel { background: #ffffff; border-color: #cbd5e1; color: #475569; }
+  .custom-alert-btn-cancel:hover { background: #f1f5f9; color: #0f172a; }
+  .custom-alert-btn-confirm { background: #0f172a; color: #ffffff; }
+  .custom-alert-btn-confirm:hover { background: #1e293b; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+
+  .custom-alert-type-danger .custom-alert-btn-confirm { background: #ef4444; }
+  .custom-alert-type-danger .custom-alert-btn-confirm:hover { background: #dc2626; }
+
+  /* Dark mode */
+  body.dark-theme .custom-alert-overlay { background: rgba(0,0,0,0.6); }
+  body.dark-theme .custom-alert-box { background: #1e293b; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid #334155; }
+  body.dark-theme .custom-alert-title { color: #f8fafc; }
+  body.dark-theme .custom-alert-body { color: #cbd5e1; }
+  body.dark-theme .custom-alert-footer { background: #0f172a; border-top-color: #334155; }
+  body.dark-theme .custom-alert-btn-cancel { background: #1e293b; border-color: #475569; color: #e2e8f0; }
+  body.dark-theme .custom-alert-btn-cancel:hover { background: #334155; color: #ffffff; }
+  body.dark-theme .custom-alert-btn-confirm { background: #f8fafc; color: #0f172a; }
+  body.dark-theme .custom-alert-btn-confirm:hover { background: #e2e8f0; }
+  body.dark-theme .custom-alert-type-danger .custom-alert-btn-confirm { background: #ef4444; color: #ffffff; }
+  body.dark-theme .custom-alert-type-danger .custom-alert-btn-confirm:hover { background: #dc2626; }
 </style>
 
 <div class="custom-alert-overlay" id="customAlertOverlay">
@@ -160,11 +98,9 @@
       <div class="custom-alert-icon" id="customAlertIcon">ℹ️</div>
       <h3 class="custom-alert-title" id="customAlertTitle">Alert</h3>
     </div>
-    <div class="custom-alert-body" id="customAlertMessage">
-      Message goes here.
-    </div>
+    <div class="custom-alert-body" id="customAlertMessage">Message goes here.</div>
     <div class="custom-alert-footer">
-      <button class="custom-alert-btn custom-alert-btn-cancel" id="customAlertCancelBtn" onclick="closeCustomAlert()">Cancel</button>
+      <button class="custom-alert-btn custom-alert-btn-cancel" id="customAlertCancelBtn">Cancel</button>
       <button class="custom-alert-btn custom-alert-btn-confirm" id="customAlertConfirmBtn">OK</button>
     </div>
   </div>
@@ -173,76 +109,45 @@
 <script>
   let _customAlertResolve = null;
 
-  /**
-   * Shows a custom modal dialog.
-   * @param {Object} options - Custom alert settings
-   * @param {string} options.title - The title of the alert
-   * @param {string} options.message - The body message content
-   * @param {string} [options.type='info'] - 'info', 'warning', 'danger', 'success'
-   * @param {boolean} [options.showCancel=false] - Whether to show the cancel button
-   * @param {string} [options.confirmText='OK'] - Text for confirm button
-   * @param {string} [options.cancelText='Cancel'] - Text for cancel button
-   * @returns {Promise<boolean>} Resolves to true if confirmed, false if canceled
-   */
   function showCustomAlert(options) {
     return new Promise((resolve) => {
       _customAlertResolve = resolve;
 
-      const overlay = document.getElementById("customAlertOverlay");
-      const box = document.getElementById("customAlertBox");
-      const titleEl = document.getElementById("customAlertTitle");
-      const messageEl = document.getElementById("customAlertMessage");
-      const iconEl = document.getElementById("customAlertIcon");
-      const confirmBtn = document.getElementById("customAlertConfirmBtn");
-      const cancelBtn = document.getElementById("customAlertCancelBtn");
+      const overlay  = document.getElementById('customAlertOverlay');
+      const box      = document.getElementById('customAlertBox');
+      const titleEl  = document.getElementById('customAlertTitle');
+      const msgEl    = document.getElementById('customAlertMessage');
+      const iconEl   = document.getElementById('customAlertIcon');
+      const confirmBtn = document.getElementById('customAlertConfirmBtn');
+      const cancelBtn  = document.getElementById('customAlertCancelBtn');
 
-      // Set content
-      titleEl.textContent = options.title || "Alert";
-      // Allow HTML in message if needed; use textContent for safety by default, 
-      // but let's assume message is safe or we escape it before passing.
-      messageEl.innerHTML = options.message || ""; 
-      
-      confirmBtn.textContent = options.confirmText || "OK";
-      cancelBtn.textContent = options.cancelText || "Cancel";
+      titleEl.textContent   = options.title || 'Alert';
+      msgEl.innerHTML       = options.message || '';
+      confirmBtn.textContent = options.confirmText || 'OK';
+      cancelBtn.textContent  = options.cancelText  || 'Cancel';
 
-      // Configure type
-      const type = options.type || "info";
+      const type = options.type || 'info';
       box.className = `custom-alert-box custom-alert-type-${type}`;
-      
-      let icon = "ℹ️";
-      if (type === "warning") icon = "⚠️";
-      if (type === "danger") icon = "🚨";
-      if (type === "success") icon = "✅";
-      iconEl.textContent = icon;
 
-      // Configure buttons
-      cancelBtn.style.display = options.showCancel ? "inline-block" : "none";
+      const icons = { info: 'ℹ️', warning: '⚠️', danger: '🚨', success: '✅' };
+      iconEl.textContent = icons[type] || 'ℹ️';
 
-      // Bind confirm action
-      confirmBtn.onclick = () => {
-        closeCustomAlert();
-        resolve(true);
-      };
-      
-      // Bind cancel action (overlay background click also cancels)
-      cancelBtn.onclick = () => {
-        closeCustomAlert();
-        resolve(false);
-      };
-      
-      // Trigger show
-      overlay.classList.add("show");
+      cancelBtn.style.display = options.showCancel ? 'inline-block' : 'none';
+
+      confirmBtn.onclick = () => { _customAlertResolve = null; closeCustomAlert(); resolve(true);  };
+      cancelBtn.onclick  = () => { _customAlertResolve = null; closeCustomAlert(); resolve(false); };
+
+      overlay.classList.add('show');
     });
   }
 
   function closeCustomAlert() {
-    const overlay = document.getElementById("customAlertOverlay");
-    overlay.classList.remove("show");
-    if (_customAlertResolve) {
-      // If closed without explicitly confirming/cancelling (e.g. background click later)
-      // just resolve false. The button clicks handle this directly first.
-      _customAlertResolve(false);
-      _customAlertResolve = null;
-    }
+    document.getElementById('customAlertOverlay').classList.remove('show');
+    if (_customAlertResolve) { _customAlertResolve(false); _customAlertResolve = null; }
   }
+
+  // Close on backdrop click
+  document.getElementById('customAlertOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeCustomAlert();
+  });
 </script>

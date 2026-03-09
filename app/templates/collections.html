@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopify · Collections</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background: #f0f2f5;
+      color: #1e293b;
+      line-height: 1.5;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    .shell {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #fff;
+      flex-shrink: 0;
+      gap: 12px;
+    }
+
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-title { font-size: 1rem; font-weight: 700; color: #0f172a; letter-spacing: -.01em; }
+
+    .topbar-right { display: flex; align-items: center; gap: 8px; }
+    #searchInput {
+      padding: 7px 12px; border: 1px solid #d1d9e6; font-size: .85rem;
+      width: 260px; border-radius: 4px; background: white; font-family: inherit;
+    }
+    #searchInput:focus { outline: none; border-color: #0f172a; box-shadow: 0 0 0 3px rgba(15,23,42,.08); }
+
+    .content { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+
+    /* ── VIEW PANELS ── */
+    .view-panel { width: 100%; height: 100%; display: flex; flex-direction: column; }
+
+    .table-scroll { flex: 1; min-height: 0; overflow-y: auto; }
+    
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    th {
+      text-align: left; padding: 11px 14px; background: #f8fafc;
+      font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0;
+      white-space: nowrap; position: sticky; top: 0; z-index: 10;
+      font-size: .78rem; text-transform: uppercase; letter-spacing: .3px;
+    }
+    td {
+      padding: 10px 14px; border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle; background: white; transition: background .3s;
+    }
+    tr:hover td { background: #fafafa; }
+    tr:last-child td { border-bottom: none; }
+
+    .product-image { width: 40px; height: 40px; object-fit: cover; border: 1px solid #e2e8f0; border-radius: 4px; display: block; }
+    .no-image {
+      width: 40px; height: 40px; background: #f1f5f9; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      color: #94a3b8; font-size: .65rem; border: 1px dashed #cbd5e1;
+    }
+
+    .badge {
+      display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: .7rem;
+      font-weight: 600; font-family: 'Menlo', 'Consolas', monospace;
+      background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;
+    }
+    
+    .edit-btn {
+      background: transparent; border: 1px solid #e2e8f0; color: #475569;
+      padding: 4px 10px; font-size: .78rem; font-weight: 500; cursor: pointer;
+      border-radius: 4px; transition: all .15s; white-space: nowrap; font-family: inherit;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .edit-btn:hover { background: #f1f5f9; border-color: #94a3b8; color: #0f172a; }
+
+    .empty-row { text-align: center; padding: 40px !important; color: #64748b; font-size: .9rem; font-style: italic; }
+
+    /* ── DARK MODE ── */
+    body.dark-theme { background: #0b1120; color: #f8fafc; }
+    body.dark-theme .shell { background: #0f172a; }
+    body.dark-theme .topbar { background: #0f172a; border-color: #1e293b; }
+    body.dark-theme .topbar-title { color: #f8fafc; }
+    body.dark-theme #searchInput { background: #1e293b; border-color: #334155; color: #f8fafc; }
+    body.dark-theme #searchInput:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,.15); }
+    body.dark-theme th { background: #1e293b; color: #94a3b8; border-color: #334155; }
+    body.dark-theme td { background: #0f172a; border-color: #1e293b; color: #e2e8f0; }
+    body.dark-theme tr:hover td { background: #1e293b; }
+    body.dark-theme .no-image { background: #1e293b; border-color: #334155; color: #64748b; }
+    body.dark-theme .badge { background: #1e293b; color: #94a3b8; border-color: #334155; }
+    body.dark-theme .edit-btn { border-color: #334155; color: #cbd5e1; }
+    body.dark-theme .edit-btn:hover { background: #334155; color: #f8fafc; border-color: #475569; }
+    body.dark-theme .empty-row { color: #64748b; }
+
+  </style>
+</head>
+<body>
+<script>if(localStorage.getItem("theme")==="dark")document.body.classList.add("dark-theme");</script>
+{% include 'components/global_nav.html' %}
+{% include 'components/custom_alert.html' %}
+
+<div class="shell" id="shell">
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-title">Collections</div>
+      </div>
+      <div class="topbar-right">
+        <input type="text" id="searchInput" placeholder="Search collections by title..." oninput="filterCollections()" />
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="view-panel active">
+        <div class="table-scroll">
+          <table id="collectionTable">
+            <thead>
+              <tr>
+                <th style="width: 50px;">Image</th>
+                <th style="min-width: 250px;">Title</th>
+                <th>Handle</th>
+                <th>Products</th>
+                <th>Last Updated</th>
+                <th style="width: 80px; text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="6" class="empty-row">⏳ Loading collections...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ── HELPERS ──
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  
+  function formatDate(isoString) {
+    if (!isoString) return '-';
+    const d = new Date(isoString);
+    return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  }
+
+  // ── STATE ──
+  let allCollections = [];
+  let filteredCollections = [];
+  let searchDebounce = null;
+
+  async function loadCollections() {
+    const tbody = document.querySelector('#collectionTable tbody');
+    try {
+      const res = await fetch('/api/collection/list');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      allCollections = await res.json();
+      filteredCollections = [...allCollections];
+      renderTable();
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-row" style="color:#b91c1c;">Error loading collections: ${escapeHtml(err.message)}</td></tr>`;
+    }
+  }
+
+  function filterCollections() {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => {
+      const term = document.getElementById('searchInput').value.trim().toLowerCase();
+      filteredCollections = allCollections.filter(c => {
+        return term === '' || c.title.toLowerCase().includes(term);
+      });
+      renderTable();
+    }, 250);
+  }
+
+  function renderTable() {
+    const tbody = document.querySelector('#collectionTable tbody');
+    tbody.innerHTML = '';
+
+    if (filteredCollections.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-row">No collections found.</td></tr>`;
+      return;
+    }
+
+    filteredCollections.forEach(c => {
+      const img = c.image 
+        ? `<img src="${escapeHtml(c.image)}" class="product-image" alt="img" />`
+        : `<div class="no-image">No img</div>`;
+        
+      const routeId = encodeURIComponent(c.id);
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${img}</td>
+        <td>
+          <div style="font-weight:600; color:var(--nav-text,#0f172a); font-size:.9rem;">${escapeHtml(c.title)}</div>
+        </td>
+        <td><span class="badge">${escapeHtml(c.handle)}</span></td>
+        <td><strong>${c.products_count}</strong> Items</td>
+        <td style="color:#64748b; font-size:.8rem;">${escapeHtml(formatDate(c.updated_at))}</td>
+        <td style="text-align: right;">
+          <a class="edit-btn" href="/collections/edit?id=${routeId}">Edit</a>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', loadCollections);
+</script>
+</body>
+</html>

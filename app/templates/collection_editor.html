@@ -1,0 +1,1008 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collection · Shopify</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f1f2f4;
+      --surface: #ffffff;
+      --border: #e1e3e5;
+      --border-focus: #005bd3;
+      --text-primary: #202223;
+      --text-secondary: #6d7175;
+      --text-disabled: #8c9196;
+      --green: #1a7f5a;
+      --green-bg: #f1f8f5;
+      --red: #d82c0d;
+      --red-bg: #fff4f4;
+      --blue: #005bd3;
+      --blue-bg: #f2f7fe;
+      --badge-active-bg: #ddf1ea;
+      --badge-active-text: #1a7f5a;
+      --badge-draft-bg: #e4e5e7;
+      --badge-draft-text: #6d7175;
+      --btn-primary-bg: #404040;
+      --btn-primary-hover: #2a2a2a;
+      --shadow-sm: 0 1px 0 rgba(0,0,0,.05);
+      --shadow-md: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-lg: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.05);
+      --radius: 8px;
+      --radius-sm: 6px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── LAYOUT ── */
+    .page-wrapper { padding: 24px 32px 120px; }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;
+    }
+    .breadcrumb a { color: var(--text-secondary); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--text-primary); }
+    .breadcrumb span { color: var(--text-disabled); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; gap: 12px;
+    }
+    .page-title { font-size: 20px; font-weight: 600; color: var(--text-primary); }
+    .header-actions { display: flex; gap: 8px; }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .card-body { padding: 16px 20px 20px; }
+    .card-title {
+      font-size: 14px; font-weight: 600;
+      color: var(--text-primary);
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block; font-size: 13px; font-weight: 500;
+      color: var(--text-primary); margin-bottom: 6px;
+    }
+    .field label .optional {
+      font-weight: 400; color: var(--text-secondary); font-size: 12px; margin-left: 4px;
+    }
+
+    input[type="text"], input[type="url"], textarea, select {
+      width: 100%; padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px; font-family: inherit;
+      color: var(--text-primary);
+      background: var(--surface);
+      transition: border-color .15s, box-shadow .15s;
+      outline: none;
+      appearance: none;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(0,91,211,.12);
+    }
+    input::placeholder, textarea::placeholder { color: var(--text-disabled); }
+    textarea { resize: vertical; min-height: 120px; }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236d7175' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px;
+    }
+
+    /* ── RICH TEXT ── */
+    .richtext-toolbar {
+      display: flex; gap: 2px; padding: 8px;
+      border-bottom: 1px solid var(--border);
+      background: #f6f6f7; flex-wrap: wrap;
+    }
+    .richtext-btn {
+      width: 28px; height: 28px; border: none; background: transparent;
+      border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;
+      color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
+      transition: background .1s, color .1s; font-family: inherit;
+    }
+    .richtext-btn:hover { background: var(--border); color: var(--text-primary); }
+    .richtext-divider { width: 1px; background: var(--border); margin: 4px 2px; }
+    .richtext-wrapper {
+      border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .richtext-wrapper:focus-within {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(0,91,211,.12);
+    }
+    #colDescription {
+      border: none; border-radius: 0; box-shadow: none !important; min-height: 140px;
+    }
+    #colDescription:focus { box-shadow: none !important; border-color: transparent !important; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 8px 16px; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 500; font-family: inherit;
+      cursor: pointer; border: none; transition: all .15s;
+      white-space: nowrap;
+    }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+    .btn-primary { background: var(--btn-primary-bg); color: white; }
+    .btn-primary:hover:not(:disabled) { background: var(--btn-primary-hover); }
+    .btn-secondary {
+      background: var(--surface); color: var(--text-primary);
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+    }
+    .btn-secondary:hover:not(:disabled) { background: #f6f6f7; }
+    .btn-danger-plain { background: transparent; color: var(--red); padding: 6px 8px; font-size: 13px; }
+    .btn-danger-plain:hover { background: var(--red-bg); border-radius: var(--radius-sm); }
+    .btn-plain { background: transparent; color: var(--blue); padding: 6px 8px; font-size: 13px; }
+    .btn-plain:hover { background: var(--blue-bg); border-radius: var(--radius-sm); }
+    .btn-sm { padding: 6px 12px; font-size: 13px; }
+
+    /* ── IMAGE UPLOAD ── */
+    .media-drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-sm);
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      position: relative;
+    }
+    .media-drop-zone:hover, .media-drop-zone.drag-over {
+      border-color: var(--border-focus); background: var(--blue-bg);
+    }
+    .media-drop-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .drop-icon { font-size: 24px; margin-bottom: 8px; }
+    .drop-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+    .drop-sub { font-size: 12px; color: var(--text-secondary); }
+    .drop-link { color: var(--blue); text-decoration: underline; }
+
+    .collection-image-preview {
+      width: 100%; aspect-ratio: 1; object-fit: cover;
+      border-radius: var(--radius-sm); border: 1px solid var(--border); display: block;
+    }
+    .image-actions {
+      display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+    }
+
+    /* ── PRODUCT LIST ── */
+    .product-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .product-item:last-child { border-bottom: none; }
+    .product-item-img {
+      width: 40px; height: 40px; border-radius: var(--radius-sm);
+      object-fit: cover; border: 1px solid var(--border); flex-shrink: 0;
+    }
+    .product-item-no-img {
+      width: 40px; height: 40px; border-radius: var(--radius-sm);
+      background: #f6f6f7; border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-disabled); font-size: 16px; flex-shrink: 0;
+    }
+    .product-item-info { flex: 1; min-width: 0; }
+    .product-item-title {
+      font-size: 13px; font-weight: 500; color: var(--text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .product-item-meta { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+
+    /* ── STATUS BADGE ── */
+    .status-dot {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500;
+    }
+    .status-dot::before { content: ''; width: 8px; height: 8px; border-radius: 50%; }
+    .status-dot.active { color: var(--badge-active-text); }
+    .status-dot.active::before { background: var(--green); }
+    .status-dot.draft { color: var(--badge-draft-text); }
+    .status-dot.draft::before { background: #8c9196; }
+
+    /* ── SEO PREVIEW ── */
+    .seo-preview {
+      background: #f6f6f7; border-radius: var(--radius-sm);
+      padding: 14px; margin-bottom: 16px;
+    }
+    .seo-preview-title { color: #1a0dab; font-size: 18px; font-weight: 400; margin-bottom: 2px; }
+    .seo-preview-url { color: #006621; font-size: 13px; margin-bottom: 4px; }
+    .seo-preview-desc { color: #545454; font-size: 13px; line-height: 1.4; }
+
+    /* ── SAVE BAR ── */
+    .save-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #1a1a1a; padding: 12px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 300; gap: 12px;
+    }
+    .save-bar-left { display: flex; align-items: center; gap: 10px; }
+    .save-bar-right { display: flex; gap: 8px; }
+    .save-status { font-size: 13px; color: #d1d5db; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; top: 72px; right: 20px;
+      background: #1a1a1a; color: white;
+      padding: 12px 16px; border-radius: var(--radius);
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+      box-shadow: var(--shadow-lg); z-index: 400;
+      transform: translateY(-8px); opacity: 0;
+      transition: all .25s; pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-left: 3px solid #1a7f5a; }
+    .toast.error { border-left: 3px solid var(--red); }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+    .help-text { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+    }
+    .section-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+
+    .spinner {
+      width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin .6s linear infinite; display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+      .page-wrapper { padding: 16px 16px 100px; }
+    }
+
+    /* ── DARK MODE ── */
+    body.dark-theme {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --border: #334155;
+      --border-focus: #3b82f6;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-disabled: #475569;
+      --green-bg: #064e3b;
+      --red-bg: #450a0a;
+      --blue-bg: #1e3a8a;
+      --badge-active-bg: #065f46;
+      --badge-active-text: #34d399;
+      --badge-draft-bg: #0f172a;
+      --badge-draft-text: #94a3b8;
+      --btn-primary-bg: #ffffff;
+      --btn-primary-hover: #f1f5f9;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    body.dark-theme .btn-primary { color: #0f172a; }
+    body.dark-theme .btn-secondary { background: #1e293b; color: #f8fafc; border-color: #334155; }
+    body.dark-theme .btn-secondary:hover:not(:disabled) { background: #334155; }
+    body.dark-theme .btn-danger-plain { color: #f87171; }
+    body.dark-theme .btn-danger-plain:hover { background: #450a0a; }
+    body.dark-theme .btn-plain { color: #60a5fa; }
+    body.dark-theme .btn-plain:hover { background: #1e3a8a; }
+    body.dark-theme .richtext-toolbar { background: #0f172a; }
+    body.dark-theme .richtext-btn { color: #94a3b8; }
+    body.dark-theme .richtext-btn:hover { background: #334155; color: #f8fafc; }
+    body.dark-theme #colDescription { background: #1e293b; color: #f8fafc; }
+    body.dark-theme .media-drop-zone { background: #0f172a; border-color: #475569; }
+    body.dark-theme .product-item-no-img { background: #0f172a; border-color: #334155; }
+    body.dark-theme .seo-preview { background: #0f172a; }
+    body.dark-theme .seo-preview-title { color: #93c5fd; }
+    body.dark-theme .seo-preview-url { color: #2dd4bf; }
+    body.dark-theme .seo-preview-desc { color: #94a3b8; }
+    body.dark-theme .save-bar { background: #0f172a; border-top: 1px solid #1e293b; }
+    body.dark-theme .toast { background: #1e293b; }
+    body.dark-theme .breadcrumb a { color: #94a3b8; }
+    body.dark-theme .page-title { color: #f8fafc; }
+    body.dark-theme .status-dot.active { color: #34d399; }
+    body.dark-theme .status-dot.draft { color: #94a3b8; }
+    body.dark-theme select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    }
+
+    /* ── CONDITIONS ── */
+    .condition-row {
+      display: grid;
+      grid-template-columns: 180px 180px 1fr 36px;
+      gap: 8px; align-items: center;
+      margin-bottom: 10px;
+    }
+    .condition-row:last-child { margin-bottom: 0; }
+    .condition-row select, .condition-row input[type="text"], .condition-row input[type="number"] {
+      margin: 0;
+    }
+    .condition-delete-btn {
+      width: 36px; height: 36px; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); background: transparent;
+      cursor: pointer; color: var(--text-secondary); font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s; flex-shrink: 0;
+    }
+    .condition-delete-btn:hover { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+    .match-radios { display: flex; gap: 20px; align-items: center; margin-bottom: 16px; }
+    .match-radio-label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 14px; cursor: pointer; color: var(--text-primary);
+    }
+    .match-radio-label input[type="radio"] {
+      width: 18px; height: 18px; accent-color: var(--text-primary);
+      cursor: pointer; flex-shrink: 0;
+    }
+    .conditions-info {
+      display: flex; align-items: flex-start; gap: 6px;
+      font-size: 13px; color: #865c04; background: #fef3cd;
+      border: 1px solid #f5c842; border-radius: var(--radius-sm);
+      padding: 8px 12px; margin: 12px 0;
+    }
+    body.dark-theme .conditions-info { background: #2d1f00; border-color: #7c5200; color: #fbbf24; }
+    @media (max-width: 640px) {
+      .condition-row { grid-template-columns: 1fr 1fr 36px; }
+      .condition-row .cond-operator { grid-column: 1 / -2; }
+      .condition-row .cond-value { grid-column: 1 / -2; }
+    }
+
+  </style>
+  <script>const COLLECTION_ID = "{{ collection_id }}";</script>
+</head>
+<body>
+<script>if(localStorage.getItem("theme")==="dark")document.body.classList.add("dark-theme");</script>
+{% include 'components/global_nav.html' %}
+{% include 'components/custom_alert.html' %}
+
+<div class="page-wrapper">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="/collections">Collections</a>
+    <span>›</span>
+    <span id="breadcrumbTitle" style="color: var(--text-primary)">Loading...</span>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1 class="page-title" id="pageTitle">Loading...</h1>
+    <div class="header-actions">
+      <button class="btn btn-secondary" onclick="location.href='/collections'">Discard</button>
+      <button class="btn btn-danger-plain" id="deleteBtn" onclick="deleteCollection()" style="display:none;">🗑 Delete collection</button>
+      <button class="btn btn-primary" id="saveBtn" onclick="saveCollection()">Save</button>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid">
+
+    <!-- ── LEFT COLUMN ── -->
+    <div class="col-main">
+
+      <!-- Title & Description -->
+      <div class="card">
+        <div class="card-body">
+          <div class="field">
+            <label for="colTitle">Title</label>
+            <input type="text" id="colTitle" placeholder="e.g. Summer Collection" />
+          </div>
+          <div class="field">
+            <label for="colDescription">Description <span class="optional">(optional)</span></label>
+            <div class="richtext-wrapper">
+              <div class="richtext-toolbar">
+                <button class="richtext-btn" onclick="fmt('bold')" title="Bold"><b>B</b></button>
+                <button class="richtext-btn" onclick="fmt('italic')" title="Italic"><i>I</i></button>
+                <button class="richtext-btn" onclick="fmt('underline')" title="Underline"><u>U</u></button>
+                <div class="richtext-divider"></div>
+                <button class="richtext-btn" onclick="fmt('insertUnorderedList')" title="Bullet list">≡</button>
+                <button class="richtext-btn" onclick="fmt('insertOrderedList')" title="Numbered list">№</button>
+                <div class="richtext-divider"></div>
+                <button class="richtext-btn" onclick="fmt('createLink')" title="Link">🔗</button>
+              </div>
+              <div id="colDescription" contenteditable="true"
+                style="padding: 10px 12px; min-height: 140px; font-size: 14px; line-height: 1.6; outline: none;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conditions -->
+      <div class="card" id="conditionsCard">
+        <div class="card-title">Conditions</div>
+        <div class="card-body">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; font-size:14px;">
+            <span style="font-weight:500;">Products must match:</span>
+            <div class="match-radios">
+              <label class="match-radio-label">
+                <input type="radio" name="matchType" value="all" checked onchange="markDirty()" />
+                all conditions
+              </label>
+              <label class="match-radio-label">
+                <input type="radio" name="matchType" value="any" onchange="markDirty()" />
+                any condition
+              </label>
+            </div>
+          </div>
+
+          <div id="conditionRows"></div>
+
+          <div class="conditions-info" id="conditionsInfo" style="display:none;">
+            <span>ⓘ</span>
+            <span id="conditionsInfoText">This collection will include all products that match the conditions.</span>
+          </div>
+
+          <button class="btn btn-secondary btn-sm" style="margin-top:12px;" onclick="addConditionRow()">
+            + Add another condition
+          </button>
+        </div>
+      </div>
+
+      <!-- Products in Collection -->
+      <div class="card">
+        <div class="card-title">
+          <div class="section-header" style="margin-bottom:0;">
+            <span>Products</span>
+            <span id="productCount" style="font-size:12px; font-weight:400; color:var(--text-secondary);"></span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="productList">
+            <div style="color:var(--text-secondary); font-size:13px; font-style:italic;">Loading products...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEO -->
+      <div class="card">
+        <div class="card-title">Search engine listing</div>
+        <div class="card-body">
+          <div class="seo-preview" id="seoPreview">
+            <div class="seo-preview-title" id="seoPreviewTitle">Collection title</div>
+            <div class="seo-preview-url" id="seoPreviewUrl">your-store.myshopify.com/collections/handle</div>
+            <div class="seo-preview-desc" id="seoPreviewDesc">Add a description to see how this collection might appear in search results.</div>
+          </div>
+          <div class="field">
+            <label>Page title</label>
+            <input type="text" id="seoTitle" placeholder="Collection title" />
+            <div class="help-text">0 of 70 characters used</div>
+          </div>
+          <div class="field">
+            <label>Meta description</label>
+            <textarea id="seoDescription" placeholder="Add a description to see how this collection might appear in search results." style="min-height:80px;"></textarea>
+            <div class="help-text">0 of 320 characters used</div>
+          </div>
+          <div class="field">
+            <label>URL handle</label>
+            <div style="display:flex; border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; transition: border-color .15s, box-shadow .15s;" id="handleWrapper">
+              <span style="padding:8px 10px; background:#f6f6f7; border-right:1px solid var(--border); font-size:13px; color:var(--text-secondary); white-space:nowrap; flex-shrink:0;">/collections/</span>
+              <input type="text" id="colHandle" style="border:none; border-radius:0; box-shadow:none !important;" placeholder="collection-handle" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── RIGHT COLUMN ── -->
+    <div class="col-side">
+
+      <!-- Status -->
+      <div class="card">
+        <div class="card-title">Visibility</div>
+        <div class="card-body">
+          <div class="field" style="margin-bottom:8px;">
+            <select id="colStatus">
+              <option value="active">Active</option>
+              <option value="draft">Draft</option>
+            </select>
+          </div>
+          <div id="statusDot" class="status-dot active">Active</div>
+        </div>
+      </div>
+
+      <!-- Collection Image -->
+      <div class="card">
+        <div class="card-title">Collection image</div>
+        <div class="card-body">
+          <div id="imageSection">
+            <div class="media-drop-zone" id="imageDropZone">
+              <input type="file" accept="image/*" onchange="handleImageUpload(this)" />
+              <div class="drop-icon">🖼</div>
+              <div class="drop-title">Add image</div>
+              <div class="drop-sub"><span class="drop-link">Upload image</span> or drag and drop</div>
+            </div>
+          </div>
+          <div class="image-actions" id="imageActions" style="display:none;">
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('imageReplace').click()">Replace</button>
+            <input type="file" id="imageReplace" accept="image/*" style="display:none;" onchange="handleImageUpload(this)" />
+            <button class="btn btn-danger-plain btn-sm" onclick="removeImage()">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Handle / Info -->
+      <div class="card">
+        <div class="card-title">Collection details</div>
+        <div class="card-body">
+          <div style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">Handle</div>
+          <div id="handleDisplay" style="font-size:13px; color:var(--text-primary); font-family:monospace; word-break:break-all;">—</div>
+          <hr class="divider" />
+          <div style="font-size:13px; color:var(--text-secondary); margin-bottom:4px;">Collection ID</div>
+          <div style="font-size:12px; color:var(--text-disabled); font-family:monospace; word-break:break-all;" id="collectionIdDisplay">—</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SAVE BAR -->
+<div class="save-bar" id="saveBar" style="display:none;">
+  <div class="save-bar-left">
+    <span class="save-status">Unsaved changes</span>
+  </div>
+  <div class="save-bar-right">
+    <button class="btn btn-secondary" style="color:#d1d5db; background:transparent; border-color:#4b5563;" onclick="discardChanges()">Discard</button>
+    <button class="btn btn-primary" id="saveBarBtn" onclick="saveCollection()">Save</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── HELPERS ──
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function fmt(cmd) {
+    if (cmd === 'createLink') {
+      const url = prompt('Enter URL:');
+      if (url) document.execCommand('createLink', false, url);
+    } else {
+      document.execCommand(cmd, false, null);
+    }
+    document.getElementById('colDescription').focus();
+  }
+
+  // ── STATE ──
+  let originalData = null;
+  let isDirty = false;
+  let currentImageUrl = null;
+
+  function markDirty() {
+    isDirty = true;
+    document.getElementById('saveBar').style.display = 'flex';
+  }
+
+  function discardChanges() {
+    if (!originalData) return;
+    populateForm(originalData);
+    isDirty = false;
+    document.getElementById('saveBar').style.display = 'none';
+  }
+
+  // ── LOAD DATA ──
+  async function loadData() {
+    try {
+      const res = await fetch('/api/collection/data?id=' + encodeURIComponent(COLLECTION_ID));
+      if (!res.ok) throw new Error('Failed to load collection');
+      const data = await res.json();
+      originalData = data;
+      populateForm(data);
+
+      // Show delete button
+      document.getElementById('deleteBtn').style.display = 'inline-flex';
+      // Load conditions
+      loadConditions(data);
+    } catch (e) {
+      showToast('Failed to load collection', 'error');
+    }
+  }
+
+  function populateForm(data) {
+    // Header
+    const title = data.title || 'Untitled Collection';
+    document.getElementById('pageTitle').textContent = title;
+    document.getElementById('breadcrumbTitle').textContent = title;
+    document.getElementById('colTitle').value = data.title || '';
+
+    // Description — set as HTML in contenteditable
+    const descEl = document.getElementById('colDescription');
+    descEl.innerHTML = data.descriptionHtml || '';
+
+    // Status
+    const status = (data.divertedStatus || data.status || 'active').toLowerCase();
+    document.getElementById('colStatus').value = status;
+    updateStatusDot(status);
+
+    // Handle
+    const handle = data.handle || '';
+    document.getElementById('colHandle').value = handle;
+    document.getElementById('handleDisplay').textContent = handle || '—';
+    document.getElementById('collectionIdDisplay').textContent = COLLECTION_ID;
+
+    // SEO
+    document.getElementById('seoTitle').value = data.seoTitle || data.title || '';
+    document.getElementById('seoDescription').value = data.seoDescription || '';
+    updateSeoPreview();
+
+    // Image
+    currentImageUrl = data.image || null;
+    renderImage();
+
+    // Products
+    renderProducts(data.products || []);
+  }
+
+  function updateStatusDot(status) {
+    const dot = document.getElementById('statusDot');
+    dot.className = 'status-dot ' + status;
+    dot.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+  }
+
+  function renderImage() {
+    const section = document.getElementById('imageSection');
+    const actions = document.getElementById('imageActions');
+    if (currentImageUrl) {
+      section.innerHTML = `<img src="${escapeHtml(currentImageUrl)}" class="collection-image-preview" />`;
+      actions.style.display = 'flex';
+    } else {
+      section.innerHTML = `
+        <div class="media-drop-zone" id="imageDropZone">
+          <input type="file" accept="image/*" onchange="handleImageUpload(this)" />
+          <div class="drop-icon">🖼</div>
+          <div class="drop-title">Add image</div>
+          <div class="drop-sub"><span class="drop-link">Upload image</span> or drag and drop</div>
+        </div>`;
+      actions.style.display = 'none';
+    }
+  }
+
+  function removeImage() {
+    currentImageUrl = null;
+    renderImage();
+    markDirty();
+  }
+
+  function handleImageUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      currentImageUrl = e.target.result;
+      renderImage();
+      markDirty();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function renderProducts(products) {
+    const list = document.getElementById('productList');
+    const count = document.getElementById('productCount');
+    count.textContent = products.length + ' product' + (products.length !== 1 ? 's' : '');
+
+    if (!products.length) {
+      list.innerHTML = `<div style="color:var(--text-secondary); font-size:13px; font-style:italic; padding:8px 0;">No products in this collection.</div>`;
+      return;
+    }
+    list.innerHTML = '';
+    products.forEach(p => {
+      const imgEl = p.image
+        ? `<img src="${escapeHtml(p.image)}" class="product-item-img" />`
+        : `<div class="product-item-no-img">📦</div>`;
+      const statusText = (p.status || 'draft');
+      const div = document.createElement('div');
+      div.className = 'product-item';
+      div.innerHTML = `
+        ${imgEl}
+        <div class="product-item-info">
+          <div class="product-item-title">${escapeHtml(p.title)}</div>
+          <div class="product-item-meta">${statusText.charAt(0).toUpperCase() + statusText.slice(1)}</div>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function updateSeoPreview() {
+    const title = document.getElementById('seoTitle').value || document.getElementById('colTitle').value || 'Collection title';
+    const desc  = document.getElementById('seoDescription').value || 'Add a description to see how this collection might appear in search results.';
+    const handle = document.getElementById('colHandle').value || 'collection-handle';
+    document.getElementById('seoPreviewTitle').textContent = title;
+    document.getElementById('seoPreviewUrl').textContent = `your-store.myshopify.com/collections/${handle}`;
+    document.getElementById('seoPreviewDesc').textContent = desc;
+  }
+
+  // ── SAVE ──
+  async function saveCollection() {
+    const btn = document.getElementById('saveBtn');
+    const barBtn = document.getElementById('saveBarBtn');
+    const oldText = btn.textContent;
+    btn.innerHTML = '<span class="spinner"></span> Saving...';
+    btn.disabled = true;
+    barBtn.innerHTML = '<span class="spinner"></span> Saving...';
+    barBtn.disabled = true;
+
+    const descEl = document.getElementById('colDescription');
+    const conditionsPayload = getConditionsPayload();
+    const payload = {
+      title:          document.getElementById('colTitle').value.trim(),
+      descriptionHtml: descEl.innerHTML.trim(),
+      handle:         document.getElementById('colHandle').value.trim(),
+      disjunctive:    conditionsPayload.disjunctive,
+      rules:          conditionsPayload.rules,
+    };
+
+    try {
+      const res = await fetch('/api/collection/update?id=' + encodeURIComponent(COLLECTION_ID), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.detail || 'Save failed');
+      }
+      const data = await res.json();
+      document.getElementById('pageTitle').textContent = data.title || payload.title;
+      document.getElementById('breadcrumbTitle').textContent = data.title || payload.title;
+      document.getElementById('handleDisplay').textContent = payload.handle || '—';
+      isDirty = false;
+      document.getElementById('saveBar').style.display = 'none';
+      showToast('✅ Collection saved');
+    } catch (e) {
+      showToast('Save failed: ' + e.message, 'error');
+    } finally {
+      btn.textContent = oldText;
+      btn.disabled = false;
+      barBtn.textContent = 'Save';
+      barBtn.disabled = false;
+    }
+  }
+
+  // ── DELETE ──
+  async function deleteCollection() {
+    const confirmed = await showCustomAlert({
+      title: 'Delete collection',
+      message: 'Are you sure you want to delete <strong>' + escapeHtml(document.getElementById('colTitle').value) + '</strong>?<br><br>This cannot be undone.',
+      type: 'danger', showCancel: true, confirmText: 'Delete collection'
+    });
+    if (!confirmed) return;
+
+    const btn = document.getElementById('deleteBtn');
+    btn.textContent = 'Deleting...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/collection/delete?id=' + encodeURIComponent(COLLECTION_ID), { method: 'DELETE' });
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.detail || 'Delete failed');
+      }
+      location.href = '/collections';
+    } catch (e) {
+      showToast('Delete failed: ' + e.message, 'error');
+      btn.textContent = '🗑 Delete collection';
+      btn.disabled = false;
+    }
+  }
+
+  // ── CHANGE LISTENERS ──
+  ['colTitle', 'colHandle', 'seoTitle', 'seoDescription'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => { markDirty(); updateSeoPreview(); });
+  });
+  document.getElementById('colDescription').addEventListener('input', markDirty);
+  document.getElementById('colStatus').addEventListener('change', e => {
+    updateStatusDot(e.target.value); markDirty();
+  });
+
+  document.addEventListener('DOMContentLoaded', loadData);
+
+  // ── CONDITIONS ──
+  const CONDITION_FIELDS = [
+    { value: 'title',        label: 'Product title' },
+    { value: 'type',         label: 'Product type' },
+    { value: 'vendor',       label: 'Product vendor' },
+    { value: 'variant_price',label: 'Price' },
+    { value: 'tag',          label: 'Product tag' },
+    { value: 'variant_weight',label: 'Weight' },
+    { value: 'variant_inventory', label: 'Inventory stock' },
+  ];
+
+  const CONDITION_OPERATORS = {
+    text:    [{ value: 'equals', label: 'is equal to' }, { value: 'not_equals', label: 'is not equal to' }, { value: 'starts_with', label: 'starts with' }, { value: 'ends_with', label: 'ends with' }, { value: 'contains', label: 'contains' }, { value: 'not_contains', label: 'does not contain' }],
+    numeric: [{ value: 'greater_than', label: 'is greater than' }, { value: 'less_than', label: 'is less than' }, { value: 'equals', label: 'is equal to' }, { value: 'not_equals', label: 'is not equal to' }],
+  };
+
+  const NUMERIC_FIELDS = new Set(['variant_price', 'variant_weight', 'variant_inventory']);
+
+  let conditions = [];
+
+  function fieldType(field) {
+    return NUMERIC_FIELDS.has(field) ? 'numeric' : 'text';
+  }
+
+  function renderConditions() {
+    const container = document.getElementById('conditionRows');
+    container.innerHTML = '';
+    if (conditions.length === 0) {
+      addConditionRow();
+      return;
+    }
+    conditions.forEach((cond, idx) => renderConditionRow(cond, idx));
+    updateConditionsInfo();
+  }
+
+  function renderConditionRow(cond, idx) {
+    const container = document.getElementById('conditionRows');
+    const row = document.createElement('div');
+    row.className = 'condition-row';
+    row.dataset.idx = idx;
+
+    const fType = fieldType(cond.field || 'title');
+    const operators = CONDITION_OPERATORS[fType];
+
+    // Field select
+    const fieldSel = document.createElement('select');
+    fieldSel.className = 'cond-field';
+    CONDITION_FIELDS.forEach(f => {
+      const o = document.createElement('option');
+      o.value = f.value; o.textContent = f.label;
+      if (f.value === cond.field) o.selected = true;
+      fieldSel.appendChild(o);
+    });
+    fieldSel.onchange = () => {
+      conditions[idx].field = fieldSel.value;
+      // Reset operator to first valid
+      const ops = CONDITION_OPERATORS[fieldType(fieldSel.value)];
+      conditions[idx].operator = ops[0].value;
+      conditions[idx].value = '';
+      renderConditions();
+      markDirty();
+    };
+
+    // Operator select
+    const opSel = document.createElement('select');
+    opSel.className = 'cond-operator';
+    operators.forEach(op => {
+      const o = document.createElement('option');
+      o.value = op.value; o.textContent = op.label;
+      if (op.value === cond.operator) o.selected = true;
+      opSel.appendChild(o);
+    });
+    opSel.onchange = () => { conditions[idx].operator = opSel.value; markDirty(); updateConditionsInfo(); };
+
+    // Value input
+    const valWrap = document.createElement('div');
+    valWrap.style.cssText = 'display:flex; align-items:center; border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; transition:border-color .15s, box-shadow .15s;';
+    valWrap.addEventListener('focusin', () => { valWrap.style.borderColor = 'var(--border-focus)'; valWrap.style.boxShadow = '0 0 0 3px rgba(0,91,211,.12)'; });
+    valWrap.addEventListener('focusout', () => { valWrap.style.borderColor = 'var(--border)'; valWrap.style.boxShadow = ''; });
+
+    if (NUMERIC_FIELDS.has(cond.field || 'title') && cond.field === 'variant_price') {
+      const prefix = document.createElement('span');
+      prefix.textContent = '$';
+      prefix.style.cssText = 'padding:8px 10px; background:#f6f6f7; border-right:1px solid var(--border); font-size:13px; color:var(--text-secondary);';
+      valWrap.appendChild(prefix);
+    }
+    const valInput = document.createElement('input');
+    valInput.type = NUMERIC_FIELDS.has(cond.field) ? 'number' : 'text';
+    valInput.style.cssText = 'border:none; border-radius:0; box-shadow:none !important; flex:1; min-width:0;';
+    valInput.placeholder = NUMERIC_FIELDS.has(cond.field) ? '0.00' : 'Enter value';
+    valInput.value = cond.value || '';
+    valInput.oninput = () => { conditions[idx].value = valInput.value; markDirty(); updateConditionsInfo(); };
+    valWrap.appendChild(valInput);
+
+    // Delete btn
+    const delBtn = document.createElement('button');
+    delBtn.className = 'condition-delete-btn';
+    delBtn.innerHTML = '&#128465;';
+    delBtn.title = 'Remove condition';
+    delBtn.onclick = () => {
+      conditions.splice(idx, 1);
+      if (conditions.length === 0) conditions.push({ field: 'title', operator: 'equals', value: '' });
+      renderConditions();
+      markDirty();
+    };
+
+    row.appendChild(fieldSel);
+    row.appendChild(opSel);
+    row.appendChild(valWrap);
+    row.appendChild(delBtn);
+    container.appendChild(row);
+  }
+
+  function addConditionRow() {
+    conditions.push({ field: 'title', operator: 'equals', value: '' });
+    renderConditions();
+    markDirty();
+  }
+
+  function updateConditionsInfo() {
+    const info = document.getElementById('conditionsInfo');
+    const infoText = document.getElementById('conditionsInfoText');
+    const filled = conditions.filter(c => c.value && c.value.trim() !== '');
+    if (filled.length === 0) { info.style.display = 'none'; return; }
+
+    const matchType = document.querySelector('input[name="matchType"]:checked')?.value || 'all';
+    const fieldLabels = [...new Set(filled.map(c => CONDITION_FIELDS.find(f => f.value === c.field)?.label || c.field))];
+    const matchWord = matchType === 'all' ? 'at least one variant that matches' : 'any variant that matches';
+    infoText.textContent = `This collection will include all products with ${matchWord}: ${fieldLabels.join(', ')}.`;
+    info.style.display = 'flex';
+  }
+
+  function getConditionsPayload() {
+    const matchType = document.querySelector('input[name="matchType"]:checked')?.value || 'all';
+    return {
+      disjunctive: matchType === 'any',
+      rules: conditions.filter(c => c.value && c.value.trim() !== '').map(c => ({
+        column: c.field,
+        relation: c.operator,
+        condition: c.value,
+      })),
+    };
+  }
+
+  function loadConditions(data) {
+    if (data.rules && data.rules.length > 0) {
+      conditions = data.rules.map(r => ({
+        field:    r.column,
+        operator: r.relation,
+        value:    r.condition,
+      }));
+      if (data.disjunctive) {
+        document.querySelector('input[name="matchType"][value="any"]').checked = true;
+      }
+    } else {
+      conditions = [{ field: 'title', operator: 'equals', value: '' }];
+    }
+    renderConditions();
+  }
+
+</script>
+</body>
+</html>
