@@ -1,7 +1,7 @@
 import os
 
 import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from app.api import product_action, products, product_page
@@ -33,6 +33,11 @@ def dashboard(request: Request):
         "dashboard.html",
         {"request": request}
     )
+
+
+@app.head("/")
+def dashboard_head():
+    return Response(status_code=200)
 
 
 if __name__ == "__main__":
