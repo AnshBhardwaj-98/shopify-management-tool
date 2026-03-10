@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Body, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from app.services.bulk_service import BulkService
 import json
@@ -22,19 +22,28 @@ class BulkPriceIncreaseRequest(BaseModel):
     variant_ids: Optional[List[str]] = None
 
 @router.post("/bulk/price-increase")
-def bulk_price_increase(request: BulkPriceIncreaseRequest):
+def bulk_price_increase(
+    percentage: float | None = Query(default=None),
+    request: BulkPriceIncreaseRequest | None = Body(default=None),
+):
     """
     Streams live progress via Server-Sent Events.
     Yields a keep-alive ping immediately so the browser
     does not show "Connecting..." while get_products() runs.
     """
 
+    # Support both request styles:
+    # 1) POST /bulk/price-increase?percentage=10
+    # 2) POST /bulk/price-increase with JSON body
+    effective_percentage = request.percentage if request else percentage
+    if effective_percentage is None:
+        raise HTTPException(status_code=422, detail="percentage is required")
+
     def generate():
         global _abort_flag
         _abort_flag = False
 
-        percentage = request.percentage
-        target_variants = set(request.variant_ids) if request.variant_ids else None
+        target_variants = set(request.variant_ids) if request and request.variant_ids else None
 
         # Ping immediately so the browser sees the connection is alive
         yield ": keep-alive\n\n"
@@ -61,7 +70,7 @@ def bulk_price_increase(request: BulkPriceIncreaseRequest):
                         continue
                         
                     old_price = float(variant["price"])
-                    new_price = round(old_price * (1 + percentage / 100), 2)
+                    new_price = round(old_price * (1 + effective_percentage / 100), 2)
                     variants_payload.append({
                         "id": variant_id,
                         "price": str(new_price)
