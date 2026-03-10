@@ -1,3 +1,6 @@
+import os
+
+import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -30,3 +33,9 @@ def dashboard(request: Request):
         "dashboard.html",
         {"request": request}
     )
+
+
+if __name__ == "__main__":
+    # Render provides PORT; default is useful for local runs.
+    port = int(os.getenv("PORT", "8000"))
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port)

@@ -84,3 +84,26 @@ shopify_controller/
 
 6. **Access Dashboard:**
    Open your browser and navigate to `http://127.0.0.1:8000/` to access the main dashboard.
+
+## Deploy on Render (GitHub)
+
+This repository is configured for a standard GitHub-connected Render Web Service without `render.yaml`.
+
+In Render, create a new **Web Service** from your GitHub repo and use:
+
+- **Runtime:** Python 3
+- **Build Command:** `pip install -r requirements.txt`
+- **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+
+Environment variables to set in Render:
+
+- `SHOPIFY_STORE` = your-store.myshopify.com
+- `SHOPIFY_TOKEN` = your Shopify Admin API token
+- `API_VERSION` = `2026-01` (optional, defaults in app)
+
+Repository deployment helpers included:
+
+- `runtime.txt` pins Python for reproducible cloud builds
+- `Procfile` documents the web process command
+
+If your Render service was previously created, make sure the service **Start Command** matches the command above, then redeploy.
