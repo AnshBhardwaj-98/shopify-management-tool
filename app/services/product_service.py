@@ -1,11 +1,12 @@
 from app.clients.shopify_client import ShopifyClient
+import time
 
 
 class ProductService:
 
     def __init__(self):
         self.client = ShopifyClient()
-        self.location_id = "gid://shopify/Location/YOUR_LOCATION_ID"  # ← Your real location ID
+        self.location_id = "gid://shopify/Location/90101711069"
 
     # ==================== GET PRODUCTS ====================
 
@@ -17,9 +18,14 @@ class ProductService:
                 "title": p["title"],
                 "vendor": p["vendor"],
                 "product_type": p["productType"],
+                "status": p.get("status", "DRAFT").lower(),
                 "image": p["featuredImage"]["url"] if p["featuredImage"] else None,
                 "variants": [
-                    {"id": v["node"]["id"], "price": v["node"]["price"]}
+                    {
+                        "id": v["node"]["id"],
+                        "price": v["node"]["price"],
+                        "quantity": v["node"].get("inventoryQuantity", 0)
+                    }
                     for v in p["variants"]["edges"]
                 ],
             }
@@ -209,13 +215,22 @@ class ProductService:
                     if track_errs:
                         raise Exception(f"Tracking error: {track_errs}")
 
+                    # Delay to ensure Shopify updates the tracking state
+                    time.sleep(1)
+
+                    # Extract the first available location ID where this item is currently stocked
+                    item_levels = variant["inventoryItem"].get("inventoryLevels", {}).get("edges", [])
+                    if not item_levels:
+                        raise Exception("Item has no inventory levels to update quantity against.")
+                    actual_location_id = item_levels[0]["node"]["location"]["id"]
+
                     # Set quantity if tracking is on
                     if data.inventory.track and data.inventory.quantity is not None:
                         qty_resp = self.client.graphql(
                             """
-                            mutation inventorySetOnHandQuantities($input: InventorySetOnHandQuantitiesInput!) {
-                              inventorySetOnHandQuantities(input: $input) {
-                                inventoryAdjustments { inventoryItem { id } }
+                            mutation inventorySetQuantities($input: InventorySetQuantitiesInput!) {
+                              inventorySetQuantities(input: $input) {
+                                inventoryAdjustmentGroup { reason }
                                 userErrors { field message }
                               }
                             }
@@ -223,15 +238,17 @@ class ProductService:
                             {
                                 "input": {
                                     "reason": "correction",
-                                    "setQuantities": [{
+                                    "name": "available",
+                                    "ignoreCompareQuantity": True,
+                                    "quantities": [{
                                         "inventoryItemId": inv_item_id,
-                                        "locationId": self.location_id,
+                                        "locationId": actual_location_id,
                                         "quantity": data.inventory.quantity
                                     }]
                                 }
                             }
                         )
-                        qty_errs = qty_resp["inventorySetOnHandQuantities"]["userErrors"]
+                        qty_errs = qty_resp["inventorySetQuantities"]["userErrors"]
                         if qty_errs:
                             raise Exception(f"Quantity error: {qty_errs}")
             except Exception as e:
@@ -403,13 +420,24 @@ class ProductService:
                     if track_errs:
                         raise Exception(f"Tracking enable error: {track_errs}")
 
+                    # Delay to ensure Shopify updates the tracking state
+                    time.sleep(1)
+
+                    # Extract the first available location ID where this item is stocked
+                    item_levels = variant["inventoryItem"].get("inventoryLevels", {}).get("edges", [])
+                    if not item_levels:
+                        # Fallback for newly created products which might be too fresh to have an inventory level bound
+                        actual_location_id = self.location_id
+                    else:
+                        actual_location_id = item_levels[0]["node"]["location"]["id"]
+
                     # STEP B: Set quantity
                     if quantity > 0:
                         qty_resp = self.client.graphql(
                             """
-                            mutation inventorySetOnHandQuantities($input: InventorySetOnHandQuantitiesInput!) {
-                              inventorySetOnHandQuantities(input: $input) {
-                                inventoryAdjustments { inventoryItem { id } }
+                            mutation inventorySetQuantities($input: InventorySetQuantitiesInput!) {
+                              inventorySetQuantities(input: $input) {
+                                inventoryAdjustmentGroup { reason }
                                 userErrors { field message }
                               }
                             }
@@ -417,17 +445,19 @@ class ProductService:
                             {
                                 "input": {
                                     "reason": "correction",
-                                    "setQuantities": [
+                                    "name": "available",
+                                    "ignoreCompareQuantity": True,
+                                    "quantities": [
                                         {
                                             "inventoryItemId": inv_item_id,
-                                            "locationId": self.location_id,
+                                            "locationId": actual_location_id,
                                             "quantity": quantity
                                         }
                                     ]
                                 }
                             }
                         )
-                        qty_errs = qty_resp["inventorySetOnHandQuantities"]["userErrors"]
+                        qty_errs = qty_resp["inventorySetQuantities"]["userErrors"]
                         if qty_errs:
                             raise Exception(f"Quantity error: {qty_errs}")
 
@@ -490,7 +520,18 @@ class ProductService:
             query($id: ID!) {
               product(id: $id) {
                 variants(first: 100) {
-                  edges { node { id price inventoryItem { id } } }
+                  edges { 
+                    node { 
+                      id 
+                      price 
+                      inventoryItem { 
+                        id
+                        inventoryLevels(first: 1) {
+                          edges { node { location { id } } }
+                        }
+                      } 
+                    } 
+                  }
                 }
               }
             }

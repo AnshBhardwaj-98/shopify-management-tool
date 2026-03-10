@@ -61,6 +61,7 @@ class ShopifyClient:
                         node {
                         id
                         price
+                        inventoryQuantity
                         }
                     }
                     }

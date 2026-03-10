@@ -51,7 +51,6 @@ def get_product(id: str):
 
 @router.put("/api/product/update")
 def update_product(id: str, req: CreateProductRequest):
-    # ID passed as query param: /product/update?id=gid://shopify/Product/123
     return service.update_product(id, req)
 
 
