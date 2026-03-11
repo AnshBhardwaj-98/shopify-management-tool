@@ -40,6 +40,11 @@ def dashboard_head():
     return Response(status_code=200)
 
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
+
 if __name__ == "__main__":
     # Render provides PORT; default is useful for local runs.
     port = int(os.getenv("PORT", "8000"))

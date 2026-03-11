@@ -1,907 +1,1791 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shopify · Dashboard</title>
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopify · Dashboard</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: "Inter", system-ui, -apple-system, sans-serif;
-      background: #f0f2f5;
-      color: #1e293b;
-      line-height: 1.5;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-    }
+      body {
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #f0f2f5;
+        color: #1e293b;
+        line-height: 1.5;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+      }
 
-    .shell {
-      display: flex;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-      background: #fff;
-    }
+      .shell {
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        background: #fff;
+      }
 
-    .sidebar {
-      width: 260px;
-      flex-shrink: 0;
-      border-right: 1px solid #e2e8f0;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      overflow: hidden;
-    }
+      .sidebar {
+        width: 260px;
+        flex-shrink: 0;
+        border-right: 1px solid #e2e8f0;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+      }
 
-    .sidebar-header {
-      padding: 16px 18px 14px;
-      border-bottom: 1px solid #e2e8f0;
-      flex-shrink: 0;
-    }
-    .sidebar-header h3 {
-      font-size: .8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      color: #64748b;
-    }
+      .sidebar-header {
+        padding: 16px 18px 14px;
+        border-bottom: 1px solid #e2e8f0;
+        flex-shrink: 0;
+      }
+      .sidebar-header h3 {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: #64748b;
+      }
 
-    .sidebar-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0;
-    }
+      .sidebar-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0;
+      }
 
-    .collapse-section { border-bottom: 1px solid #e2e8f0; }
+      .collapse-section {
+        border-bottom: 1px solid #e2e8f0;
+      }
 
-    .collapse-trigger {
-      width: 100%; display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 18px; background: none; border: none; cursor: pointer;
-      font-size: .88rem; font-weight: 600; color: #0f172a;
-      transition: background .12s;
-    }
-    .collapse-trigger:hover { background: #f8fafc; }
-    .collapse-trigger .chevron {
-      font-size: .7rem; color: #94a3b8;
-      transition: transform .2s;
-      display: inline-block;
-    }
-    .collapse-trigger.open .chevron { transform: rotate(180deg); }
+      .collapse-trigger {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 18px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #0f172a;
+        transition: background 0.12s;
+      }
+      .collapse-trigger:hover {
+        background: #f8fafc;
+      }
+      .collapse-trigger .chevron {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        transition: transform 0.2s;
+        display: inline-block;
+      }
+      .collapse-trigger.open .chevron {
+        transform: rotate(180deg);
+      }
 
-    .collapse-body {
-      padding: 0 18px 14px;
-      display: none;
-    }
-    .collapse-body.open { display: block; }
+      .collapse-body {
+        padding: 0 18px 14px;
+        display: none;
+      }
+      .collapse-body.open {
+        display: block;
+      }
 
-    .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
-    .field:last-child { margin-bottom: 0; }
-    .field label {
-      font-size: .73rem; font-weight: 600; color: #475569;
-      text-transform: uppercase; letter-spacing: .4px;
-    }
-    .field input {
-      padding: 8px 10px; border: 1px solid #d1d9e6;
-      background: #fff; font-size: .88rem; border-radius: 4px;
-      transition: border .15s, box-shadow .15s; font-family: inherit;
-    }
-    .field input:focus {
-      outline: none; border-color: #0f172a;
-      box-shadow: 0 0 0 3px rgba(15,23,42,.08);
-    }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 12px;
+      }
+      .field:last-child {
+        margin-bottom: 0;
+      }
+      .field label {
+        font-size: 0.73rem;
+        font-weight: 600;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .field input {
+        padding: 8px 10px;
+        border: 1px solid #d1d9e6;
+        background: #fff;
+        font-size: 0.88rem;
+        border-radius: 4px;
+        transition:
+          border 0.15s,
+          box-shadow 0.15s;
+        font-family: inherit;
+      }
+      .field input:focus {
+        outline: none;
+        border-color: #0f172a;
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+      }
 
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 8px 16px; font-size: .85rem; font-weight: 500;
-      cursor: pointer; border-radius: 4px; border: none;
-      transition: background .15s, transform .1s; font-family: inherit;
-      white-space: nowrap;
-    }
-    .btn:active { transform: scale(.98); }
-    .btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
-    .btn-dark { background: #0f172a; color: white; }
-    .btn-dark:hover:not(:disabled) { background: #1e293b; }
-    .btn-outline {
-      background: white; color: #0f172a; border: 1px solid #d1d9e6;
-    }
-    .btn-outline:hover:not(:disabled) { background: #f8fafc; border-color: #94a3b8; }
-    .btn-sm { padding: 6px 12px; font-size: .8rem; }
-    .btn-full { width: 100%; }
-    .btn-ghost {
-      background: transparent; color: #475569; border: 1px solid transparent;
-    }
-    .btn-ghost:hover { background: #f1f5f9; color: #0f172a; }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 4px;
+        border: none;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+        font-family: inherit;
+        white-space: nowrap;
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-dark {
+        background: #0f172a;
+        color: white;
+      }
+      .btn-dark:hover:not(:disabled) {
+        background: #1e293b;
+      }
+      .btn-outline {
+        background: white;
+        color: #0f172a;
+        border: 1px solid #d1d9e6;
+      }
+      .btn-outline:hover:not(:disabled) {
+        background: #f8fafc;
+        border-color: #94a3b8;
+      }
+      .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+      .btn-full {
+        width: 100%;
+      }
+      .btn-ghost {
+        background: transparent;
+        color: #475569;
+        border: 1px solid transparent;
+      }
+      .btn-ghost:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+      }
 
-    .progress-panel {
-      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px;
-      padding: 12px; display: none; flex-direction: column; gap: 10px;
-      margin-top: 4px;
-    }
-    .progress-panel h4 { font-size: .8rem; font-weight: 600; color: #0f172a; }
-    .progress-bar-wrap { background: #e2e8f0; height: 5px; border-radius: 3px; overflow: hidden; }
-    .progress-bar-fill { height: 100%; background: #0f172a; border-radius: 3px; width: 0%; transition: width .3s ease; }
-    .progress-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
-    .stat-box { background: white; border: 1px solid #e2e8f0; padding: 6px 8px; text-align: center; border-radius: 3px; }
-    .stat-box .stat-val { font-size: 1.1rem; font-weight: 700; color: #0f172a; display: block; }
-    .stat-box .stat-val.green { color: #1a7f5a; }
-    .stat-box .stat-val.red { color: #b91c1c; }
-    .stat-box .stat-label { font-size: .65rem; color: #64748b; text-transform: uppercase; letter-spacing: .3px; }
-    .live-log {
-      max-height: 160px; overflow-y: auto;
-      background: white; border: 1px solid #e9edf2; border-radius: 3px;
-      font-size: .73rem; font-family: 'Menlo', 'Consolas', monospace;
-    }
-    .log-entry {
-      padding: 3px 8px; border-bottom: 1px solid #f1f5f9;
-      animation: fadeIn .15s ease;
-    }
-    .log-entry:last-child { border-bottom: none; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
-    .log-entry.success { color: #1a7f5a; }
-    .log-entry.fail { color: #b91c1c; }
-    .log-entry.skip { color: #94a3b8; }
-    .log-entry.done { color: #0f172a; font-weight: 600; }
-    .progress-status { font-size: .75rem; color: #64748b; font-style: italic; }
+      .progress-panel {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        padding: 12px;
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 4px;
+      }
+      .progress-panel h4 {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #0f172a;
+      }
+      .progress-bar-wrap {
+        background: #e2e8f0;
+        height: 5px;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .progress-bar-fill {
+        height: 100%;
+        background: #0f172a;
+        border-radius: 3px;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+      .progress-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 5px;
+      }
+      .stat-box {
+        background: white;
+        border: 1px solid #e2e8f0;
+        padding: 6px 8px;
+        text-align: center;
+        border-radius: 3px;
+      }
+      .stat-box .stat-val {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        display: block;
+      }
+      .stat-box .stat-val.green {
+        color: #1a7f5a;
+      }
+      .stat-box .stat-val.red {
+        color: #b91c1c;
+      }
+      .stat-box .stat-label {
+        font-size: 0.65rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .live-log {
+        max-height: 160px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #e9edf2;
+        border-radius: 3px;
+        font-size: 0.73rem;
+        font-family: "Menlo", "Consolas", monospace;
+      }
+      .log-entry {
+        padding: 3px 8px;
+        border-bottom: 1px solid #f1f5f9;
+        animation: fadeIn 0.15s ease;
+      }
+      .log-entry:last-child {
+        border-bottom: none;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-3px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .log-entry.success {
+        color: #1a7f5a;
+      }
+      .log-entry.fail {
+        color: #b91c1c;
+      }
+      .log-entry.skip {
+        color: #94a3b8;
+      }
+      .log-entry.done {
+        color: #0f172a;
+        font-weight: 600;
+      }
+      .progress-status {
+        font-size: 0.75rem;
+        color: #64748b;
+        font-style: italic;
+      }
 
-    .sidebar-footer {
-      padding: 12px 18px;
-      border-top: 1px solid #e2e8f0;
-      font-size: .75rem;
-      color: #94a3b8;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
+      .sidebar-footer {
+        padding: 12px 18px;
+        border-top: 1px solid #e2e8f0;
+        font-size: 0.75rem;
+        color: #94a3b8;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
 
-    .main {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      overflow: hidden;
-    }
+      .main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+      }
 
-    .topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 20px;
-      border-bottom: 1px solid #e2e8f0;
-      background: #fff;
-      flex-shrink: 0;
-      gap: 12px;
-    }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 20px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #fff;
+        flex-shrink: 0;
+        gap: 12px;
+      }
 
-    .topbar-left { display: flex; align-items: center; gap: 12px; }
-    .topbar-title { font-size: 1rem; font-weight: 700; color: #0f172a; letter-spacing: -.01em; }
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .topbar-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -0.01em;
+      }
 
-    .view-switcher {
-      display: flex; background: #f1f5f9; border-radius: 6px; padding: 3px; gap: 2px;
-    }
-    .view-btn {
-      padding: 5px 14px; font-size: .8rem; font-weight: 500;
-      border: none; background: transparent; cursor: pointer;
-      border-radius: 4px; color: #64748b; transition: all .15s;
-      font-family: inherit;
-    }
-    .view-btn.active { background: #fff; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+      .view-switcher {
+        display: flex;
+        background: #f1f5f9;
+        border-radius: 6px;
+        padding: 3px;
+        gap: 2px;
+      }
+      .view-btn {
+        padding: 5px 14px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        border-radius: 4px;
+        color: #64748b;
+        transition: all 0.15s;
+        font-family: inherit;
+      }
+      .view-btn.active {
+        background: #fff;
+        color: #0f172a;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
 
-    .topbar-right { display: flex; align-items: center; gap: 8px; }
-    #searchInput {
-      padding: 7px 12px; border: 1px solid #d1d9e6; font-size: .85rem;
-      width: 220px; border-radius: 4px; background: white; font-family: inherit;
-    }
-    #searchInput:focus { outline: none; border-color: #0f172a; box-shadow: 0 0 0 3px rgba(15,23,42,.08); }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      #searchInput {
+        padding: 7px 12px;
+        border: 1px solid #d1d9e6;
+        font-size: 0.85rem;
+        width: 220px;
+        border-radius: 4px;
+        background: white;
+        font-family: inherit;
+      }
+      #searchInput:focus {
+        outline: none;
+        border-color: #0f172a;
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+      }
 
-    .content { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+      .content {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+        position: relative;
+      }
 
-    .view-panel { width: 100%; height: 100%; display: none; flex-direction: column; }
-    .view-panel.active { display: flex; }
+      .view-panel {
+        width: 100%;
+        height: 100%;
+        display: none;
+        flex-direction: column;
+      }
+      .view-panel.active {
+        display: flex;
+      }
 
-    .table-scroll {
-      flex: 1; min-height: 0; overflow-y: auto;
-    }
-    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
-    th {
-      text-align: left; padding: 11px 14px; background: #f8fafc;
-      font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0;
-      white-space: nowrap; position: sticky; top: 0; z-index: 10;
-      font-size: .78rem; text-transform: uppercase; letter-spacing: .3px;
-    }
-    td {
-      padding: 10px 14px; border-bottom: 1px solid #f1f5f9;
-      vertical-align: middle; background: white; transition: background .3s;
-    }
-    tr:hover td { background: #fafafa; }
-    tr:last-child td { border-bottom: none; }
-    td.flash-update { background: #f0fdf4 !important; }
+      .table-scroll {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      th {
+        text-align: left;
+        padding: 11px 14px;
+        background: #f8fafc;
+        font-weight: 600;
+        color: #475569;
+        border-bottom: 2px solid #e2e8f0;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+        background: white;
+        transition: background 0.3s;
+      }
+      tr:hover td {
+        background: #fafafa;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      td.flash-update {
+        background: #f0fdf4 !important;
+      }
 
-    .product-image { width: 40px; height: 40px; object-fit: cover; border: 1px solid #e2e8f0; border-radius: 4px; display: block; }
-    .no-image {
-      width: 40px; height: 40px; background: #f1f5f9; border-radius: 4px;
-      display: flex; align-items: center; justify-content: center;
-      color: #94a3b8; font-size: .65rem; border: 1px dashed #cbd5e1;
-    }
-    td input[type="text"] {
-      width: 85px; padding: 6px 8px; border: 1px solid #d1d9e6;
-      background: white; font-size: .85rem; border-radius: 4px; transition: border .15s; font-family: inherit;
-    }
-    td input[type="text"]:focus { outline: none; border-color: #0f172a; box-shadow: 0 0 0 2px rgba(15,23,42,.08); }
-    .update-btn {
-      background: transparent; border: 1px solid #0f172a; color: #0f172a;
-      padding: 4px 10px; font-size: .78rem; font-weight: 500; cursor: pointer;
-      border-radius: 4px; transition: background .15s; white-space: nowrap; font-family: inherit;
-    }
-    .update-btn:hover { background: #0f172a; color: white; }
-    .edit-btn {
-      background: transparent; border: 1px solid #e2e8f0; color: #475569;
-      padding: 4px 10px; font-size: .78rem; font-weight: 500; cursor: pointer;
-      border-radius: 4px; transition: all .15s; white-space: nowrap; font-family: inherit;
-    }
-    .edit-btn:hover { background: #f1f5f9; border-color: #94a3b8; color: #0f172a; }
-    .delete-btn {
-      background: transparent; border: 1px solid #fecaca; color: #b91c1c;
-      padding: 4px 10px; font-size: .78rem; font-weight: 500; cursor: pointer;
-      border-radius: 4px; transition: all .15s; white-space: nowrap; font-family: inherit;
-    }
-    .delete-btn:hover { background: #fef2f2; border-color: #f87171; }
-    .delete-btn:disabled { opacity: .5; cursor: not-allowed; }
-    .badge {
-      background: #f1f5f9; color: #64748b; padding: 2px 7px;
-      font-size: .72rem; font-weight: 500; border-radius: 3px;
-      max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block;
-    }
-    .status-badge {
-      padding: 2px 8px; font-size: .7rem; font-weight: 600; border-radius: 12px;
-      text-transform: uppercase; letter-spacing: .3px; display: inline-block;
-    }
-    .status-badge.active { background: #dcfce7; color: #166534; }
-    .status-badge.draft { background: #f1f5f9; color: #475569; }
-    .status-badge.archived { background: #fef3c7; color: #92400e; }
-    .empty-row { text-align: center; color: #94a3b8; padding: 48px 0; font-size: .9rem; }
+      .product-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        display: block;
+      }
+      .no-image {
+        width: 40px;
+        height: 40px;
+        background: #f1f5f9;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 0.65rem;
+        border: 1px dashed #cbd5e1;
+      }
+      td input[type="text"] {
+        width: 85px;
+        padding: 6px 8px;
+        border: 1px solid #d1d9e6;
+        background: white;
+        font-size: 0.85rem;
+        border-radius: 4px;
+        transition: border 0.15s;
+        font-family: inherit;
+      }
+      td input[type="text"]:focus {
+        outline: none;
+        border-color: #0f172a;
+        box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.08);
+      }
+      .update-btn {
+        background: transparent;
+        border: 1px solid #0f172a;
+        color: #0f172a;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background 0.15s;
+        white-space: nowrap;
+        font-family: inherit;
+      }
+      .update-btn:hover {
+        background: #0f172a;
+        color: white;
+      }
+      .edit-btn {
+        background: transparent;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.15s;
+        white-space: nowrap;
+        font-family: inherit;
+      }
+      .edit-btn:hover {
+        background: #f1f5f9;
+        border-color: #94a3b8;
+        color: #0f172a;
+      }
+      .delete-btn {
+        background: transparent;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.15s;
+        white-space: nowrap;
+        font-family: inherit;
+      }
+      .delete-btn:hover {
+        background: #fef2f2;
+        border-color: #f87171;
+      }
+      .delete-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .badge {
+        background: #f1f5f9;
+        color: #64748b;
+        padding: 2px 7px;
+        font-size: 0.72rem;
+        font-weight: 500;
+        border-radius: 3px;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+      }
+      .status-badge {
+        padding: 2px 8px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        display: inline-block;
+      }
+      .status-badge.active {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .status-badge.draft {
+        background: #f1f5f9;
+        color: #475569;
+      }
+      .status-badge.archived {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .empty-row {
+        text-align: center;
+        color: #94a3b8;
+        padding: 48px 0;
+        font-size: 0.9rem;
+      }
 
-    .excel-view {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      height: 100%; gap: 24px; padding: 40px;
-    }
-    .excel-view h2 { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
-    .excel-view p { font-size: .85rem; color: #64748b; text-align: center; max-width: 360px; }
-    .excel-cards {
-      display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
-    }
-    .excel-card {
-      background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
-      padding: 28px 32px; width: 260px; text-align: center;
-      display: flex; flex-direction: column; align-items: center; gap: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.04);
-      transition: box-shadow .2s, border-color .2s;
-      cursor: default;
-    }
-    .excel-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.08); border-color: #cbd5e1; }
-    .excel-card-icon { font-size: 2.4rem; }
-    .excel-card h3 { font-size: .95rem; font-weight: 700; color: #0f172a; }
-    .excel-card p { font-size: .8rem; color: #64748b; line-height: 1.5; }
-    .excel-card-actions { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+      .excel-view {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        gap: 24px;
+        padding: 40px;
+      }
+      .excel-view h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+      }
+      .excel-view p {
+        font-size: 0.85rem;
+        color: #64748b;
+        text-align: center;
+        max-width: 360px;
+      }
+      .excel-cards {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .excel-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 28px 32px;
+        width: 260px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transition:
+          box-shadow 0.2s,
+          border-color 0.2s;
+        cursor: default;
+      }
+      .excel-card:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        border-color: #cbd5e1;
+      }
+      .excel-card-icon {
+        font-size: 2.4rem;
+      }
+      .excel-card h3 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #0f172a;
+      }
+      .excel-card p {
+        font-size: 0.8rem;
+        color: #64748b;
+        line-height: 1.5;
+      }
+      .excel-card-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+      }
 
-    .drop-zone {
-      border: 2px dashed #d1d9e6; border-radius: 6px; padding: 14px;
-      text-align: center; cursor: pointer; transition: border-color .15s, background .15s;
-      position: relative; font-size: .78rem; color: #64748b;
-    }
-    .drop-zone:hover, .drop-zone.drag-over { border-color: #0f172a; background: #f8fafc; }
-    .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+      .drop-zone {
+        border: 2px dashed #d1d9e6;
+        border-radius: 6px;
+        padding: 14px;
+        text-align: center;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+        position: relative;
+        font-size: 0.78rem;
+        color: #64748b;
+      }
+      .drop-zone:hover,
+      .drop-zone.drag-over {
+        border-color: #0f172a;
+        background: #f8fafc;
+      }
+      .drop-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
 
-    .import-status {
-      font-size: .78rem; padding: 8px 10px; border-radius: 4px;
-      display: none; text-align: left; line-height: 1.5;
-    }
-    .import-status.success { background: #f0fdf4; color: #1a7f5a; border: 1px solid #bbf7d0; display: block; }
-    .import-status.error { background: #fff4f4; color: #b91c1c; border: 1px solid #fecaca; display: block; }
-    .import-status.loading { background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; display: block; }
+      .import-status {
+        font-size: 0.78rem;
+        padding: 8px 10px;
+        border-radius: 4px;
+        display: none;
+        text-align: left;
+        line-height: 1.5;
+      }
+      .import-status.success {
+        background: #f0fdf4;
+        color: #1a7f5a;
+        border: 1px solid #bbf7d0;
+        display: block;
+      }
+      .import-status.error {
+        background: #fff4f4;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+        display: block;
+      }
+      .import-status.loading {
+        background: #f8fafc;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        display: block;
+      }
 
-    /* ── IMPORT BUTTON (label styled as .btn-outline) ── */
-    .btn-import-label {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 12px; font-size: .8rem; font-weight: 500;
-      cursor: pointer; border-radius: 4px; border: 1px solid #d1d9e6;
-      background: white; color: #0f172a; transition: background .15s, border-color .15s;
-      font-family: inherit; white-space: nowrap; user-select: none;
-    }
-    .btn-import-label:hover { background: #f8fafc; border-color: #94a3b8; }
+      /* ── IMPORT BUTTON (label styled as .btn-outline) ── */
+      .btn-import-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 4px;
+        border: 1px solid #d1d9e6;
+        background: white;
+        color: #0f172a;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+        font-family: inherit;
+        white-space: nowrap;
+        user-select: none;
+      }
+      .btn-import-label:hover {
+        background: #f8fafc;
+        border-color: #94a3b8;
+      }
 
-    /* inline import progress bar */
-    #importProgressWrap {
-      display: none; align-items: center; gap: 8px;
-      font-size: .78rem; color: #475569;
-    }
-    #importProgressWrap .imp-bar-track {
-      width: 120px; height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;
-    }
-    #importProgressWrap .imp-bar-fill {
-      height: 100%; background: #0f172a; border-radius: 2px;
-      width: 0%; transition: width .3s ease;
-    }
+      /* inline import progress bar */
+      #importProgressWrap {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+        color: #475569;
+      }
+      #importProgressWrap .imp-bar-track {
+        width: 120px;
+        height: 4px;
+        background: #e2e8f0;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      #importProgressWrap .imp-bar-fill {
+        height: 100%;
+        background: #0f172a;
+        border-radius: 2px;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
 
-    /* imported rows tint */
-    #gridContainer .handsontable td.imported-cell { background: #eff6ff !important; }
+      /* imported rows tint */
+      #gridContainer .handsontable td.imported-cell {
+        background: #eff6ff !important;
+      }
 
-    .grid-toolbar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 8px 16px; border-bottom: 1px solid #e2e8f0;
-      background: #fff; flex-shrink: 0; gap: 12px; flex-wrap: wrap;
-    }
-    .grid-toolbar-left, .grid-toolbar-right { display: flex; align-items: center; gap: 8px; }
-    .grid-status { font-size: .8rem; color: #64748b; }
-    .changed-badge {
-      background: #fef9c3; color: #854d0e; border: 1px solid #fde047;
-      padding: 3px 10px; border-radius: 12px; font-size: .75rem; font-weight: 600;
-    }
+      .grid-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 16px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #fff;
+        flex-shrink: 0;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .grid-toolbar-left,
+      .grid-toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .grid-status {
+        font-size: 0.8rem;
+        color: #64748b;
+      }
+      .changed-badge {
+        background: #fef9c3;
+        color: #854d0e;
+        border: 1px solid #fde047;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
 
-    #gridContainer { width: 100%; height: 100%; }
-    #gridContainer .handsontable td.changed-cell {
-      background: #fefce8 !important;
-    }
-    #gridContainer .handsontable td.htDimmed {
-      color: #94a3b8;
-    }
-    .colHeader-readonly {
-      color: #94a3b8 !important;
-    }
+      #gridContainer {
+        width: 100%;
+        height: 100%;
+      }
+      #gridContainer .handsontable td.changed-cell {
+        background: #fefce8 !important;
+      }
+      #gridContainer .handsontable td.htDimmed {
+        color: #94a3b8;
+      }
+      .colHeader-readonly {
+        color: #94a3b8 !important;
+      }
 
-    .grid-save-toast {
-      position: fixed; bottom: 24px; right: 24px;
-      padding: 10px 18px; border-radius: 6px; font-size: .85rem; font-weight: 500;
-      z-index: 9999; animation: fadeIn .2s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,.15);
-    }
-    .grid-save-toast.success { background: #0f172a; color: white; }
-    .grid-save-toast.error { background: #b91c1c; color: white; }
-    .grid-save-toast.partial { background: #92400e; color: white; }
+      .grid-save-toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        padding: 10px 18px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        z-index: 9999;
+        animation: fadeIn 0.2s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      .grid-save-toast.success {
+        background: #0f172a;
+        color: white;
+      }
+      .grid-save-toast.error {
+        background: #b91c1c;
+        color: white;
+      }
+      .grid-save-toast.partial {
+        background: #92400e;
+        color: white;
+      }
 
-    .spinner {
-      display: inline-block; width: 13px; height: 13px;
-      border: 2px solid rgba(255,255,255,.3); border-radius: 50%;
-      border-top-color: white; animation: spin .6s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner-dark {
-      border-color: rgba(15,23,42,.15);
-      border-top-color: #0f172a;
-    }
+      .spinner {
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.6s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .spinner-dark {
+        border-color: rgba(15, 23, 42, 0.15);
+        border-top-color: #0f172a;
+      }
 
-    /* ── DARK MODE ── */
-    body.dark-theme { background: #0b1120; color: #f8fafc; }
-    body.dark-theme .shell { background: #0f172a; box-shadow: 0 0 0 1px rgba(255,255,255,0.05); }
-    body.dark-theme .sidebar { background: #1e293b; border-right-color: #334155; box-shadow: 2px 0 8px rgba(0,0,0,0.2); }
-    body.dark-theme .sidebar-header { border-bottom-color: #334155; }
-    body.dark-theme .sidebar-header h3 { color: #94a3b8; }
-    body.dark-theme .collapse-section { border-bottom-color: #334155; }
-    body.dark-theme .collapse-trigger { color: #e2e8f0; }
-    body.dark-theme .collapse-trigger:hover { background: #334155; color: #f8fafc; }
-    body.dark-theme .field label { color: #cbd5e1; }
-    body.dark-theme .field input { background: #0f172a; border-color: #475569; color: #f8fafc; }
-    body.dark-theme .field input:focus { border-color: #3b82f6; }
-    body.dark-theme .btn-dark { background: #e2e8f0; color: #0f172a; }
-    body.dark-theme .btn-dark:hover:not(:disabled) { background: #ffffff; }
-    body.dark-theme .btn-outline { background: #1e293b; color: #f8fafc; border-color: #475569; }
-    body.dark-theme .btn-outline:hover:not(:disabled) { background: #334155; border-color: #64748b; }
-    body.dark-theme .btn-ghost { color: #cbd5e1; }
-    body.dark-theme .btn-ghost:hover { background: #334155; color: #f8fafc; }
-    body.dark-theme .progress-panel { background: #0f172a; border-color: #334155; }
-    body.dark-theme .progress-panel h4 { color: #f8fafc; }
-    body.dark-theme .progress-bar-wrap { background: #334155; }
-    body.dark-theme .progress-bar-fill { background: #3b82f6; }
-    body.dark-theme .stat-box { background: #1e293b; border-color: #334155; }
-    body.dark-theme .stat-box .stat-val { color: #f8fafc; }
-    body.dark-theme .stat-box .stat-val.green { color: #34d399; }
-    body.dark-theme .stat-box .stat-val.red { color: #f87171; }
-    body.dark-theme .live-log { background: #1e293b; border-color: #334155; }
-    body.dark-theme .sidebar-footer { background: #0f172a; border-top-color: #334155; color: #64748b; }
-    body.dark-theme .main { background: #0b1120; }
-    body.dark-theme .topbar { background: #1e293b; border-bottom-color: #334155; }
-    body.dark-theme .topbar-title { color: #f8fafc; background: #334155; }
-    body.dark-theme .view-switcher { background: #0f172a; }
-    body.dark-theme .view-btn { color: #94a3b8; }
-    body.dark-theme .view-btn.active { background: #1e293b; color: #f8fafc; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
-    body.dark-theme #searchInput { background: #0f172a; border-color: #475569; color: #f8fafc; }
-    body.dark-theme .table-scroll { background: #1e293b; box-shadow: none; }
-    body.dark-theme th { background: #0f172a; color: #cbd5e1; border-bottom-color: #334155; }
-    body.dark-theme td { background: #1e293b; border-bottom-color: #334155; }
-    body.dark-theme tr:hover td { background: #334155; }
-    body.dark-theme td.flash-update { background: #064e3b !important; }
-    body.dark-theme td input[type="text"] { background: #0f172a; border-color: #475569; color: #f8fafc; }
-    body.dark-theme .edit-btn { background: #1e293b; border-color: #475569; color: #94a3b8; }
-    body.dark-theme .edit-btn:hover { background: #334155; border-color: #64748b; color: #f8fafc; }
-    body.dark-theme .delete-btn { border-color: #7f1d1d; color: #f87171; }
-    body.dark-theme .delete-btn:hover { background: #450a0a; border-color: #ef4444; }
-    body.dark-theme .badge { background: #1e3a5f; color: #93c5fd; }
-    body.dark-theme .excel-card { background: #1e293b; border-color: #334155; }
-    body.dark-theme .excel-card h3 { color: #f8fafc; }
-    body.dark-theme .excel-card p { color: #94a3b8; }
-    body.dark-theme .excel-card:hover { border-color: #475569; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    body.dark-theme .drop-zone { background: #0f172a; border-color: #475569; color: #94a3b8; }
-    body.dark-theme .drop-zone:hover { background: #1e293b; }
-    body.dark-theme .grid-toolbar { background: #1e293b; border-bottom-color: #334155; }
-    body.dark-theme .grid-status { color: #94a3b8; }
-    body.dark-theme .changed-badge { background: #422006; color: #fcd34d; border-color: #b45309; }
-    body.dark-theme #gridLoadProgress { background: #0f172a !important; border-bottom-color: #334155 !important; }
-    body.dark-theme #gridLoadProgress div:first-child { color: #f8fafc !important; }
-    body.dark-theme #gridProgressBar { background: #3b82f6 !important; }
-    body.dark-theme #gridProgressLog { color: #94a3b8 !important; }
-    body.dark-theme #gridContainer .handsontable th { background: #0f172a; color: #f8fafc; border-color: #334155; }
-    body.dark-theme #gridContainer .handsontable td { background: #1e293b; color: #f8fafc; border-color: #334155; }
-    body.dark-theme #gridContainer .handsontable td.changed-cell { background: #422006 !important; }
-    body.dark-theme #gridContainer .handsontable td.htDimmed { color: #64748b; background: #0f172a; }
-    body.dark-theme #gridEmpty { background: #0b1120; }
-    body.dark-theme #gridEmpty div { color: #94a3b8; }
-    body.dark-theme .btn-import-label { background: #1e293b; color: #f8fafc; border-color: #475569; }
-    body.dark-theme .btn-import-label:hover { background: #334155; border-color: #64748b; }
-    body.dark-theme #importProgressWrap { color: #94a3b8; }
-    body.dark-theme #importProgressWrap .imp-bar-track { background: #334155; }
-    body.dark-theme #importProgressWrap .imp-bar-fill { background: #3b82f6; }
-    body.dark-theme #gridContainer .handsontable td.imported-cell { background: #1e3a8a !important; }
-  html.dark-theme-pre body { background: #0b1120 !important; }
+      /* ── DARK MODE ── */
+      body.dark-theme {
+        background: #0b1120;
+        color: #f8fafc;
+      }
+      body.dark-theme .shell {
+        background: #0f172a;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+      }
+      body.dark-theme .sidebar {
+        background: #1e293b;
+        border-right-color: #334155;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+      }
+      body.dark-theme .sidebar-header {
+        border-bottom-color: #334155;
+      }
+      body.dark-theme .sidebar-header h3 {
+        color: #94a3b8;
+      }
+      body.dark-theme .collapse-section {
+        border-bottom-color: #334155;
+      }
+      body.dark-theme .collapse-trigger {
+        color: #e2e8f0;
+      }
+      body.dark-theme .collapse-trigger:hover {
+        background: #334155;
+        color: #f8fafc;
+      }
+      body.dark-theme .field label {
+        color: #cbd5e1;
+      }
+      body.dark-theme .field input {
+        background: #0f172a;
+        border-color: #475569;
+        color: #f8fafc;
+      }
+      body.dark-theme .field input:focus {
+        border-color: #3b82f6;
+      }
+      body.dark-theme .btn-dark {
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+      body.dark-theme .btn-dark:hover:not(:disabled) {
+        background: #ffffff;
+      }
+      body.dark-theme .btn-outline {
+        background: #1e293b;
+        color: #f8fafc;
+        border-color: #475569;
+      }
+      body.dark-theme .btn-outline:hover:not(:disabled) {
+        background: #334155;
+        border-color: #64748b;
+      }
+      body.dark-theme .btn-ghost {
+        color: #cbd5e1;
+      }
+      body.dark-theme .btn-ghost:hover {
+        background: #334155;
+        color: #f8fafc;
+      }
+      body.dark-theme .progress-panel {
+        background: #0f172a;
+        border-color: #334155;
+      }
+      body.dark-theme .progress-panel h4 {
+        color: #f8fafc;
+      }
+      body.dark-theme .progress-bar-wrap {
+        background: #334155;
+      }
+      body.dark-theme .progress-bar-fill {
+        background: #3b82f6;
+      }
+      body.dark-theme .stat-box {
+        background: #1e293b;
+        border-color: #334155;
+      }
+      body.dark-theme .stat-box .stat-val {
+        color: #f8fafc;
+      }
+      body.dark-theme .stat-box .stat-val.green {
+        color: #34d399;
+      }
+      body.dark-theme .stat-box .stat-val.red {
+        color: #f87171;
+      }
+      body.dark-theme .live-log {
+        background: #1e293b;
+        border-color: #334155;
+      }
+      body.dark-theme .sidebar-footer {
+        background: #0f172a;
+        border-top-color: #334155;
+        color: #64748b;
+      }
+      body.dark-theme .main {
+        background: #0b1120;
+      }
+      body.dark-theme .topbar {
+        background: #1e293b;
+        border-bottom-color: #334155;
+      }
+      body.dark-theme .topbar-title {
+        color: #f8fafc;
+        background: #334155;
+      }
+      body.dark-theme .view-switcher {
+        background: #0f172a;
+      }
+      body.dark-theme .view-btn {
+        color: #94a3b8;
+      }
+      body.dark-theme .view-btn.active {
+        background: #1e293b;
+        color: #f8fafc;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+      body.dark-theme #searchInput {
+        background: #0f172a;
+        border-color: #475569;
+        color: #f8fafc;
+      }
+      body.dark-theme .table-scroll {
+        background: #1e293b;
+        box-shadow: none;
+      }
+      body.dark-theme th {
+        background: #0f172a;
+        color: #cbd5e1;
+        border-bottom-color: #334155;
+      }
+      body.dark-theme td {
+        background: #1e293b;
+        border-bottom-color: #334155;
+      }
+      body.dark-theme tr:hover td {
+        background: #334155;
+      }
+      body.dark-theme td.flash-update {
+        background: #064e3b !important;
+      }
+      body.dark-theme td input[type="text"] {
+        background: #0f172a;
+        border-color: #475569;
+        color: #f8fafc;
+      }
+      body.dark-theme .edit-btn {
+        background: #1e293b;
+        border-color: #475569;
+        color: #94a3b8;
+      }
+      body.dark-theme .edit-btn:hover {
+        background: #334155;
+        border-color: #64748b;
+        color: #f8fafc;
+      }
+      body.dark-theme .delete-btn {
+        border-color: #7f1d1d;
+        color: #f87171;
+      }
+      body.dark-theme .delete-btn:hover {
+        background: #450a0a;
+        border-color: #ef4444;
+      }
+      body.dark-theme .badge {
+        background: #1e3a5f;
+        color: #93c5fd;
+      }
+      body.dark-theme .excel-card {
+        background: #1e293b;
+        border-color: #334155;
+      }
+      body.dark-theme .excel-card h3 {
+        color: #f8fafc;
+      }
+      body.dark-theme .excel-card p {
+        color: #94a3b8;
+      }
+      body.dark-theme .excel-card:hover {
+        border-color: #475569;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      }
+      body.dark-theme .drop-zone {
+        background: #0f172a;
+        border-color: #475569;
+        color: #94a3b8;
+      }
+      body.dark-theme .drop-zone:hover {
+        background: #1e293b;
+      }
+      body.dark-theme .grid-toolbar {
+        background: #1e293b;
+        border-bottom-color: #334155;
+      }
+      body.dark-theme .grid-status {
+        color: #94a3b8;
+      }
+      body.dark-theme .changed-badge {
+        background: #422006;
+        color: #fcd34d;
+        border-color: #b45309;
+      }
+      body.dark-theme #gridLoadProgress {
+        background: #0f172a !important;
+        border-bottom-color: #334155 !important;
+      }
+      body.dark-theme #gridLoadProgress div:first-child {
+        color: #f8fafc !important;
+      }
+      body.dark-theme #gridProgressBar {
+        background: #3b82f6 !important;
+      }
+      body.dark-theme #gridProgressLog {
+        color: #94a3b8 !important;
+      }
+      body.dark-theme #gridContainer .handsontable th {
+        background: #0f172a;
+        color: #f8fafc;
+        border-color: #334155;
+      }
+      body.dark-theme #gridContainer .handsontable td {
+        background: #1e293b;
+        color: #f8fafc;
+        border-color: #334155;
+      }
+      body.dark-theme #gridContainer .handsontable td.changed-cell {
+        background: #422006 !important;
+      }
+      body.dark-theme #gridContainer .handsontable td.htDimmed {
+        color: #64748b;
+        background: #0f172a;
+      }
+      body.dark-theme #gridEmpty {
+        background: #0b1120;
+      }
+      body.dark-theme #gridEmpty div {
+        color: #94a3b8;
+      }
+      body.dark-theme .btn-import-label {
+        background: #1e293b;
+        color: #f8fafc;
+        border-color: #475569;
+      }
+      body.dark-theme .btn-import-label:hover {
+        background: #334155;
+        border-color: #64748b;
+      }
+      body.dark-theme #importProgressWrap {
+        color: #94a3b8;
+      }
+      body.dark-theme #importProgressWrap .imp-bar-track {
+        background: #334155;
+      }
+      body.dark-theme #importProgressWrap .imp-bar-fill {
+        background: #3b82f6;
+      }
+      body.dark-theme #gridContainer .handsontable td.imported-cell {
+        background: #1e3a8a !important;
+      }
+      html.dark-theme-pre body {
+        background: #0b1120 !important;
+      }
 
-    /* ── CARD VIEW ── */
-    .card-grid {
-      flex: 1;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
-      padding: 20px;
-      overflow-y: auto;
-      background: var(--bg-surface-secondary);
-      align-content: start;
-    }
-    .product-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: var(--transition);
-      box-shadow: var(--shadow-sm);
-      cursor: default;
-    }
-    .product-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-      border-color: var(--border-strong);
-    }
-    .product-card-image-wrap {
-      width: 100%;
-      height: 180px;
-      flex-shrink: 0;
-      overflow: hidden;
-      border-bottom: 1px solid var(--border-light);
-      background: var(--bg-surface-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .product-card-image-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .product-card-image-wrap .no-img-placeholder {
-      font-size: 2.5rem;
-      color: var(--text-disabled);
-    }
-    .product-card-body {
-      padding: 14px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .product-card-title {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--text-primary);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      line-height: 1.35;
-    }
-    .product-card-badge-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .product-card-meta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.78rem;
-      color: var(--text-secondary);
-      gap: 8px;
-    }
-    .product-card-price-row {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-    .product-card-price-row span.label {
-      font-weight: 400;
-      color: var(--text-tertiary);
-      font-size: 0.78rem;
-    }
-    .product-card-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: auto;
-      padding-top: 10px;
-      border-top: 1px solid var(--border-light);
-    }
-    .product-card-actions .btn {
-      flex: 1;
-      font-size: 0.78rem;
-      padding: 6px 10px;
-    }
-    .card-delete-btn {
-      background: transparent;
-      border: 1px solid var(--border-light);
-      color: var(--text-tertiary);
-      flex: 0 0 36px !important;
-      width: 36px;
-      padding: 6px !important;
-    }
-    .card-delete-btn:hover {
-      border-color: #f87171;
-      color: var(--accent-danger);
-      background: #fff5f5;
-    }
-    body.dark-theme .card-delete-btn:hover {
-      background: #450a0a;
-    }
-    @keyframes flashGreen {
-      0% { background: rgba(74,222,128,0.35); }
-      100% { background: transparent; }
-    }
-    .flash-update { animation: flashGreen 1s ease; }
+      /* ── CARD VIEW ── */
+      .card-grid {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        padding: 20px;
+        overflow-y: auto;
+        background: var(--bg-surface-secondary);
+        align-content: start;
+      }
+      .product-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: var(--transition);
+        box-shadow: var(--shadow-sm);
+        cursor: default;
+      }
+      .product-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--border-strong);
+      }
+      .product-card-image-wrap {
+        width: 100%;
+        height: 180px;
+        flex-shrink: 0;
+        overflow: hidden;
+        border-bottom: 1px solid var(--border-light);
+        background: var(--bg-surface-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .product-card-image-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .product-card-image-wrap .no-img-placeholder {
+        font-size: 2.5rem;
+        color: var(--text-disabled);
+      }
+      .product-card-body {
+        padding: 14px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .product-card-title {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.35;
+      }
+      .product-card-badge-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .product-card-meta-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        gap: 8px;
+      }
+      .product-card-price-row {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .product-card-price-row span.label {
+        font-weight: 400;
+        color: var(--text-tertiary);
+        font-size: 0.78rem;
+      }
+      .product-card-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 10px;
+        border-top: 1px solid var(--border-light);
+      }
+      .product-card-actions .btn {
+        flex: 1;
+        font-size: 0.78rem;
+        padding: 6px 10px;
+      }
+      .card-delete-btn {
+        background: transparent;
+        border: 1px solid var(--border-light);
+        color: var(--text-tertiary);
+        flex: 0 0 36px !important;
+        width: 36px;
+        padding: 6px !important;
+      }
+      .card-delete-btn:hover {
+        border-color: #f87171;
+        color: var(--accent-danger);
+        background: #fff5f5;
+      }
+      body.dark-theme .card-delete-btn:hover {
+        background: #450a0a;
+      }
+      @keyframes flashGreen {
+        0% {
+          background: rgba(74, 222, 128, 0.35);
+        }
+        100% {
+          background: transparent;
+        }
+      }
+      .flash-update {
+        animation: flashGreen 1s ease;
+      }
+    </style>
 
-  </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+      rel="stylesheet"
+    />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
-  
-  <!-- Handsontable -->
-  <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
-  <!-- SheetJS -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-</head>
-<body>
-<script>if(localStorage.getItem("theme")==="dark")document.body.classList.add("dark-theme");</script>
-{% include 'components/global_nav.html' %}
-{% include 'components/custom_alert.html' %}
-<div class="shell">
+    <!-- Handsontable -->
+    <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css"
+      rel="stylesheet"
+      media="screen"
+    />
+    <!-- SheetJS -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  </head>
+  <body>
+    <script>
+      if (localStorage.getItem("theme") === "dark")
+        document.body.classList.add("dark-theme");
+    </script>
+    {% include 'components/global_nav.html' %} {% include
+    'components/custom_alert.html' %}
+    <div class="shell">
+      <!-- ── SIDEBAR ── -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>⚙️ Actions</h3>
+        </div>
 
-  <!-- ── SIDEBAR ── -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h3>⚙️ Actions</h3>
-    </div>
+        <div class="sidebar-body">
+          <div class="collapse-section">
+            <button class="collapse-trigger" onclick="toggleCollapse(this)">
+              <span>⚡ Bulk price update</span>
+              <span class="chevron">▼</span>
+            </button>
+            <div class="collapse-body">
+              <div class="field">
+                <label>Percentage change (%)</label>
+                <input
+                  type="number"
+                  id="percentage"
+                  placeholder="e.g. 10 or -5"
+                  step="any"
+                  value="10"
+                />
+              </div>
+              <button
+                class="btn btn-dark btn-full btn-sm"
+                id="bulkUpdateBtn"
+                onclick="bulkUpdate()"
+              >
+                Apply to all variants
+              </button>
 
-    <div class="sidebar-body">
-
-      <div class="collapse-section">
-        <button class="collapse-trigger" onclick="toggleCollapse(this)">
-          <span>⚡ Bulk price update</span>
-          <span class="chevron">▼</span>
-        </button>
-        <div class="collapse-body">
-          <div class="field">
-            <label>Percentage change (%)</label>
-            <input type="number" id="percentage" placeholder="e.g. 10 or -5" step="any" value="10" />
+              <div class="progress-panel" id="progressPanel">
+                <h4>📊 Live progress</h4>
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar-fill" id="progressBar"></div>
+                </div>
+                <div class="progress-status" id="progressStatus">
+                  Fetching products...
+                </div>
+                <div class="progress-stats">
+                  <div class="stat-box">
+                    <span class="stat-val" id="statTotal">0</span>
+                    <span class="stat-label">Total</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-val green" id="statUpdated">0</span>
+                    <span class="stat-label">Done</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-val red" id="statFailed">0</span>
+                    <span class="stat-label">Failed</span>
+                  </div>
+                </div>
+                <div class="live-log" id="liveLog"></div>
+                <button
+                  class="btn btn-outline btn-sm btn-full"
+                  id="dismissBtn"
+                  onclick="dismissProgress()"
+                  style="display: none"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </div>
           </div>
-          <button class="btn btn-dark btn-full btn-sm" id="bulkUpdateBtn" onclick="bulkUpdate()">
-            Apply to all variants
-          </button>
 
-          <div class="progress-panel" id="progressPanel">
-            <h4>📊 Live progress</h4>
-            <div class="progress-bar-wrap">
-              <div class="progress-bar-fill" id="progressBar"></div>
+          <div class="collapse-section">
+            <button class="collapse-trigger" onclick="toggleCollapse(this)">
+              <span>🔧 Other tools</span>
+              <span class="chevron">▼</span>
+            </button>
+            <div class="collapse-body">
+              <button
+                class="btn btn-outline btn-full btn-sm"
+                onclick="
+                  showCustomAlert({
+                    title: 'Coming Soon',
+                    message:
+                      'Filtered price update is coming in the next release!',
+                    type: 'info',
+                    confirmText: 'Got it',
+                  })
+                "
+              >
+                ⚙️ Filtered price update
+              </button>
             </div>
-            <div class="progress-status" id="progressStatus">Fetching products...</div>
-            <div class="progress-stats">
-              <div class="stat-box">
-                <span class="stat-val" id="statTotal">0</span>
-                <span class="stat-label">Total</span>
-              </div>
-              <div class="stat-box">
-                <span class="stat-val green" id="statUpdated">0</span>
-                <span class="stat-label">Done</span>
-              </div>
-              <div class="stat-box">
-                <span class="stat-val red" id="statFailed">0</span>
-                <span class="stat-label">Failed</span>
-              </div>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <span>📦 Shopify Admin API</span>
+          <span>🔴 Live SSE streaming</span>
+        </div>
+      </aside>
+
+      <!-- ── MAIN ── -->
+      <main class="main">
+        <div class="topbar">
+          <div class="topbar-left">
+            <span class="topbar-title">Products</span>
+            <div class="view-switcher">
+              <button
+                class="view-btn active"
+                id="viewBtnTable"
+                onclick="switchView('table')"
+              >
+                <i class="fa-solid fa-table-list"></i> Table
+              </button>
+              <button
+                class="view-btn"
+                id="viewBtnCard"
+                onclick="switchView('card')"
+              >
+                <i class="fa-solid fa-border-all"></i> Card
+              </button>
+              <button
+                class="view-btn"
+                id="viewBtnExcel"
+                onclick="switchView('excel')"
+              >
+                <i class="fa-solid fa-file-excel"></i> Excel
+              </button>
             </div>
-            <div class="live-log" id="liveLog"></div>
-            <button class="btn btn-outline btn-sm btn-full" id="dismissBtn" onclick="dismissProgress()" style="display:none;">
-              Dismiss
+          </div>
+          <div class="topbar-right">
+            <select
+              id="statusFilter"
+              class="form-select"
+              style="
+                padding: 7px 10px;
+                border: 1px solid #d1d9e6;
+                border-radius: 4px;
+                font-size: 0.85rem;
+                background: white;
+              "
+              onchange="filterProducts()"
+            >
+              <option value="all">All statuses</option>
+              <option value="active">Active</option>
+              <option value="draft">Draft</option>
+              <option value="archived">Archived</option>
+            </select>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="🔍 Search products..."
+              autocomplete="off"
+            />
+            <button class="btn btn-outline btn-sm" onclick="loadProducts()">
+              ↻ Refresh
+            </button>
+            <button
+              class="btn btn-dark btn-sm"
+              onclick="location.href = '/product/new'"
+            >
+              ➕ Add product
             </button>
           </div>
         </div>
-      </div>
 
-      <div class="collapse-section">
-        <button class="collapse-trigger" onclick="toggleCollapse(this)">
-          <span>🔧 Other tools</span>
-          <span class="chevron">▼</span>
-        </button>
-        <div class="collapse-body">
-          <button class="btn btn-outline btn-full btn-sm" onclick="showCustomAlert({ title: 'Coming Soon', message: 'Filtered price update is coming in the next release!', type: 'info', confirmText: 'Got it' })">
-            ⚙️ Filtered price update
-          </button>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="sidebar-footer">
-      <span>📦 Shopify Admin API</span>
-      <span>🔴 Live SSE streaming</span>
-    </div>
-  </aside>
-
-  <!-- ── MAIN ── -->
-  <main class="main">
-
-    <div class="topbar">
-      <div class="topbar-left">
-        <span class="topbar-title">Products</span>
-        <div class="view-switcher">
-          <button class="view-btn active" id="viewBtnTable" onclick="switchView('table')">
-            <i class="fa-solid fa-table-list"></i> Table
-          </button>
-          <button class="view-btn" id="viewBtnCard" onclick="switchView('card')">
-            <i class="fa-solid fa-border-all"></i> Card
-          </button>
-          <button class="view-btn" id="viewBtnExcel" onclick="switchView('excel')">
-            <i class="fa-solid fa-file-excel"></i> Excel
-          </button>
-        </div>
-      </div>
-      <div class="topbar-right">
-        <select id="statusFilter" class="form-select" style="padding: 7px 10px; border: 1px solid #d1d9e6; border-radius: 4px; font-size: .85rem; background: white;" onchange="filterProducts()">
-          <option value="all">All statuses</option>
-          <option value="active">Active</option>
-          <option value="draft">Draft</option>
-          <option value="archived">Archived</option>
-        </select>
-        <input type="text" id="searchInput" placeholder="🔍 Search products..." autocomplete="off" />
-        <button class="btn btn-outline btn-sm" onclick="loadProducts()">↻ Refresh</button>
-        <button class="btn btn-dark btn-sm" onclick="location.href='/product/new'">➕ Add product</button>
-      </div>
-    </div>
-
-    <div class="content">
-
-      <!-- TABLE VIEW -->
-      <div class="view-panel active" id="viewTable">
-        <div class="table-scroll">
-          <table id="productTable">
-            <thead>
-              <tr>
-                <th style="width: 50px;">Image</th>
-                <th>Product</th>
-                <th>Status</th>
-                <th>Variant ID</th>
-                <th>Price (USD)</th>
-                <th>Edit</th>
-                <th>Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td colspan="7" class="empty-row">Click <strong>Refresh</strong> to load products.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-
-      <!-- CARD VIEW -->
-      <div class="view-panel" id="viewCard">
-        <div class="card-grid" id="productCardGrid">
-          <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-disabled);">Click <strong>Refresh</strong> to load products.</div>
-        </div>
-      </div>
-
-      <!-- EXCEL VIEW -->
-      <div class="view-panel" id="viewExcel">
-
-        <!-- GRID TOOLBAR -->
-        <div class="grid-toolbar" id="gridToolbar">
-          <div class="grid-toolbar-left">
-            <button class="btn btn-dark btn-sm" id="gridLoadBtn" onclick="gridLoad()">
-              ⟳ Load from Shopify
-            </button>
-            <label class="btn-import-label" title="Import .xlsx / .csv into grid">
-              📂 Import .xlsx
-              <input type="file" id="gridImportFile" accept=".xlsx,.xls,.csv" style="display:none;" onchange="gridImport(this)" />
-            </label>
-            <div id="importProgressWrap">
-              <span id="importProgressLabel">Parsing...</span>
-              <div class="imp-bar-track"><div class="imp-bar-fill" id="importProgressBar"></div></div>
+        <div class="content">
+          <!-- TABLE VIEW -->
+          <div class="view-panel active" id="viewTable">
+            <div class="table-scroll">
+              <table id="productTable">
+                <thead>
+                  <tr>
+                    <th style="width: 50px">Image</th>
+                    <th>Product</th>
+                    <th>Status</th>
+                    <th>Variant ID</th>
+                    <th>Price (USD)</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="7" class="empty-row">
+                      Click <strong>Refresh</strong> to load products.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <span class="grid-status" id="gridStatus">No data loaded</span>
           </div>
-          <div class="grid-toolbar-right" id="gridActions" style="display:none;">
-            <span class="changed-badge" id="changedBadge" style="display:none;">0 unsaved changes</span>
-            <button class="btn btn-outline btn-sm" onclick="gridExport()">📥 Export .xlsx</button>
-            <button class="btn btn-dark btn-sm" id="gridSaveBtn" onclick="gridSave()" style="display:none;">
-              🚀 Push to Shopify
-            </button>
+
+          <!-- CARD VIEW -->
+          <div class="view-panel" id="viewCard">
+            <div class="card-grid" id="productCardGrid">
+              <div
+                style="
+                  grid-column: 1/-1;
+                  text-align: center;
+                  padding: 2rem;
+                  color: var(--text-disabled);
+                "
+              >
+                Click <strong>Refresh</strong> to load products.
+              </div>
+            </div>
+          </div>
+
+          <!-- EXCEL VIEW -->
+          <div class="view-panel" id="viewExcel">
+            <!-- GRID TOOLBAR -->
+            <div class="grid-toolbar" id="gridToolbar">
+              <div class="grid-toolbar-left">
+                <button
+                  class="btn btn-dark btn-sm"
+                  id="gridLoadBtn"
+                  onclick="gridLoad()"
+                >
+                  ⟳ Load from Shopify
+                </button>
+                <label
+                  class="btn-import-label"
+                  title="Import .xlsx / .csv into grid"
+                >
+                  📂 Import .xlsx
+                  <input
+                    type="file"
+                    id="gridImportFile"
+                    accept=".xlsx,.xls,.csv"
+                    style="display: none"
+                    onchange="gridImport(this)"
+                  />
+                </label>
+                <div id="importProgressWrap">
+                  <span id="importProgressLabel">Parsing...</span>
+                  <div class="imp-bar-track">
+                    <div class="imp-bar-fill" id="importProgressBar"></div>
+                  </div>
+                </div>
+                <span class="grid-status" id="gridStatus">No data loaded</span>
+              </div>
+              <div
+                class="grid-toolbar-right"
+                id="gridActions"
+                style="display: none"
+              >
+                <span
+                  class="changed-badge"
+                  id="changedBadge"
+                  style="display: none"
+                  >0 unsaved changes</span
+                >
+                <button class="btn btn-outline btn-sm" onclick="gridExport()">
+                  📥 Export .xlsx
+                </button>
+                <button
+                  class="btn btn-dark btn-sm"
+                  id="gridSaveBtn"
+                  onclick="gridSave()"
+                  style="display: none"
+                >
+                  🚀 Push to Shopify
+                </button>
+              </div>
+            </div>
+
+            <!-- LOAD PROGRESS -->
+            <div
+              id="gridLoadProgress"
+              style="
+                display: none;
+                padding: 12px 20px;
+                background: #f8fafc;
+                border-bottom: 1px solid #e2e8f0;
+              "
+            >
+              <div
+                style="
+                  font-size: 0.8rem;
+                  font-weight: 600;
+                  color: #0f172a;
+                  margin-bottom: 6px;
+                "
+              >
+                Loading data from Shopify...
+              </div>
+              <div
+                style="
+                  background: #e2e8f0;
+                  height: 4px;
+                  border-radius: 2px;
+                  overflow: hidden;
+                  margin-bottom: 8px;
+                "
+              >
+                <div
+                  id="gridProgressBar"
+                  style="
+                    height: 100%;
+                    background: #0f172a;
+                    width: 0%;
+                    transition: width 0.4s ease;
+                  "
+                ></div>
+              </div>
+              <div
+                id="gridProgressLog"
+                style="
+                  max-height: 100px;
+                  overflow-y: auto;
+                  font-size: 0.72rem;
+                  font-family: monospace;
+                  color: #475569;
+                "
+              ></div>
+            </div>
+
+            <!-- HANDSONTABLE GRID -->
+            <div
+              id="gridContainer"
+              style="flex: 1; min-height: 0; overflow: hidden; display: none"
+            ></div>
+
+            <!-- EMPTY STATE -->
+            <div
+              id="gridEmpty"
+              style="
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 12px;
+                color: #94a3b8;
+              "
+            >
+              <div style="font-size: 2.5rem">📊</div>
+              <div
+                style="
+                  font-size: 0.95rem;
+                  font-weight: 500;
+                  color: #64748b;
+                  text-align: center;
+                "
+              >
+                Click
+                <strong style="color: #0f172a">Load from Shopify</strong> to
+                fetch live data,<br />
+                or <strong style="color: #0f172a">Import .xlsx</strong> to edit
+                and push a spreadsheet
+              </div>
+              <div style="font-size: 0.8rem">
+                Uses Shopify Bulk Operations — supports thousands of products
+              </div>
+            </div>
           </div>
         </div>
-
-        <!-- LOAD PROGRESS -->
-        <div id="gridLoadProgress" style="display:none; padding:12px 20px; background:#f8fafc; border-bottom:1px solid #e2e8f0;">
-          <div style="font-size:.8rem; font-weight:600; color:#0f172a; margin-bottom:6px;">Loading data from Shopify...</div>
-          <div style="background:#e2e8f0; height:4px; border-radius:2px; overflow:hidden; margin-bottom:8px;">
-            <div id="gridProgressBar" style="height:100%; background:#0f172a; width:0%; transition:width .4s ease;"></div>
-          </div>
-          <div id="gridProgressLog" style="max-height:100px; overflow-y:auto; font-size:.72rem; font-family:monospace; color:#475569;"></div>
-        </div>
-
-        <!-- HANDSONTABLE GRID -->
-        <div id="gridContainer" style="flex:1; min-height:0; overflow:hidden; display:none;"></div>
-
-        <!-- EMPTY STATE -->
-        <div id="gridEmpty" style="flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px; color:#94a3b8;">
-          <div style="font-size:2.5rem;">📊</div>
-          <div style="font-size:.95rem; font-weight:500; color:#64748b; text-align:center;">
-            Click <strong style="color:#0f172a;">Load from Shopify</strong> to fetch live data,<br>
-            or <strong style="color:#0f172a;">Import .xlsx</strong> to edit and push a spreadsheet
-          </div>
-          <div style="font-size:.8rem;">Uses Shopify Bulk Operations — supports thousands of products</div>
-        </div>
-
-      </div>
-
+      </main>
     </div>
-  </main>
-</div>
 
-<script>
-  // ── COLLAPSE TOGGLE ──
-  function toggleCollapse(trigger) {
-    trigger.classList.toggle('open');
-    const body = trigger.nextElementSibling;
-    body.classList.toggle('open');
-  }
+    <script>
+      // ── COLLAPSE TOGGLE ──
+      function toggleCollapse(trigger) {
+        trigger.classList.toggle("open");
+        const body = trigger.nextElementSibling;
+        body.classList.toggle("open");
+      }
 
-  // ── VIEW SWITCHER ──
-  function switchView(view) {
-    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1)).classList.add('active');
-    document.getElementById('viewBtn' + view.charAt(0).toUpperCase() + view.slice(1)).classList.add('active');
-    document.getElementById('searchInput').style.display = (view === 'table' || view === 'card') ? '' : 'none';
-    document.getElementById('statusFilter').style.display = (view === 'table' || view === 'card') ? '' : 'none';
-  }
+      // ── VIEW SWITCHER ──
+      function switchView(view) {
+        document
+          .querySelectorAll(".view-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".view-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .getElementById("view" + view.charAt(0).toUpperCase() + view.slice(1))
+          .classList.add("active");
+        document
+          .getElementById(
+            "viewBtn" + view.charAt(0).toUpperCase() + view.slice(1),
+          )
+          .classList.add("active");
+        document.getElementById("searchInput").style.display =
+          view === "table" || view === "card" ? "" : "none";
+        document.getElementById("statusFilter").style.display =
+          view === "table" || view === "card" ? "" : "none";
+      }
 
-  // ── HELPERS ──
-  function escapeHtml(s) {
-    if (s == null) return '';
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-  function getImageSrc(product) {
-    if (product.image && typeof product.image === 'string') return product.image;
-    if (product.image?.src) return product.image.src;
-    if (product.images?.length) return product.images[0].src;
-    return null;
-  }
-  function safeId(id) { return id.replace(/[^a-zA-Z0-9]/g, '_'); }
+      // ── HELPERS ──
+      function escapeHtml(s) {
+        if (s == null) return "";
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+      function getImageSrc(product) {
+        if (product.image && typeof product.image === "string")
+          return product.image;
+        if (product.image?.src) return product.image.src;
+        if (product.images?.length) return product.images[0].src;
+        return null;
+      }
+      function safeId(id) {
+        return id.replace(/[^a-zA-Z0-9]/g, "_");
+      }
 
-  // ── INFINITE SCROLL STATE ──
-  const PAGE_SIZE = 20;
-  let allProducts = [];
-  let filteredProducts = [];
-  let renderedCount = 0;
-  let isLoadingMore = false;
+      // ── INFINITE SCROLL STATE ──
+      const PAGE_SIZE = 20;
+      let allProducts = [];
+      let filteredProducts = [];
+      let renderedCount = 0;
+      let isLoadingMore = false;
 
-  let searchDebounce = null;
-  function filterProducts() {
-    clearTimeout(searchDebounce);
-    searchDebounce = setTimeout(() => {
-      const term = document.getElementById('searchInput').value.trim().toLowerCase();
-      const statusF = document.getElementById('statusFilter').value;
-      filteredProducts = allProducts.filter(p => {
-        const matchTitle = term === '' || p.title.toLowerCase().includes(term);
-        const matchStatus = statusF === 'all' || (p.status || '').toLowerCase() === statusF;
-        return matchTitle && matchStatus;
-      });
-      renderedCount = 0;
-      document.querySelector('#productTable tbody').innerHTML = '';
-      const cg = document.querySelector('#productCardGrid');
-      if (cg) cg.innerHTML = '';
-      renderNextPage();
-    }, 250);
-  }
+      let searchDebounce = null;
+      function filterProducts() {
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(() => {
+          const term = document
+            .getElementById("searchInput")
+            .value.trim()
+            .toLowerCase();
+          const statusF = document.getElementById("statusFilter").value;
+          filteredProducts = allProducts.filter((p) => {
+            const matchTitle =
+              term === "" || p.title.toLowerCase().includes(term);
+            const matchStatus =
+              statusF === "all" || (p.status || "").toLowerCase() === statusF;
+            return matchTitle && matchStatus;
+          });
+          renderedCount = 0;
+          document.querySelector("#productTable tbody").innerHTML = "";
+          const cg = document.querySelector("#productCardGrid");
+          if (cg) cg.innerHTML = "";
+          renderNextPage();
+        }, 250);
+      }
 
-  async function loadProducts() {
-    const tbody = document.querySelector('#productTable tbody');
-    tbody.innerHTML = `<tr><td colspan="7" class="empty-row">⏳ Loading...</td></tr>`;
-    try {
-      const res = await fetch('/products');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const products = await res.json();
-      allProducts = [...products].reverse();
-      filteredProducts = [...allProducts];
-      renderedCount = 0;
-      tbody.innerHTML = '';
-      const cGrid = document.querySelector('#productCardGrid');
-      if (cGrid) cGrid.innerHTML = '';
-      renderNextPage();
-    } catch {
-      tbody.innerHTML = `<tr><td colspan="7" class="empty-row">❌ Failed to load products</td></tr>`;
-    }
-  }
+      async function loadProducts() {
+        const tbody = document.querySelector("#productTable tbody");
+        tbody.innerHTML = `<tr><td colspan="7" class="empty-row">⏳ Loading...</td></tr>`;
+        try {
+          const res = await fetch("/products");
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const products = await res.json();
+          allProducts = [...products].reverse();
+          filteredProducts = [...allProducts];
+          renderedCount = 0;
+          tbody.innerHTML = "";
+          const cGrid = document.querySelector("#productCardGrid");
+          if (cGrid) cGrid.innerHTML = "";
+          renderNextPage();
+        } catch {
+          tbody.innerHTML = `<tr><td colspan="7" class="empty-row">❌ Failed to load products</td></tr>`;
+        }
+      }
 
-  function renderNextPage() {
-    const tbody = document.querySelector('#productTable tbody');
-    const cardGrid = document.querySelector('#productCardGrid');
-    const slice = filteredProducts.slice(renderedCount, renderedCount + PAGE_SIZE);
+      function renderNextPage() {
+        const tbody = document.querySelector("#productTable tbody");
+        const cardGrid = document.querySelector("#productCardGrid");
+        const slice = filteredProducts.slice(
+          renderedCount,
+          renderedCount + PAGE_SIZE,
+        );
 
-    if (renderedCount === 0 && slice.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" class="empty-row">📭 No products found</td></tr>`;
-      if (cardGrid) cardGrid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-disabled);">📭 No products found</div>`;
-      return;
-    }
+        if (renderedCount === 0 && slice.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="8" class="empty-row">📭 No products found</td></tr>`;
+          if (cardGrid)
+            cardGrid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-disabled);">📭 No products found</div>`;
+          return;
+        }
 
-    slice.forEach(product => {
-      const title = escapeHtml(product.title);
-      const productId = escapeHtml(product.id);
-      const imgSrc = getImageSrc(product);
-      const status = (product.status || 'draft').toLowerCase();
-      const statusBadge = `<span class="status-badge ${status}">${status}</span>`;
+        slice.forEach((product) => {
+          const title = escapeHtml(product.title);
+          const productId = escapeHtml(product.id);
+          const imgSrc = getImageSrc(product);
+          const status = (product.status || "draft").toLowerCase();
+          const statusBadge = `<span class="status-badge ${status}">${status}</span>`;
 
-      // ── CARD (one per product) ──
-      if (cardGrid) {
-        const variants = product.variants || [];
-        const variantCount = variants.length;
-        const prices = variants.map(v => parseFloat(v.price)).filter(p => !isNaN(p));
-        const minPrice = prices.length ? Math.min(...prices).toFixed(2) : '0.00';
-        const maxPrice = prices.length ? Math.max(...prices).toFixed(2) : '0.00';
-        const priceDisplay = minPrice === maxPrice ? `$${minPrice}` : `$${minPrice} – $${maxPrice}`;
-        const vendor = escapeHtml(product.vendor || '');
-        const productType = escapeHtml(product.product_type || '');
+          // ── CARD (one per product) ──
+          if (cardGrid) {
+            const variants = product.variants || [];
+            const variantCount = variants.length;
+            const prices = variants
+              .map((v) => parseFloat(v.price))
+              .filter((p) => !isNaN(p));
+            const minPrice = prices.length
+              ? Math.min(...prices).toFixed(2)
+              : "0.00";
+            const maxPrice = prices.length
+              ? Math.max(...prices).toFixed(2)
+              : "0.00";
+            const priceDisplay =
+              minPrice === maxPrice
+                ? `$${minPrice}`
+                : `$${minPrice} – $${maxPrice}`;
+            const vendor = escapeHtml(product.vendor || "");
+            const productType = escapeHtml(product.product_type || "");
 
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.dataset.productId = product.id;
-        card.dataset.productTitle = product.title;
-        card.innerHTML = `
+            const card = document.createElement("div");
+            card.className = "product-card";
+            card.dataset.productId = product.id;
+            card.dataset.productTitle = product.title;
+            card.innerHTML = `
           <div class="product-card-image-wrap">
-            ${imgSrc
-              ? `<img src="${escapeHtml(imgSrc)}" alt="${title}" loading="lazy" />`
-              : `<div class="no-img-placeholder">🖼️</div>`}
+            ${
+              imgSrc
+                ? `<img src="${escapeHtml(imgSrc)}" alt="${title}" loading="lazy" />`
+                : `<div class="no-img-placeholder">🖼️</div>`
+            }
           </div>
           <div class="product-card-body">
             <div class="product-card-title" title="${title}">${title}</div>
             <div class="product-card-badge-row">
               ${statusBadge}
-              ${vendor ? `<span class="badge">${vendor}</span>` : ''}
+              ${vendor ? `<span class="badge">${vendor}</span>` : ""}
             </div>
             <div class="product-card-meta-row">
-              <span>📦 ${variantCount} variant${variantCount !== 1 ? 's' : ''}</span>
-              ${productType ? `<span style="color:var(--text-tertiary);">${productType}</span>` : ''}
+              <span>📦 ${variantCount} variant${variantCount !== 1 ? "s" : ""}</span>
+              ${productType ? `<span style="color:var(--text-tertiary);">${productType}</span>` : ""}
             </div>
             <div class="product-card-price-row">
               <span class="label">Price </span>${priceDisplay}
@@ -916,20 +1800,20 @@
             </div>
           </div>
         `;
-        cardGrid.appendChild(card);
-      }
+            cardGrid.appendChild(card);
+          }
 
-      // ── TABLE ROWS (one per variant) ──
-      const imgHtml = imgSrc
-        ? `<img class="product-image" src="${escapeHtml(imgSrc)}" alt="${title}" />`
-        : `<div class="no-image">🖼️</div>`;
+          // ── TABLE ROWS (one per variant) ──
+          const imgHtml = imgSrc
+            ? `<img class="product-image" src="${escapeHtml(imgSrc)}" alt="${title}" />`
+            : `<div class="no-image">🖼️</div>`;
 
-      (product.variants || []).forEach(v => {
-        const domId = safeId(v.id);
-        const row = document.createElement('tr');
-        row.dataset.productId = product.id;
-        row.dataset.productTitle = product.title;
-        row.innerHTML = `
+          (product.variants || []).forEach((v) => {
+            const domId = safeId(v.id);
+            const row = document.createElement("tr");
+            row.dataset.productId = product.id;
+            row.dataset.productTitle = product.title;
+            row.innerHTML = `
           <td>${imgHtml}</td>
           <td><strong>${title}</strong></td>
           <td>${statusBadge}</td>
@@ -939,471 +1823,600 @@
           <td><button class="edit-btn" onclick="location.href='/product/${productId}'">✏️ Edit</button></td>
           <td><button class="delete-btn" onclick="deleteProduct(this)">🗑️ Delete</button></td>
         `;
-        tbody.appendChild(row);
-      });
-    });
+            tbody.appendChild(row);
+          });
+        });
 
-    renderedCount += slice.length;
-    isLoadingMore = false;
-  }
-  function setupInfiniteScroll() {
-    ['.table-scroll', '.card-grid'].forEach(selector => {
-      const scroller = document.querySelector(selector);
-      if (!scroller) return;
-      scroller.addEventListener('scroll', () => {
-        if (isLoadingMore || renderedCount >= filteredProducts.length) return;
-        const { scrollTop, scrollHeight, clientHeight } = scroller;
-        if (scrollTop + clientHeight >= scrollHeight - 400) {
-          isLoadingMore = true;
-          setTimeout(renderNextPage, 150);
-        }
-      });
-    });
-  }
-
-  function updateVariantPriceInTable(variantId, newPrice) {
-    const input = document.querySelector(`input[data-variant-id="${CSS.escape(variantId)}"]`);
-    if (!input) return;
-    input.value = newPrice;
-    const td = input.closest('td');
-    td.classList.add('flash-update');
-    setTimeout(() => td.classList.remove('flash-update'), 1000);
-  }
-
-  // ── DELETE PRODUCT ──
-  async function deleteProduct(btn) {
-    const row = btn.closest('tr');
-    const productId = row.dataset.productId;
-    const title = row.dataset.productTitle || 'this product';
-
-    const confirmed = await showCustomAlert({
-      title: 'Delete product',
-      message: 'Delete <strong>' + escapeHtml(title) + '</strong>?<br><br>This cannot be undone.',
-      type: 'danger', showCancel: true, confirmText: 'Delete'
-    });
-    if (!confirmed) return;
-
-    const originalText = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = '⏳';
-
-    try {
-      const res = await fetch('/api/product/delete?id=' + encodeURIComponent(productId), { method: 'DELETE' });
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}));
-        throw new Error(errBody.detail || 'HTTP ' + res.status);
+        renderedCount += slice.length;
+        isLoadingMore = false;
       }
-      document.querySelectorAll('tr[data-product-id="' + CSS.escape(productId) + '"]').forEach(r => {
-        r.style.transition = 'opacity 0.3s';
-        r.style.opacity = '0';
-        setTimeout(() => r.remove(), 300);
-      });
-      allProducts      = allProducts.filter(p => p.id !== productId);
-      filteredProducts = filteredProducts.filter(p => p.id !== productId);
-      showGridToast('🗑️ Product deleted', 'success');
-    } catch (err) {
-      await showCustomAlert({ title: 'Delete failed', message: err.message, type: 'danger' });
-      btn.disabled = false;
-      btn.textContent = originalText;
-    }
-  }
-
-  // ── BULK UPDATE SSE ──
-  function addLog(msg, type = '') {
-    const log = document.getElementById('liveLog');
-    const entry = document.createElement('div');
-    entry.className = `log-entry ${type}`;
-    entry.textContent = msg;
-    log.appendChild(entry);
-    log.scrollTop = log.scrollHeight;
-  }
-  function updateStats(updated, failed, total) {
-    document.getElementById('statTotal').textContent = total;
-    document.getElementById('statUpdated').textContent = updated;
-    document.getElementById('statFailed').textContent = failed;
-    const pct = total > 0 ? Math.round(((updated + failed) / total) * 100) : 0;
-    document.getElementById('progressBar').style.width = pct + '%';
-    document.getElementById('progressStatus').textContent = `${updated + failed} / ${total} (${pct}%)`;
-  }
-  function dismissProgress() { document.getElementById('progressPanel').style.display = 'none'; }
-
-  async function bulkUpdate() {
-    const percentage = document.getElementById('percentage').value.trim();
-    if (!percentage) { showCustomAlert({ title: 'Validation Error', message: 'Enter a percentage', type: 'warning' }); return; }
-    const _bulkConfirmed = await showCustomAlert({ title: 'Confirm Bulk Update', message: `Apply ${percentage}% price change to ALL variants?`, type: 'warning', showCancel: true, confirmText: 'Apply' });
-    if (!_bulkConfirmed) return;
-    const btn = document.getElementById('bulkUpdateBtn');
-    btn.innerHTML = '<span class="spinner"></span> Running...'; btn.disabled = true;
-    const panel = document.getElementById('progressPanel');
-    panel.style.display = 'flex';
-    document.getElementById('liveLog').innerHTML = '';
-    document.getElementById('progressBar').style.width = '0%';
-    document.getElementById('progressStatus').textContent = 'Fetching products from Shopify...';
-    document.getElementById('statTotal').textContent = '0';
-    document.getElementById('statUpdated').textContent = '0';
-    document.getElementById('statFailed').textContent = '0';
-    document.getElementById('dismissBtn').style.display = 'none';
-    try {
-      const res = await fetch(`/bulk/price-increase?percentage=${encodeURIComponent(percentage)}`, { method: 'POST' });
-      if (!res.ok) throw new Error(`Server error ${res.status}`);
-      const reader = res.body.getReader(); const decoder = new TextDecoder(); let buffer = '';
-      while (true) {
-        const { done, value } = await reader.read(); if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n'); buffer = lines.pop();
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          try {
-            const evt = JSON.parse(line.slice(6));
-            if (evt.type === 'start') { addLog(`🚀 Starting — ${evt.total} products`); document.getElementById('statTotal').textContent = evt.total; }
-            else if (evt.type === 'success') { updateStats(evt.updated, evt.failed, evt.total); addLog(`✅ ${evt.title}`, 'success'); evt.variants?.forEach(v => updateVariantPriceInTable(v.id, v.price)); }
-            else if (evt.type === 'fail' || evt.type === 'error') { updateStats(evt.updated, evt.failed, evt.total); addLog(`❌ ${evt.title}`, 'fail'); }
-            else if (evt.type === 'skip') { addLog(`⏭ ${evt.title}`, 'skip'); }
-            else if (evt.type === 'done') {
-              document.getElementById('progressBar').style.width = '100%';
-              document.getElementById('progressStatus').textContent = `✅ Done — ${evt.updated} updated, ${evt.failed} failed`;
-              addLog(`🏁 Complete: ${evt.updated}/${evt.total}`, 'done');
-              document.getElementById('dismissBtn').style.display = 'block';
+      function setupInfiniteScroll() {
+        [".table-scroll", ".card-grid"].forEach((selector) => {
+          const scroller = document.querySelector(selector);
+          if (!scroller) return;
+          scroller.addEventListener("scroll", () => {
+            if (isLoadingMore || renderedCount >= filteredProducts.length)
+              return;
+            const { scrollTop, scrollHeight, clientHeight } = scroller;
+            if (scrollTop + clientHeight >= scrollHeight - 400) {
+              isLoadingMore = true;
+              setTimeout(renderNextPage, 150);
             }
-          } catch {}
+          });
+        });
+      }
+
+      function updateVariantPriceInTable(variantId, newPrice) {
+        const input = document.querySelector(
+          `input[data-variant-id="${CSS.escape(variantId)}"]`,
+        );
+        if (!input) return;
+        input.value = newPrice;
+        const td = input.closest("td");
+        td.classList.add("flash-update");
+        setTimeout(() => td.classList.remove("flash-update"), 1000);
+      }
+
+      // ── DELETE PRODUCT ──
+      async function deleteProduct(btn) {
+        const row = btn.closest("tr");
+        const productId = row.dataset.productId;
+        const title = row.dataset.productTitle || "this product";
+
+        const confirmed = await showCustomAlert({
+          title: "Delete product",
+          message:
+            "Delete <strong>" +
+            escapeHtml(title) +
+            "</strong>?<br><br>This cannot be undone.",
+          type: "danger",
+          showCancel: true,
+          confirmText: "Delete",
+        });
+        if (!confirmed) return;
+
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "⏳";
+
+        try {
+          const res = await fetch(
+            "/api/product/delete?id=" + encodeURIComponent(productId),
+            { method: "DELETE" },
+          );
+          if (!res.ok) {
+            const errBody = await res.json().catch(() => ({}));
+            throw new Error(errBody.detail || "HTTP " + res.status);
+          }
+          document
+            .querySelectorAll(
+              'tr[data-product-id="' + CSS.escape(productId) + '"]',
+            )
+            .forEach((r) => {
+              r.style.transition = "opacity 0.3s";
+              r.style.opacity = "0";
+              setTimeout(() => r.remove(), 300);
+            });
+          allProducts = allProducts.filter((p) => p.id !== productId);
+          filteredProducts = filteredProducts.filter((p) => p.id !== productId);
+          showGridToast("🗑️ Product deleted", "success");
+        } catch (err) {
+          await showCustomAlert({
+            title: "Delete failed",
+            message: err.message,
+            type: "danger",
+          });
+          btn.disabled = false;
+          btn.textContent = originalText;
         }
       }
-    } catch (err) {
-      addLog(`❌ ${err.message}`, 'fail');
-      document.getElementById('progressStatus').textContent = 'Failed';
-      document.getElementById('dismissBtn').style.display = 'block';
-    } finally { btn.innerHTML = 'Apply to all variants'; btn.disabled = false; }
-  }
 
-  // ── DROP ZONE (legacy excel card, kept for compat) ──
-  function initDropZone() {
-    const dropZone = document.getElementById('dropZone');
-    if (!dropZone) return;
-    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-    dropZone.addEventListener('drop', e => {
-      e.preventDefault(); dropZone.classList.remove('drag-over');
-      const file = e.dataTransfer.files[0];
-      if (file) handleExcelImport({ files: [file] });
-    });
-  }
-
-  // ════════════════════════════════════════
-  // SPREADSHEET GRID
-  // ════════════════════════════════════════
-  var hotInstance = null;
-  var gridData    = [];
-  var gridChanges = new Map();
-  var gridColumns = [];
-  var importedRows = new Set(); // rows loaded from import (blue tint)
-
-  const READONLY_COLS = new Set([
-    "Product ID", "Variant ID", "Inventory Item ID",
-    "Created At", "Updated At", "Last Synced", "Product Category ID",
-  ]);
-
-  // ── LOAD FROM SHOPIFY ──
-  async function gridLoad() {
-    const btn = document.getElementById('gridLoadBtn');
-    const status = document.getElementById('gridStatus');
-    const progress = document.getElementById('gridLoadProgress');
-    const progressLog = document.getElementById('gridProgressLog');
-    const progressBar = document.getElementById('gridProgressBar');
-    const empty = document.getElementById('gridEmpty');
-    const container = document.getElementById('gridContainer');
-
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Loading...';
-    progress.style.display = 'block';
-    empty.style.display = 'none';
-    container.style.display = 'none';
-    progressLog.innerHTML = '';
-    progressBar.style.width = '0%';
-    status.textContent = 'Connecting to Shopify...';
-    gridChanges.clear();
-    importedRows.clear();
-
-    let stepCount = 0;
-    const totalSteps = 7;
-
-    function logLine(msg) {
-      const div = document.createElement('div');
-      div.textContent = msg;
-      progressLog.appendChild(div);
-      progressLog.scrollTop = progressLog.scrollHeight;
-      stepCount = Math.min(stepCount + 1, totalSteps);
-      progressBar.style.width = Math.round((stepCount / totalSteps) * 90) + '%';
-      status.textContent = msg;
-    }
-
-    try {
-      const res = await fetch('/grid/load', { method: 'POST' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-      while (true) {
-        const { done, value } = await reader.read(); if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n'); buffer = lines.pop();
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          try {
-            const evt = JSON.parse(line.slice(6));
-            if (evt.type === 'log') { logLine(evt.msg); }
-            else if (evt.type === 'ready') {
-              progressBar.style.width = '100%';
-              logLine('✅ Loaded ' + evt.count + ' rows');
-              gridData = evt.rows;
-              initGrid(gridData);
-            } else if (evt.type === 'error') { throw new Error(evt.msg); }
-          } catch(e) { if (e.message?.includes('❌')) throw e; }
-        }
+      // ── BULK UPDATE SSE ──
+      function addLog(msg, type = "") {
+        const log = document.getElementById("liveLog");
+        const entry = document.createElement("div");
+        entry.className = `log-entry ${type}`;
+        entry.textContent = msg;
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight;
       }
-    } catch(err) {
-      status.textContent = '❌ ' + err.message;
-      empty.style.display = 'flex';
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = '⟳ Reload';
-      progress.style.display = 'none';
-    }
-  }
+      function updateStats(updated, failed, total) {
+        document.getElementById("statTotal").textContent = total;
+        document.getElementById("statUpdated").textContent = updated;
+        document.getElementById("statFailed").textContent = failed;
+        const pct =
+          total > 0 ? Math.round(((updated + failed) / total) * 100) : 0;
+        document.getElementById("progressBar").style.width = pct + "%";
+        document.getElementById("progressStatus").textContent =
+          `${updated + failed} / ${total} (${pct}%)`;
+      }
+      function dismissProgress() {
+        document.getElementById("progressPanel").style.display = "none";
+      }
 
-  // ── IMPORT FROM EXCEL ──
-  async function gridImport(input) {
-    const file = input.files[0];
-    if (!file) return;
-    input.value = ''; // reset so same file can be re-imported
-
-    const wrap  = document.getElementById('importProgressWrap');
-    const label = document.getElementById('importProgressLabel');
-    const bar   = document.getElementById('importProgressBar');
-
-    wrap.style.display = 'flex';
-    label.textContent  = 'Parsing ' + file.name + '...';
-    bar.style.width    = '20%';
-
-    await new Promise(r => setTimeout(r, 10)); // yield to browser so UI updates
-
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        bar.style.width   = '50%';
-        label.textContent = 'Reading rows...';
-
-        const data = new Uint8Array(e.target.result);
-        const wb   = XLSX.read(data, { type: 'array', cellDates: true });
-        const ws   = wb.Sheets[wb.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-
-        bar.style.width = '80%';
-
-        if (!rows.length) {
-          wrap.style.display = 'none';
-          await showCustomAlert({ title: 'Empty file', message: 'No rows found in the spreadsheet.', type: 'warning' });
+      async function bulkUpdate() {
+        const percentage = document.getElementById("percentage").value.trim();
+        if (!percentage) {
+          showCustomAlert({
+            title: "Validation Error",
+            message: "Enter a percentage",
+            type: "warning",
+          });
           return;
         }
-
-        // Validate required columns
-        const missingCols = ['Product ID', 'Variant ID'].filter(c => !(c in rows[0]));
-        if (missingCols.length) {
-          const go = await showCustomAlert({
-            title: 'Missing required columns',
-            message: `Column(s) <strong>${missingCols.join(', ')}</strong> are missing.<br><br>`
-              + `Without these, rows cannot be matched to Shopify products.<br>`
-              + `You can still view the data, but <em>Push to Shopify</em> won't work for those rows.<br><br>`
-              + `Continue anyway?`,
-            type: 'warning', showCancel: true, confirmText: 'Continue'
-          });
-          if (!go) { wrap.style.display = 'none'; return; }
+        const _bulkConfirmed = await showCustomAlert({
+          title: "Confirm Bulk Update",
+          message: `Apply ${percentage}% price change to ALL variants?`,
+          type: "warning",
+          showCancel: true,
+          confirmText: "Apply",
+        });
+        if (!_bulkConfirmed) return;
+        const btn = document.getElementById("bulkUpdateBtn");
+        btn.innerHTML = '<span class="spinner"></span> Running...';
+        btn.disabled = true;
+        const panel = document.getElementById("progressPanel");
+        panel.style.display = "flex";
+        document.getElementById("liveLog").innerHTML = "";
+        document.getElementById("progressBar").style.width = "0%";
+        document.getElementById("progressStatus").textContent =
+          "Fetching products from Shopify...";
+        document.getElementById("statTotal").textContent = "0";
+        document.getElementById("statUpdated").textContent = "0";
+        document.getElementById("statFailed").textContent = "0";
+        document.getElementById("dismissBtn").style.display = "none";
+        try {
+          const res = await fetch(
+            `/bulk/price-increase?percentage=${encodeURIComponent(percentage)}`,
+            { method: "POST" },
+          );
+          if (!res.ok) throw new Error(`Server error ${res.status}`);
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop();
+            for (const line of lines) {
+              if (!line.startsWith("data: ")) continue;
+              try {
+                const evt = JSON.parse(line.slice(6));
+                if (evt.type === "start") {
+                  addLog(`🚀 Starting — ${evt.total} products`);
+                  document.getElementById("statTotal").textContent = evt.total;
+                } else if (evt.type === "success") {
+                  updateStats(evt.updated, evt.failed, evt.total);
+                  addLog(`✅ ${evt.title}`, "success");
+                  evt.variants?.forEach((v) =>
+                    updateVariantPriceInTable(v.id, v.price),
+                  );
+                } else if (evt.type === "fail" || evt.type === "error") {
+                  updateStats(evt.updated, evt.failed, evt.total);
+                  addLog(`❌ ${evt.title}`, "fail");
+                } else if (evt.type === "skip") {
+                  addLog(`⏭ ${evt.title}`, "skip");
+                } else if (evt.type === "done") {
+                  document.getElementById("progressBar").style.width = "100%";
+                  document.getElementById("progressStatus").textContent =
+                    `✅ Done — ${evt.updated} updated, ${evt.failed} failed`;
+                  addLog(`🏁 Complete: ${evt.updated}/${evt.total}`, "done");
+                  document.getElementById("dismissBtn").style.display = "block";
+                }
+              } catch {}
+            }
+          }
+        } catch (err) {
+          addLog(`❌ ${err.message}`, "fail");
+          document.getElementById("progressStatus").textContent = "Failed";
+          document.getElementById("dismissBtn").style.display = "block";
+        } finally {
+          btn.innerHTML = "Apply to all variants";
+          btn.disabled = false;
         }
+      }
 
-        bar.style.width   = '95%';
-        label.textContent = 'Loading into grid...';
+      // ── DROP ZONE (legacy excel card, kept for compat) ──
+      function initDropZone() {
+        const dropZone = document.getElementById("dropZone");
+        if (!dropZone) return;
+        dropZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          dropZone.classList.add("drag-over");
+        });
+        dropZone.addEventListener("dragleave", () =>
+          dropZone.classList.remove("drag-over"),
+        );
+        dropZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dropZone.classList.remove("drag-over");
+          const file = e.dataTransfer.files[0];
+          if (file) handleExcelImport({ files: [file] });
+        });
+      }
 
-        gridData = rows;
+      // ════════════════════════════════════════
+      // SPREADSHEET GRID
+      // ════════════════════════════════════════
+      var hotInstance = null;
+      var gridData = [];
+      var gridChanges = new Map();
+      var gridColumns = [];
+      var importedRows = new Set(); // rows loaded from import (blue tint)
+
+      const READONLY_COLS = new Set([
+        "Product ID",
+        "Variant ID",
+        "Inventory Item ID",
+        "Created At",
+        "Updated At",
+        "Last Synced",
+        "Product Category ID",
+      ]);
+
+      // ── LOAD FROM SHOPIFY ──
+      async function gridLoad() {
+        const btn = document.getElementById("gridLoadBtn");
+        const status = document.getElementById("gridStatus");
+        const progress = document.getElementById("gridLoadProgress");
+        const progressLog = document.getElementById("gridProgressLog");
+        const progressBar = document.getElementById("gridProgressBar");
+        const empty = document.getElementById("gridEmpty");
+        const container = document.getElementById("gridContainer");
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Loading...';
+        progress.style.display = "block";
+        empty.style.display = "none";
+        container.style.display = "none";
+        progressLog.innerHTML = "";
+        progressBar.style.width = "0%";
+        status.textContent = "Connecting to Shopify...";
         gridChanges.clear();
         importedRows.clear();
-        initGrid(rows);
 
-        // Mark all valid rows as pending — enables Push to Shopify
-        rows.forEach((row, i) => {
-          if (row['Product ID'] && row['Variant ID']) {
-            gridChanges.set(i, { ...row });
-            importedRows.add(i);
+        let stepCount = 0;
+        const totalSteps = 7;
+
+        function logLine(msg) {
+          const div = document.createElement("div");
+          div.textContent = msg;
+          progressLog.appendChild(div);
+          progressLog.scrollTop = progressLog.scrollHeight;
+          stepCount = Math.min(stepCount + 1, totalSteps);
+          progressBar.style.width =
+            Math.round((stepCount / totalSteps) * 90) + "%";
+          status.textContent = msg;
+        }
+
+        try {
+          const res = await fetch("/grid/load", { method: "POST" });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop();
+            for (const line of lines) {
+              if (!line.startsWith("data: ")) continue;
+              try {
+                const evt = JSON.parse(line.slice(6));
+                if (evt.type === "log") {
+                  logLine(evt.msg);
+                } else if (evt.type === "ready") {
+                  progressBar.style.width = "100%";
+                  logLine("✅ Loaded " + evt.count + " rows");
+                  gridData = evt.rows;
+                  initGrid(gridData);
+                } else if (evt.type === "error") {
+                  throw new Error(evt.msg);
+                }
+              } catch (e) {
+                if (e.message?.includes("❌")) throw e;
+              }
+            }
           }
-        });
-        updateChangedBadge();
-
-        bar.style.width   = '100%';
-        label.textContent = '✅ ' + rows.length + ' rows loaded';
-        setTimeout(() => { wrap.style.display = 'none'; }, 1500);
-
-        document.getElementById('gridStatus').textContent = rows.length + ' rows from ' + file.name;
-        showGridToast('📂 ' + rows.length + ' rows imported from ' + file.name, 'success');
-
-      } catch(err) {
-        wrap.style.display = 'none';
-        await showCustomAlert({ title: 'Import error', message: err.message, type: 'danger' });
+        } catch (err) {
+          status.textContent = "❌ " + err.message;
+          empty.style.display = "flex";
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = "⟳ Reload";
+          progress.style.display = "none";
+        }
       }
-    };
-    reader.readAsArrayBuffer(file);
-  }
 
-  // ── INIT GRID ──
-  function initGrid(rows) {
-    if (!rows || rows.length === 0) return;
-    const container = document.getElementById('gridContainer');
-    container.style.display = 'block';
-    document.getElementById('gridEmpty').style.display = 'none';
-    document.getElementById('gridActions').style.display = 'flex';
-    document.getElementById('gridStatus').textContent = rows.length + ' rows loaded';
+      // ── IMPORT FROM EXCEL ──
+      async function gridImport(input) {
+        const file = input.files[0];
+        if (!file) return;
+        input.value = ""; // reset so same file can be re-imported
 
-    const keys = Object.keys(rows[0]);
-    gridColumns = keys.map(key => {
-      const col = { data: key, title: key, readOnly: READONLY_COLS.has(key) };
-      if (key === 'Status') { col.type = 'dropdown'; col.source = ['ACTIVE', 'DRAFT', 'ARCHIVED']; }
-      if (/Price|Cost|Qty|Grams/.test(key)) col.type = 'numeric';
-      return col;
-    });
+        const wrap = document.getElementById("importProgressWrap");
+        const label = document.getElementById("importProgressLabel");
+        const bar = document.getElementById("importProgressBar");
 
-    if (hotInstance) hotInstance.destroy();
+        wrap.style.display = "flex";
+        label.textContent = "Parsing " + file.name + "...";
+        bar.style.width = "20%";
 
-    hotInstance = new Handsontable(container, {
-      data: rows,
-      columns: gridColumns,
-      colHeaders: keys,
-      rowHeaders: true,
-      width: '100%',
-      height: '100%',
-      licenseKey: 'non-commercial-and-evaluation',
-      stretchH: 'none',
-      columnSorting: true,
-      filters: true,
-      dropdownMenu: true,
-      contextMenu: true,
-      manualColumnResize: true,
-      manualColumnMove: true,
-      fixedColumnsStart: 0,
-      autoWrapRow: true,
-      autoWrapCol: true,
-      wordWrap: true,
-      cells(row, col) {
-        const cellProperties = {};
-        const key = keys[col];
-        if (READONLY_COLS.has(key)) {
-          cellProperties.renderer = function(instance, td) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.color = '#94a3b8';
-            td.style.background = document.body.classList.contains('dark-theme') ? '#0f172a' : '#f8fafc';
-            td.style.fontSize = '0.75rem';
+        await new Promise((r) => setTimeout(r, 10)); // yield to browser so UI updates
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          try {
+            bar.style.width = "50%";
+            label.textContent = "Reading rows...";
+
+            const data = new Uint8Array(e.target.result);
+            const wb = XLSX.read(data, { type: "array", cellDates: true });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, { defval: "" });
+
+            bar.style.width = "80%";
+
+            if (!rows.length) {
+              wrap.style.display = "none";
+              await showCustomAlert({
+                title: "Empty file",
+                message: "No rows found in the spreadsheet.",
+                type: "warning",
+              });
+              return;
+            }
+
+            // Validate required columns
+            const missingCols = ["Product ID", "Variant ID"].filter(
+              (c) => !(c in rows[0]),
+            );
+            if (missingCols.length) {
+              const go = await showCustomAlert({
+                title: "Missing required columns",
+                message:
+                  `Column(s) <strong>${missingCols.join(", ")}</strong> are missing.<br><br>` +
+                  `Without these, rows cannot be matched to Shopify products.<br>` +
+                  `You can still view the data, but <em>Push to Shopify</em> won't work for those rows.<br><br>` +
+                  `Continue anyway?`,
+                type: "warning",
+                showCancel: true,
+                confirmText: "Continue",
+              });
+              if (!go) {
+                wrap.style.display = "none";
+                return;
+              }
+            }
+
+            bar.style.width = "95%";
+            label.textContent = "Loading into grid...";
+
+            gridData = rows;
+            gridChanges.clear();
+            importedRows.clear();
+            initGrid(rows);
+
+            // Mark all valid rows as pending — enables Push to Shopify
+            rows.forEach((row, i) => {
+              if (row["Product ID"] && row["Variant ID"]) {
+                gridChanges.set(i, { ...row });
+                importedRows.add(i);
+              }
+            });
+            updateChangedBadge();
+
+            bar.style.width = "100%";
+            label.textContent = "✅ " + rows.length + " rows loaded";
+            setTimeout(() => {
+              wrap.style.display = "none";
+            }, 1500);
+
+            document.getElementById("gridStatus").textContent =
+              rows.length + " rows from " + file.name;
+            showGridToast(
+              "📂 " + rows.length + " rows imported from " + file.name,
+              "success",
+            );
+          } catch (err) {
+            wrap.style.display = "none";
+            await showCustomAlert({
+              title: "Import error",
+              message: err.message,
+              type: "danger",
+            });
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      }
+
+      // ── INIT GRID ──
+      function initGrid(rows) {
+        if (!rows || rows.length === 0) return;
+        const container = document.getElementById("gridContainer");
+        container.style.display = "block";
+        document.getElementById("gridEmpty").style.display = "none";
+        document.getElementById("gridActions").style.display = "flex";
+        document.getElementById("gridStatus").textContent =
+          rows.length + " rows loaded";
+
+        const keys = Object.keys(rows[0]);
+        gridColumns = keys.map((key) => {
+          const col = {
+            data: key,
+            title: key,
+            readOnly: READONLY_COLS.has(key),
           };
-        } else if (importedRows.has(row) && gridChanges.has(row)) {
-          cellProperties.className = 'imported-cell';
-        }
-        return cellProperties;
-      },
-      afterChange(changes, source) {
-        if (!changes || source === 'loadData') return;
-        changes.forEach(([row, prop, oldVal, newVal]) => {
-          if (oldVal === newVal) return;
-          if (!gridChanges.has(row)) {
-            gridChanges.set(row, { ...hotInstance.getSourceDataAtRow(row) });
+          if (key === "Status") {
+            col.type = "dropdown";
+            col.source = ["ACTIVE", "DRAFT", "ARCHIVED"];
           }
-          gridChanges.get(row)[prop] = newVal;
-          importedRows.delete(row); // user edited — switch from blue to yellow changed-cell tint
-          const colIdx = keys.indexOf(prop);
-          hotInstance.setCellMeta(row, colIdx, 'className', 'changed-cell');
+          if (/Price|Cost|Qty|Grams/.test(key)) col.type = "numeric";
+          return col;
         });
-        hotInstance.render();
-        updateChangedBadge();
+
+        if (hotInstance) hotInstance.destroy();
+
+        hotInstance = new Handsontable(container, {
+          data: rows,
+          columns: gridColumns,
+          colHeaders: keys,
+          rowHeaders: true,
+          width: "100%",
+          height: "100%",
+          licenseKey: "non-commercial-and-evaluation",
+          stretchH: "none",
+          columnSorting: true,
+          filters: true,
+          dropdownMenu: true,
+          contextMenu: true,
+          manualColumnResize: true,
+          manualColumnMove: true,
+          fixedColumnsStart: 0,
+          autoWrapRow: true,
+          autoWrapCol: true,
+          wordWrap: true,
+          cells(row, col) {
+            const cellProperties = {};
+            const key = keys[col];
+            if (READONLY_COLS.has(key)) {
+              cellProperties.renderer = function (instance, td) {
+                Handsontable.renderers.TextRenderer.apply(this, arguments);
+                td.style.color = "#94a3b8";
+                td.style.background = document.body.classList.contains(
+                  "dark-theme",
+                )
+                  ? "#0f172a"
+                  : "#f8fafc";
+                td.style.fontSize = "0.75rem";
+              };
+            } else if (importedRows.has(row) && gridChanges.has(row)) {
+              cellProperties.className = "imported-cell";
+            }
+            return cellProperties;
+          },
+          afterChange(changes, source) {
+            if (!changes || source === "loadData") return;
+            changes.forEach(([row, prop, oldVal, newVal]) => {
+              if (oldVal === newVal) return;
+              if (!gridChanges.has(row)) {
+                gridChanges.set(row, {
+                  ...hotInstance.getSourceDataAtRow(row),
+                });
+              }
+              gridChanges.get(row)[prop] = newVal;
+              importedRows.delete(row); // user edited — switch from blue to yellow changed-cell tint
+              const colIdx = keys.indexOf(prop);
+              hotInstance.setCellMeta(row, colIdx, "className", "changed-cell");
+            });
+            hotInstance.render();
+            updateChangedBadge();
+          },
+        });
       }
-    });
-  }
 
-  function updateChangedBadge() {
-    const badge = document.getElementById('changedBadge');
-    const saveBtn = document.getElementById('gridSaveBtn');
-    const count = gridChanges.size;
-    if (count > 0) {
-      badge.textContent = count + ' unsaved change' + (count > 1 ? 's' : '');
-      badge.style.display = 'inline-block';
-      saveBtn.style.display = 'inline-flex';
-    } else {
-      badge.style.display = 'none';
-      saveBtn.style.display = 'none';
-    }
-  }
-
-  async function gridSave() {
-    if (gridChanges.size === 0) return;
-    const btn = document.getElementById('gridSaveBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Pushing...';
-
-    try {
-      const res = await fetch('/grid/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ changes: Array.from(gridChanges.values()) }),
-      });
-      const result = await res.json();
-
-      if (result.status === 'ok' || result.status === 'partial') {
-        gridChanges.clear();
-        importedRows.clear();
-        if (hotInstance) {
-          for (let r = 0; r < hotInstance.countRows(); r++)
-            for (let c = 0; c < hotInstance.countCols(); c++)
-              hotInstance.setCellMeta(r, c, 'className', '');
-          hotInstance.render();
+      function updateChangedBadge() {
+        const badge = document.getElementById("changedBadge");
+        const saveBtn = document.getElementById("gridSaveBtn");
+        const count = gridChanges.size;
+        if (count > 0) {
+          badge.textContent =
+            count + " unsaved change" + (count > 1 ? "s" : "");
+          badge.style.display = "inline-block";
+          saveBtn.style.display = "inline-flex";
+        } else {
+          badge.style.display = "none";
+          saveBtn.style.display = "none";
         }
-        updateChangedBadge();
-        const msg = result.status === 'ok'
-          ? '✅ Pushed ' + result.updated + ' rows to Shopify'
-          : '⚠️ Pushed ' + result.updated + ' rows — ' + result.errors.length + ' failed';
-        showGridToast(msg, result.status === 'ok' ? 'success' : 'partial');
-      } else {
-        throw new Error(JSON.stringify(result.errors));
       }
-    } catch(err) {
-      showGridToast('❌ Push failed: ' + err.message, 'error');
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = '🚀 Push to Shopify';
-    }
-  }
 
-  function gridExport() {
-    if (!gridData || gridData.length === 0) {
-      showCustomAlert({ title: 'Export Error', message: 'Load data first.', type: 'warning' }); return;
-    }
-    const exportData = hotInstance ? hotInstance.getData() : gridData;
-    const headers = gridColumns.map(c => c.data);
-    const ws = XLSX.utils.aoa_to_sheet([headers, ...exportData]);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Products');
-    XLSX.writeFile(wb, 'shopify_products_' + new Date().toISOString().slice(0,10) + '.xlsx');
-  }
+      async function gridSave() {
+        if (gridChanges.size === 0) return;
+        const btn = document.getElementById("gridSaveBtn");
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Pushing...';
 
-  function showGridToast(msg, type) {
-    const t = document.querySelector('.grid-save-toast');
-    if (t) t.remove();
-    const toast = document.createElement('div');
-    toast.className = 'grid-save-toast ' + type;
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 4000);
-  }
+        try {
+          const res = await fetch("/grid/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ changes: Array.from(gridChanges.values()) }),
+          });
+          const result = await res.json();
 
-  // ── INIT ──
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('searchInput').addEventListener('input', filterProducts);
-    setupInfiniteScroll();
-    loadProducts();
-    initDropZone();
-  });
-</script>
-</body>
+          if (result.status === "ok" || result.status === "partial") {
+            gridChanges.clear();
+            importedRows.clear();
+            if (hotInstance) {
+              for (let r = 0; r < hotInstance.countRows(); r++)
+                for (let c = 0; c < hotInstance.countCols(); c++)
+                  hotInstance.setCellMeta(r, c, "className", "");
+              hotInstance.render();
+            }
+            updateChangedBadge();
+            const msg =
+              result.status === "ok"
+                ? "✅ Pushed " + result.updated + " rows to Shopify"
+                : "⚠️ Pushed " +
+                  result.updated +
+                  " rows — " +
+                  result.errors.length +
+                  " failed";
+            showGridToast(msg, result.status === "ok" ? "success" : "partial");
+          } else {
+            throw new Error(JSON.stringify(result.errors));
+          }
+        } catch (err) {
+          showGridToast("❌ Push failed: " + err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = "🚀 Push to Shopify";
+        }
+      }
+
+      function gridExport() {
+        if (!gridData || gridData.length === 0) {
+          showCustomAlert({
+            title: "Export Error",
+            message: "Load data first.",
+            type: "warning",
+          });
+          return;
+        }
+        const exportData = hotInstance ? hotInstance.getData() : gridData;
+        const headers = gridColumns.map((c) => c.data);
+        const ws = XLSX.utils.aoa_to_sheet([headers, ...exportData]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Products");
+        XLSX.writeFile(
+          wb,
+          "shopify_products_" + new Date().toISOString().slice(0, 10) + ".xlsx",
+        );
+      }
+
+      function showGridToast(msg, type) {
+        const t = document.querySelector(".grid-save-toast");
+        if (t) t.remove();
+        const toast = document.createElement("div");
+        toast.className = "grid-save-toast " + type;
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+      }
+
+      // ── INIT ──
+      document.addEventListener("DOMContentLoaded", () => {
+        document
+          .getElementById("searchInput")
+          .addEventListener("input", filterProducts);
+        setupInfiniteScroll();
+        loadProducts();
+        initDropZone();
+      });
+    </script>
+  </body>
 </html>
